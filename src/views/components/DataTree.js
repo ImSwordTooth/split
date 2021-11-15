@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import { Tree } from 'antd'
 
 const { TreeNode } = Tree
 
 class DataTree extends PureComponent {
-
 
     createNodes = (val) => {
         const { activeId } = this.props
@@ -16,7 +16,7 @@ class DataTree extends PureComponent {
         return (
             <TreeNode
                 key={val.id}
-                className={activeId.toString() === val.id.toString() ? 'ant-tree-node-selected' : ''}
+                className={activeId === val.id ? 'ant-tree-node-selected' : ''}
                 icon={<i className={`iconfont ${val.iconName}`} />}
                 title={val.name}
             >
@@ -31,7 +31,7 @@ class DataTree extends PureComponent {
     }
 
     render() {
-        const { data, activeId } = this.props
+        const { dataList, activeId } = this.props
         return (
             <Tree showIcon defaultExpandAll draggable
                   selectedKeys={[activeId]}
@@ -47,11 +47,16 @@ class DataTree extends PureComponent {
                   onSelect={this.treeNodeOnClick}
             >
                 <TreeNode icon={<i className={'iconfont icondiv'}/>} title='总容器' key="0">
-                    {data.map(val=>this.createNodes(val))}
+                    {dataList.map(val=>this.createNodes(val))}
                 </TreeNode>
             </Tree>
         )
     }
 }
 
-export default DataTree
+function mapStateToProps(state) {
+    const { activeId,  dataList } = state;
+    return { activeId, dataList }
+}
+
+export default connect(mapStateToProps)(DataTree)

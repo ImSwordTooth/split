@@ -1,5 +1,5 @@
-import React, {PureComponent} from "react";
-import "./DragLine.scss"
+import React, { PureComponent } from "react";
+import { StyledDragLine } from './styles'
 
 class DragLine extends PureComponent {
 
@@ -24,7 +24,7 @@ class DragLine extends PureComponent {
 
     render() {
         return (
-            <div className="dragline" onMouseDown={this.startMove}/>
+            <StyledDragLine onMouseDown={this.startMove}/>
         )
     }
 }
