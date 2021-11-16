@@ -5,14 +5,15 @@ import Point from "./components/Point"
 import DataTree from "./components/DataTree";
 import DragLine from "./components/DragLine/index";
 import ToolBar from "./ToolBar";
-import {changeActiveId, changeDataList, changeMode, changeScale} from "../store/action";
+import {changeActiveId, changeMode, changeScale, deleteData} from "../store/action";
 import { StyledApp } from './styles'
+import {getAllChildren} from "./utils/pixiUtils";
 
 class App extends PureComponent{
     state = {
         app: null,
         rightWidth: 500,
-        isMoveMode: false,
+        isMoveMode: false
     }
 
     componentDidMount() {
@@ -39,12 +40,14 @@ class App extends PureComponent{
         const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_46/4616816EE196C3DDF3FD415009BEB5D27901E2C8_size392_w750_h1624.png')
         const image = new PIXI.Sprite(texture);
         image.name = 'bc'
-
+        image.zIndex = -1
         app.stage.addChild(image)
+        app.stage.sortableChildren = true
         appElement.appendChild(app.view);
         this.setState({
             app,
         })
+        window.app = app
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', this.resize, false)
     }
@@ -58,15 +61,16 @@ class App extends PureComponent{
 
     keyEvent = (e) => {
         const { app, isMoveMode } = this.state
-        const { scale, activeId, dataList } = this.props
+        const { scale, activeId, dataMap } = this.props
         // Delete 并且选中了一个图形
         if (e.keyCode === 46 && activeId !== '') {
-            app.stage.removeChild(app.stage.children.find(a => activeId === a.name))
-            const newDataList = [...dataList]
-            newDataList.splice(dataList.findIndex(({ id }) => id.toString() === activeId), 1)
-            changeDataList(newDataList)
-            changeActiveId('')
-            changeMode('choose')
+            const active = app.stage.children.find(a => activeId === a.name)
+            app.stage.removeChild(active)
+            const children = getAllChildren(app, active)
+            for (let i=0; i<children.length; i++) {
+                app.stage.removeChild(children[i])
+            }
+            deleteData(activeId)
         }
 
         // 空格 并且没有在移动模式
@@ -141,18 +145,6 @@ class App extends PureComponent{
         }
     }
 
-    resizeTo = size => {
-        this.resize(null, size)
-    }
-
-    handlePointChange = (newData) => {
-        const { dataList } = this.props
-        const index = dataList.findIndex(a => a.id === newData.id)
-        const newList = [...dataList]
-        newList.splice(index, 1, newData)
-        changeDataList(newList)
-    }
-
     handleWidthChange = (width) => {
         this.setState({
             rightWidth: width
@@ -161,18 +153,13 @@ class App extends PureComponent{
 
     render() {
         const { app, rightWidth } = this.state
-        const { dataList, scale, activeId } = this.props
-        const activeGraphics = dataList.find(a => a.id === activeId)
         return (
             <StyledApp>
-                <ToolBar app={app}/>
+                <ToolBar app={app} />
                 <div className="main">
                     <div className="left">
                         <div className="operate" id="app">
-                            {
-                                app && activeGraphics &&
-                                <Point app={app} data={{...activeGraphics}} scale={scale} onChange={this.handlePointChange}/>
-                            }
+                            <Point app={app} />
                         </div>
                     </div>
                     <div className="data" style={{ width: `${rightWidth}px` }}>
@@ -186,8 +173,8 @@ class App extends PureComponent{
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, activeId,  dataList } = state;
-    return { mode, scale, activeId, dataList }
+    const { mode, scale, activeId,  dataMap } = state;
+    return { mode, scale, activeId, dataMap }
 }
 
 export default connect(mapStateToProps)(App);

@@ -2,8 +2,10 @@ import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import { changeMode, changeScale, changeDataList, changeActiveId } from '../../store/action'
+import { changeMode, changeScale, changeDataMap, changeActiveId } from '../../store/action'
 import UploadImage from "../components/UploadImage";
+import {getAllChildren, hitTest, updateLineStyle} from "../utils/pixiUtils";
+import {getDataById} from "../utils/common";
 
 class ToolBar extends PureComponent {
 
@@ -12,38 +14,46 @@ class ToolBar extends PureComponent {
     }
 
     state = {
-        maxNum: 1
+        hitObject: null
     }
 
     choose = () => {
         const { app, scale } = this.props
         changeMode('choose')
+        app.stage.cursor = 'default'
         app.stage.removeAllListeners()
-        const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
+        const blocks = getAllChildren(app)
         blocks.forEach((item, index) => {
             item.cursor = 'move'
             item.removeAllListeners()
             item.interactive = true
             item.on('pointerdown',  (event) => {
-                const { dataList } = this.props
+                const { dataMap } = this.props
                 let ing = true
                 let { x: startX, y: startY } = {...event.data.global}
-                const dataIndex = dataList.findIndex(a => a.id === item.name)
-                if (dataIndex > -1) {
+                const newDataMap = {...dataMap}
+                const activeData = getDataById(item.name, newDataMap)
+                if (activeData) {
                     changeActiveId(item.name)
                     item.on('pointermove',  (event) => {
                         if (ing) {
                             const { x: endX, y: endY } = {...event.data.global}
                             item.x += (endX - startX) / scale
                             item.y += (endY - startY) / scale
-                            const newDataList = [...dataList]
-                            newDataList.splice(dataIndex, 1, {
-                                ...newDataList[dataIndex],
-                                x: item.x,
-                                y: item.y
-                            })
+                            activeData.x = item.x
+                            activeData.y = item.y
+                            const children = getAllChildren(app, item)
+                            if (children.length > 0) {
+                                for (let i=0; i<children.length; i++) {
+                                    children[i].x += (endX - startX) / scale
+                                    children[i].y += (endY - startY) / scale
+                                    const data = getDataById(children[i].name, activeData)
+                                    data.x = children[i].x
+                                    data.y = children[i].y
+                                }
+                            }
 
-                            changeDataList(newDataList)
+                            changeDataMap(newDataMap)
                             startX = endX
                             startY = endY
                         }
@@ -56,66 +66,100 @@ class ToolBar extends PureComponent {
     }
 
     drawNormal = (e) => {
-        const { maxNum } = this.state
-        const { app, dataList, scale } = this.props
-        const blocks = app.stage.children.filter(c => c.name !== 'mask')
+        const { app, dataMap, scale } = this.props
+        const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
         changeMode('rect')
         blocks.forEach(b => b.interactive = false)
         app.stage.removeAllListeners()
+        app.stage.on('pointermove', this.findHit)
         let start = {}
         let ing = false
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
 
-        const handleEnd = (that, event) => {
+        const handleEnd = (event) => {
             if (ing) {
                 const end = {...event.data.global}
                 const shape = new PIXI.Graphics()
                 app.stage.removeChild(duringRect)
                 shape.lineStyle(2, 0x1099bb, .85)
                 shape.beginFill(0x1099bb, 0.1)
-                const width = (end.x-start.x) / scale
-                const height = (end.y-start.y) / scale
+                const width = Math.abs(end.x-start.x) / scale
+                const height = Math.abs(end.y-start.y) / scale
                 shape.drawRect(
                     0,
                     0,
-                    (end.x-start.x) / scale,
-                    (end.y-start.y) / scale
+                    width,
+                    height
                 )
 
                 shape.x = (Math.min(start.x, end.x) - app.stage.x) / scale
                 shape.y = (Math.min(start.y, end.y) - app.stage.y) / scale
-                const thisId = maxNum.toString()
-                changeDataList([...dataList, {
-                    id: thisId,
-                    name: `组件${maxNum}`,
-                    x: shape.x,
-                    y: shape.y,
-                    width,
-                    height
-                }])
                 shape.endFill()
-                shape.name = maxNum + ''
                 ing = false
                 start = {}
-                app.stage.addChild(shape)
-                this.choose()
-                app.stage.cursor = 'default'
-                changeActiveId(thisId)
-                this.setState({
-                    maxNum: maxNum + 1
-                })
+                // 有命中，在命中的容器内创建
+                const { hitObject: hit } = this.state
+
+                if (hit) {
+                    const newDataMap = { ...dataMap }
+                    const parent = getDataById(hit.name, newDataMap)
+                    const newId = parent.id + '_' + parent.willCreateKey + ''
+                    parent.children.push({
+                        id: newId,
+                        name: `组件${newId}`,
+                        x: shape.x,
+                        y: shape.y,
+                        width,
+                        height,
+                        children: [],
+                        willCreateKey: 1
+                    })
+                    parent.willCreateKey++
+                    // shape.x -= parent.x
+                    // shape.y -= parent.y
+                    shape.name = newId
+                    app.stage.addChild(shape)
+
+                    changeActiveId(newId)
+                    changeDataMap(newDataMap)
+                } else {
+                    // 没有命中，创建到总容器内
+                    const newId = dataMap.willCreateKey + ''
+                    changeDataMap({
+                        ...dataMap,
+                        willCreateKey: dataMap.willCreateKey + 1,
+                        children: [
+                            ...dataMap.children,
+                            {
+                                id: newId,
+                                name: `组件${newId}`,
+                                x: shape.x,
+                                y: shape.y,
+                                width,
+                                height,
+                                children: [],
+                                willCreateKey: 1
+                            }
+                        ]
+                    })
+                    shape.name = newId
+                    app.stage.addChild(shape)
+                    changeActiveId(newId)
+                }
+                this.drawNormal()
             }
         }
 
-        app.stage.on('pointerdown', function (event) {
+        app.stage.on('pointerdown', (event) => {
             start = {...event.data.global}
+            app.stage.off('pointermove', this.findHit)
             duringRect.visible = false
             duringRect.name = 'tmp'
             app.stage.addChild(duringRect)
             ing = true
 
-            app.stage.on('pointermove', function (event) {
+            app.stage.on('pointermove', (event) => {
                 duringRect.visible = true
                 if (ing) {
                     const current = {...event.data.global}
@@ -131,9 +175,27 @@ class ToolBar extends PureComponent {
                     duringRect.endFill()
                 }
             })
-            app.stage.on('pointerup', function (event) { handleEnd(this, event) })
-            app.stage.on('pointerupoutside', function (event) { handleEnd(this, event) })
+            app.stage.on('pointerup', handleEnd)
+            app.stage.on('pointerupoutside', handleEnd)
         })
+    }
+
+    findHit = (event) => {
+        const { app, dataMap } = this.props
+        const { hitObject } = this.state
+        const hit = hitTest(event.data.global, app, dataMap)
+        if (!hitObject || !hit || (hitObject && hit && hit.name !== hitObject.name)) {
+            if (hitObject) {
+                hitObject.tint = 0xffffff
+            }
+            if (hit) {
+                hit.tint = 0x7c7c7c;
+            }
+            this.setState({
+                hitObject: hit
+            })
+        }
+
     }
 
 
@@ -160,6 +222,10 @@ class ToolBar extends PureComponent {
         this.resize(null, size)
     }
 
+    test = () => {
+        this.props.app.stage.children.find(a => a.name === '1_1').hitFirst = true
+    }
+
     render() {
         const { app, mode, scale } = this.props
         return (
@@ -172,6 +238,7 @@ class ToolBar extends PureComponent {
                         <button onClick={() => this.resizeTo( 0.5)}>缩放到50%</button>
                         <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
                         <UploadImage app={app}/>
+                        <button onClick={this.test}>测试标记</button>
                     </div>
                     <div>
                         <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>
@@ -185,8 +252,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, dataList } = state;
-    return { mode, scale, dataList }
+    const { mode, scale, dataMap } = state;
+    return { mode, scale, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)

@@ -1,55 +1,30 @@
 import { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
+import {connect} from "react-redux";
+import {getDataById} from "../utils/common";
+import {changeDataMap} from "../../store/action";
 
 class Point extends PureComponent {
     state = {
         pointGraphics: []
     }
 
-    componentDidMount() {
-        this.init()
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.data !== this.props.data) {
-            console.log('update')
+        if (prevProps.activeId !== this.props.activeId || prevProps.dataMap !== this.props.dataMap) {
             this.update()
         }
     }
-    
+
     componentWillUnmount() {
         const { app } = this.props
         const { pointGraphics } = this.state
         pointGraphics.forEach(p => app.stage.removeChild(p))
     }
 
-    init = () => {
-        const { app } = this.props
-        const points = this.getPoints()
-        let arr = []
-        for (let i=0; i<points.length; i++) {
-            const point = new PIXI.Graphics()
-            point.interactive = true
-            point.name = `point`
-            app.stage.addChild(point)
-            arr.push(point)
-            point.x = points[i].x
-            point.y = points[i].y
-            point.lineStyle(1, 0x3e3c3d, 1)
-            point.beginFill(0xf8f8f8, 1)
-            point.drawCircle(0, 0, 5)
-            point.endFill()
-
-            point.on('pointerdown', (e) => this.handlePoint(e, point, i))
-        }
-        this.setState({
-            pointGraphics: arr
-        })
-    }
-
     handlePoint = (e, point, i) => {
-        const { app, data, scale, onChange } = this.props
-        const graphics = app.stage.children.find(a => a.name === data.id + '')
+        const { app, activeId, scale, dataMap } = this.props
+        const graphics = app.stage.children.find(c => c.name === activeId)
+        const data = getDataById(activeId, dataMap)
         const points = this.getPoints()
         let { x: startX, y: startY } = {...e.data.global}
 
@@ -92,13 +67,12 @@ class Point extends PureComponent {
                 }
             }
 
-            onChange({
-                ...this.props.data,
-                x: newX,
-                y: newY,
-                width: newWidth,
-                height: newHeight
-            })
+            data.x = newX
+            data.y = newY
+            data.width = newWidth
+            data.height = newHeight
+
+            changeDataMap(dataMap)
 
             graphics.clear()
             graphics.x = newX
@@ -114,7 +88,6 @@ class Point extends PureComponent {
         })
 
         point.on('pointerup', () => {
-            console.log('停止点击')
             point
                 .off('pointermove')
                 .off('pointerup')
@@ -129,30 +102,65 @@ class Point extends PureComponent {
     }
 
     update = () => {
+        const { app } = this.props
         const { pointGraphics } = this.state
         const points = this.getPoints()
-        
-        for (let i=0; i<points.length; i++) {
-            const point = pointGraphics[i]
-            point.interactive = true
-            point.x = points[i].x
-            point.y = points[i].y
-            point.clear()
-            point.lineStyle(1, 0x3e3c3d, 1)
-            point.beginFill( 0xf8f8f8, 1)
-            point.drawCircle(0, 0, 5)
-            point.endFill()
+
+        // 有坐标
+        if (points.length > 0) {
+            let arr = []
+
+            for (let i=0; i<points.length; i++) {
+                let point = pointGraphics[i]
+                if (!point) {
+                    point = new PIXI.Graphics()
+                    point.interactive = true
+                    point.name = `point`
+                    app.stage.addChild(point)
+                    arr.push(point)
+                    point.on('pointerdown', (e) => this.handlePoint(e, point, i))
+                }
+                point.x = points[i].x
+                point.y = points[i].y
+                point.clear()
+                point.lineStyle(1, 0x3e3c3d, 1)
+                point.beginFill( 0xf8f8f8, 1)
+                point.drawCircle(0, 0, 5)
+                point.endFill()
+                point.zIndex = 9999
+            }
+            if (arr.length > 0) {
+                this.setState({
+                    pointGraphics: arr
+                })
+            }
+        } else {
+            /**
+             * 无坐标，说明图形被删除了或者是初始化
+             * 初始化不用管
+             */
+            if (pointGraphics[0]) {
+                for (let i=0; i<4; i++) {
+                    pointGraphics[i].clear()
+                }
+            }
         }
     }
 
     getPoints = () => {
-        const { x, y, width, height } = this.props.data
-        return [
-            { x, y },
-            { x: x + width, y },
-            { x: x + width, y: y + height },
-            { x, y: y + height }
-        ]
+        const { activeId, dataMap } = this.props
+        const data = getDataById(activeId, dataMap)
+        if (data) {
+            const { x, y, width, height } = data
+            return [
+                { x, y },
+                { x: x + width, y },
+                { x: x + width, y: y + height },
+                { x, y: y + height }
+            ]
+        } else {
+            return []
+        }
     }
 
     render() {
@@ -160,4 +168,10 @@ class Point extends PureComponent {
     }
 }
 
-export default Point
+
+function mapStateToProps(state) {
+    const { scale, activeId,  dataMap } = state;
+    return { scale, activeId, dataMap: {...dataMap} }
+}
+
+export default connect(mapStateToProps)(Point)

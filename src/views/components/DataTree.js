@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Tree } from 'antd'
+import {changeActiveId} from "../../store/action";
+import Icon from "./Icon";
 
 const { TreeNode } = Tree
 
@@ -17,7 +19,7 @@ class DataTree extends PureComponent {
             <TreeNode
                 key={val.id}
                 className={activeId === val.id ? 'ant-tree-node-selected' : ''}
-                icon={<i className={`iconfont ${val.iconName}`} />}
+                icon={<Icon icon="div" />}
                 title={val.name}
             >
                 {son}
@@ -26,16 +28,17 @@ class DataTree extends PureComponent {
     };
 
     treeNodeOnClick = (keys, e) => {
-        const { onChangeId } = this.props
-        onChangeId(e.node.key)
+        changeActiveId(e.node.key)
     }
 
     render() {
-        const { dataList, activeId } = this.props
+        const { dataMap, activeId } = this.props
         return (
-            <Tree showIcon defaultExpandAll draggable
+            <Tree showIcon
+                  draggable
+                  defaultExpandAll
                   selectedKeys={[activeId]}
-                  // onDragStart={()=>{                //开始拖拽的时候把hover—mask和抽屉去掉，十分low的行为，有机会改掉
+                  // onDragStart={()=>{
                   //     changeHoveredTag('');
                   //     changeDrawer(false)
                   // }}
@@ -46,17 +49,20 @@ class DataTree extends PureComponent {
                   // onRightClick={(e)=>this.treeNodeonRightClick(e)}
                   onSelect={this.treeNodeOnClick}
             >
-                <TreeNode icon={<i className={'iconfont icondiv'}/>} title='总容器' key="0">
-                    {dataList.map(val=>this.createNodes(val))}
-                </TreeNode>
+                {
+                    dataMap && dataMap.children &&
+                    <TreeNode icon={<Icon icon="all" />} title='总容器' key="0">
+                        {dataMap.children.map(val=>this.createNodes(val))}
+                    </TreeNode>
+                }
             </Tree>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { activeId,  dataList } = state;
-    return { activeId, dataList }
+    const { activeId, dataMap } = state;
+    return { activeId, dataMap }
 }
 
 export default connect(mapStateToProps)(DataTree)

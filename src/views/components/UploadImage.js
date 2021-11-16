@@ -21,6 +21,7 @@ class UploadImage extends PureComponent {
             const texture = PIXI.Texture.from(ev.target.result)
             const image = new PIXI.Sprite(texture);
             image.name = 'bc'
+            image.zIndex = -1
             // 只能出现一个背景图，所以要删掉上一个
             app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
             app.stage.addChild(image)
