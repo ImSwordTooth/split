@@ -1,28 +1,24 @@
 import React, {PureComponent} from 'react'
-import PropTypes from 'prop-types'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import { changeMode, changeScale, changeDataMap, changeActiveId } from '../../store/action'
+import {changeMode, changeScale, changeDataMap, changeActiveId, changeEditId} from '../../store/action'
 import UploadImage from "../components/UploadImage";
 import {getAllChildren, hitTest, updateLineStyle} from "../utils/pixiUtils";
 import {getDataById} from "../utils/common";
 
 class ToolBar extends PureComponent {
 
-    static propTypes = {
-        app: PropTypes.object
-    }
-
     state = {
         hitObject: null
     }
 
     choose = () => {
-        const { app, scale } = this.props
+        const {  scale } = this.props
+        const { app } = window
         changeMode('choose')
         app.stage.cursor = 'default'
         app.stage.removeAllListeners()
-        const blocks = getAllChildren(app)
+        const blocks = getAllChildren()
         blocks.forEach((item, index) => {
             item.cursor = 'move'
             item.removeAllListeners()
@@ -42,7 +38,7 @@ class ToolBar extends PureComponent {
                             item.y += (endY - startY) / scale
                             activeData.x = item.x
                             activeData.y = item.y
-                            const children = getAllChildren(app, item)
+                            const children = getAllChildren(item)
                             if (children.length > 0) {
                                 for (let i=0; i<children.length; i++) {
                                     children[i].x += (endX - startX) / scale
@@ -66,7 +62,8 @@ class ToolBar extends PureComponent {
     }
 
     drawNormal = (e) => {
-        const { app, dataMap, scale } = this.props
+        const { dataMap, scale } = this.props
+        const { app } = window
         const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
         changeMode('rect')
         blocks.forEach(b => b.interactive = false)
@@ -122,6 +119,7 @@ class ToolBar extends PureComponent {
                     app.stage.addChild(shape)
 
                     changeActiveId(newId)
+                    changeEditId(newId)
                     changeDataMap(newDataMap)
                 } else {
                     // 没有命中，创建到总容器内
@@ -146,6 +144,7 @@ class ToolBar extends PureComponent {
                     shape.name = newId
                     app.stage.addChild(shape)
                     changeActiveId(newId)
+                    changeEditId(newId)
                 }
                 this.drawNormal()
             }
@@ -181,9 +180,8 @@ class ToolBar extends PureComponent {
     }
 
     findHit = (event) => {
-        const { app, dataMap } = this.props
         const { hitObject } = this.state
-        const hit = hitTest(event.data.global, app, dataMap)
+        const hit = hitTest(event.data.global)
         if (!hitObject || !hit || (hitObject && hit && hit.name !== hitObject.name)) {
             if (hitObject) {
                 hitObject.tint = 0xffffff
@@ -200,7 +198,8 @@ class ToolBar extends PureComponent {
 
 
     resize = (e, to) => {
-        const { app, scale } = this.props
+        const { scale } = this.props
+        const { app } = window
         // 要按 command
         if (e && !e.metaKey) {
             return
@@ -223,11 +222,11 @@ class ToolBar extends PureComponent {
     }
 
     test = () => {
-        this.props.app.stage.children.find(a => a.name === '1_1').hitFirst = true
+        // window.app.stage.children.find(a => a.name === '1_1').hitFirst = true
     }
 
     render() {
-        const { app, mode, scale } = this.props
+        const { mode, scale } = this.props
         return (
             <div>
                 <div className="toolbar">
@@ -237,7 +236,7 @@ class ToolBar extends PureComponent {
                         <span>当前缩放度：{scale}</span>
                         <button onClick={() => this.resizeTo( 0.5)}>缩放到50%</button>
                         <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
-                        <UploadImage app={app}/>
+                        <UploadImage />
                         <button onClick={this.test}>测试标记</button>
                     </div>
                     <div>

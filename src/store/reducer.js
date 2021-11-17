@@ -6,6 +6,8 @@ function reducer (state = defaultState, action) {
         case 'change_mode': return { ...state, mode: action.mode }
         case 'change_scale': return { ...state, scale: action.scale }
         case 'change_dataMap': return { ...state, dataMap: action.dataMap }
+        case 'change_editId': return { ...state, editId: action.editId }
+
         case 'change_activeId': return { ...state, activeId: action.activeId }
         case 'delete_data': {
             const ids = action.id.split('_')

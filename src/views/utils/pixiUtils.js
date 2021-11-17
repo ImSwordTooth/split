@@ -7,15 +7,13 @@ import {getDataById} from "./common";
  * @param {Number} point.x 横坐标
  * @param {Number} point.y 纵坐标
  *
- * @param {PIXI.Application}  app
- *
  * @return {Object} 点击命中的图形
  *
  * */
 
 
-export const hitTest = (point, app, dataList) => {
-    let allChildren = getAllChildren(app)
+export const hitTest = (point) => {
+    let allChildren = getAllChildren()
     const firstIndex = allChildren.findIndex(b => b.hitFirst)
     // 如果有被标记的图形，就把他置为首位
     if (firstIndex > -1) {
@@ -54,30 +52,13 @@ export const isPointInRect = (point, rect) => {
  * 获取某个图形对象下的所有层级的children
  *
  * */
-export const getAllChildren = (app, container) => {
-    let arr = []
+export const getAllChildren = (container) => {
+    const { app } = window
     if (container) {
         return app.stage.children.filter(a => /^\d(_\d)*$/g.test(a.name) && a.name.indexOf(container.name) === 0 && container.name !== a.name)
     } else {
         return app.stage.children.filter(a => /^\d(_\d)*$/g.test(a.name))
     }
-
-    //
-    // const getChildren = (obj, arr) => {
-    //     obj.children.forEach(o => {
-    //         if (/^\d(_\d)*$/g.test(o.name)) {
-    //             arr.push(o)
-    //             if (o.children && o.children.length > 0) {
-    //                 return getChildren(o, arr)
-    //             } else {
-    //                 return arr
-    //             }
-    //         }
-    //     })
-    // }
-    //
-    // getChildren(container, arr)
-    // return arr
 }
 
 export const updateLineStyle = (obj, lineWidth, color, alpha) => {

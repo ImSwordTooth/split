@@ -2,16 +2,15 @@ import React, {PureComponent} from "react";
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import Point from "./components/Point"
-import DataTree from "./components/DataTree";
+import DataTree from "./components/DataTree/index";
 import DragLine from "./components/DragLine/index";
 import ToolBar from "./ToolBar";
-import {changeActiveId, changeMode, changeScale, deleteData} from "../store/action";
+import { changeMode, changeScale, deleteData} from "../store/action";
 import { StyledApp } from './styles'
 import {getAllChildren} from "./utils/pixiUtils";
 
 class App extends PureComponent{
     state = {
-        app: null,
         rightWidth: 500,
         isMoveMode: false
     }
@@ -44,29 +43,27 @@ class App extends PureComponent{
         app.stage.addChild(image)
         app.stage.sortableChildren = true
         appElement.appendChild(app.view);
-        this.setState({
-            app,
-        })
         window.app = app
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', this.resize, false)
     }
 
     componentWillUnmount() {
-        const { app } = this.state
+        const { app } = window
         document.removeEventListener('keydown', this.keyEvent, false)
         document.removeEventListener('wheel', this.resize, false)
         app.stage.removeAllListeners()
     }
 
     keyEvent = (e) => {
-        const { app, isMoveMode } = this.state
-        const { scale, activeId, dataMap } = this.props
+        const { isMoveMode } = this.state
+        const { app } = window
+        const { scale, activeId } = this.props
         // Delete 并且选中了一个图形
         if (e.keyCode === 46 && activeId !== '') {
             const active = app.stage.children.find(a => activeId === a.name)
             app.stage.removeChild(active)
-            const children = getAllChildren(app, active)
+            const children = getAllChildren(active)
             for (let i=0; i<children.length; i++) {
                 app.stage.removeChild(children[i])
             }
@@ -128,7 +125,7 @@ class App extends PureComponent{
     }
 
     resize = (e, to) => {
-        const { app } = this.state
+        const { app } = window
         // 要按 command
         if (e && !e.metaKey) {
             return
@@ -152,14 +149,14 @@ class App extends PureComponent{
     }
 
     render() {
-        const { app, rightWidth } = this.state
+        const { rightWidth } = this.state
         return (
             <StyledApp>
-                <ToolBar app={app} />
+                <ToolBar />
                 <div className="main">
                     <div className="left">
                         <div className="operate" id="app">
-                            <Point app={app} />
+                            <Point />
                         </div>
                     </div>
                     <div className="data" style={{ width: `${rightWidth}px` }}>

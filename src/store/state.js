@@ -7,4 +7,5 @@ export const defaultState = {
         children: []
     },
     activeId: '', // 当前激活的图形的id
+    editId: '', // 修改名称的图形的id
 };

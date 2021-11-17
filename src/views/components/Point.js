@@ -16,13 +16,14 @@ class Point extends PureComponent {
     }
 
     componentWillUnmount() {
-        const { app } = this.props
+        const { app } = window
         const { pointGraphics } = this.state
         pointGraphics.forEach(p => app.stage.removeChild(p))
     }
 
     handlePoint = (e, point, i) => {
-        const { app, activeId, scale, dataMap } = this.props
+        const { app } = window
+        const { activeId, scale, dataMap } = this.props
         const graphics = app.stage.children.find(c => c.name === activeId)
         const data = getDataById(activeId, dataMap)
         const points = this.getPoints()
@@ -102,7 +103,7 @@ class Point extends PureComponent {
     }
 
     update = () => {
-        const { app } = this.props
+        const { app } = window
         const { pointGraphics } = this.state
         const points = this.getPoints()
 

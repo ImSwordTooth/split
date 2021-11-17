@@ -1,19 +1,14 @@
 import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
 import * as PIXI from 'pixi.js'
 
 class UploadImage extends PureComponent {
-
-    static propTypes = {
-        app: PropTypes.object
-    }
 
     upload = () => {
         document.getElementById("uploadImage").click()
     }
 
     finishUpload = (e) => {
-        const { app } = this.props
+        const { app } = window
         const [ file ] = e.currentTarget.files
         const reader = new FileReader();
         reader.readAsDataURL(file);
