@@ -43,7 +43,7 @@ class ToolBar extends PureComponent {
                                 for (let i=0; i<children.length; i++) {
                                     children[i].x += (endX - startX) / scale
                                     children[i].y += (endY - startY) / scale
-                                    const data = getDataById(children[i].name, activeData)
+                                    const data = getDataById(children[i].name, newDataMap)
                                     data.x = children[i].x
                                     data.y = children[i].y
                                 }
@@ -225,6 +225,11 @@ class ToolBar extends PureComponent {
         // window.app.stage.children.find(a => a.name === '1_1').hitFirst = true
     }
 
+    test2 = () => {
+        const res = getDataById('1_1', this.props.dataMap)
+        console.log(res)
+    }
+
     render() {
         const { mode, scale } = this.props
         return (
@@ -238,6 +243,7 @@ class ToolBar extends PureComponent {
                         <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
                         <UploadImage />
                         <button onClick={this.test}>测试标记</button>
+                        <button onClick={this.test2}>1_1</button>
                     </div>
                     <div>
                         <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>

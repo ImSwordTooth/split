@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Tree, Input } from 'antd'
-import {changeActiveId, changeDataMap, changeEditId, changeMode} from "../../../store/action";
+import { Tree, Input, message } from 'antd'
+import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../store/action";
 import Icon from "../Icon";
 import { StyledDataTree } from './styles'
 import {getDataById} from "../../utils/common";
@@ -122,6 +122,19 @@ class DataTree extends PureComponent {
         })
     }
 
+    drop = (e) => {
+        if(e.node.props.eventKey === '0' && !e.node.props.dragOver){
+            message.error('根元素只能为一个');
+        }else {
+            dragData({
+                dropOver: e.node.props.dragOver, // 是否拖拽到目标内部
+                originKey: e.dragNodesKeys, // 被拖拽的对象的key的列表（最后一位是当前对象）
+                targetKey: e.node.props.eventKey, // 拖拽目标key
+                dropPosition: e.node.props.dragOverGapTop ? 'top':'bottom' // 拖拽位置,不是top就是bottom
+            })
+        }
+    }
+
 
     render() {
         const { dataMap, activeId, editId } = this.props
@@ -130,20 +143,14 @@ class DataTree extends PureComponent {
             <StyledDataTree>
                 <Tree showIcon
                       draggable
+                      allowDrop={() => true}
                       selectedKeys={[activeId]}
                       expandedKeys={expandedKeys}
-                    // onDragStart={()=>{
-                    //     changeHoveredTag('');
-                    //     changeDrawer(false)
-                    // }}
-                    // onDrop={(e)=>this.drop(e)}
-                    // onSelect={(e)=>this.treeNodeonClick(e)}
-                    // onMouseEnter={(e)=>{changeHoveredTag(e.node.props.eventKey)}}
-                    // onMouseLeave={()=>{changeHoveredTag('')}}
                     // onRightClick={(e)=>this.treeNodeonRightClick(e)}
                       onExpand={this.handleExpand}
                       onRightClick={this.treeNodeOnRightClick}
                       onSelect={this.treeNodeOnClick}
+                      onDrop={this.drop}
                 >
                     {
                         dataMap && dataMap.children &&

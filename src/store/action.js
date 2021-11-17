@@ -7,4 +7,5 @@ export const changeEditId = editId => store.dispatch({ type: 'change_editId', ed
 
 export const changeDataMap = dataMap => store.dispatch({ type:'change_dataMap', dataMap })
 export const deleteData = id => store.dispatch({ type: 'delete_data', id })
+export const dragData = obj => store.dispatch({ type: 'drag_data', obj })
 

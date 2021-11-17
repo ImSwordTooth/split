@@ -115,7 +115,7 @@ class App extends PureComponent{
     }
 
     cancelMove = () => {
-        const { app } = this.state
+        const { app } = window
         app.stage.cursor = 'default'
         this.setState({
             isMoveMode: false
