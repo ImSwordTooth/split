@@ -2,16 +2,14 @@ import React, {PureComponent} from "react";
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import Point from "./components/Point"
-import DataTree from "./components/DataTree/index";
-import DragLine from "./components/DragLine/index";
 import ToolBar from "./ToolBar";
 import { changeMode, changeScale, deleteData} from "../store/action";
 import { StyledApp } from './styles'
 import {getAllChildren} from "./utils/pixiUtils";
+import Setting from "./components/Setting";
 
 class App extends PureComponent{
     state = {
-        rightWidth: 500,
         isMoveMode: false
     }
 
@@ -142,14 +140,7 @@ class App extends PureComponent{
         }
     }
 
-    handleWidthChange = (width) => {
-        this.setState({
-            rightWidth: width
-        })
-    }
-
     render() {
-        const { rightWidth } = this.state
         return (
             <StyledApp>
                 <ToolBar />
@@ -159,9 +150,8 @@ class App extends PureComponent{
                             <Point />
                         </div>
                     </div>
-                    <div className="data" style={{ width: `${rightWidth}px` }}>
-                        <DragLine width={rightWidth} onChange={this.handleWidthChange}/>
-                        <DataTree />
+                    <div className="data">
+                        <Setting />
                     </div>
                 </div>
             </StyledApp>

@@ -7,6 +7,7 @@ function reducer (state = defaultState, action) {
         case 'change_scale': return { ...state, scale: action.scale }
         case 'change_dataMap': return { ...state, dataMap: action.dataMap }
         case 'change_editId': return { ...state, editId: action.editId }
+        case 'change_settingWidth': return { ...state, settingWidth: action.settingWidth }
 
         case 'change_activeId': return { ...state, activeId: action.activeId }
         case 'delete_data': {

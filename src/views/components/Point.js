@@ -119,6 +119,7 @@ class Point extends PureComponent {
                     point.name = `point`
                     app.stage.addChild(point)
                     arr.push(point)
+                    point.cursor = i % 2 === 0 ? 'nwse-resize' : 'nesw-resize'
                     point.on('pointerdown', (e) => this.handlePoint(e, point, i))
                 }
                 point.x = points[i].x

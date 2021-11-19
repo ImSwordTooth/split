@@ -5,14 +5,6 @@ export const StyledApp = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-    
-  .toolbar {
-    height: 48px;
-    background-color: #e5e5e5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
 
   .main {
     display: flex;
@@ -36,13 +28,4 @@ export const StyledApp = styled.div`
     position: relative;
     height: 100%;
   }
-
-  .toolbar .active {
-    background-color: greenyellow;
-  }
-
-  .data .list > li.active {
-    color: red;
-  }
-
 `

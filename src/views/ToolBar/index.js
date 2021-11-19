@@ -3,8 +3,9 @@ import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import {changeMode, changeScale, changeDataMap, changeActiveId, changeEditId} from '../../store/action'
 import UploadImage from "../components/UploadImage";
-import {getAllChildren, hitTest, updateLineStyle} from "../utils/pixiUtils";
-import {getDataById} from "../utils/common";
+import {hitTest} from "../utils/pixiUtils";
+import {getDataById,startChoose} from "../utils/common";
+import { StyledToolbar } from './styles'
 
 class ToolBar extends PureComponent {
 
@@ -12,56 +13,7 @@ class ToolBar extends PureComponent {
         hitObject: null
     }
 
-    choose = () => {
-        const {  scale } = this.props
-        const { app } = window
-        changeMode('choose')
-        app.stage.cursor = 'default'
-        app.stage.removeAllListeners()
-        const blocks = getAllChildren()
-        blocks.forEach((item, index) => {
-            item.cursor = 'move'
-            item.removeAllListeners()
-            item.interactive = true
-            item.on('pointerdown',  (event) => {
-                const { dataMap } = this.props
-                let ing = true
-                let { x: startX, y: startY } = {...event.data.global}
-                const newDataMap = {...dataMap}
-                const activeData = getDataById(item.name, newDataMap)
-                if (activeData) {
-                    changeActiveId(item.name)
-                    item.on('pointermove',  (event) => {
-                        if (ing) {
-                            const { x: endX, y: endY } = {...event.data.global}
-                            item.x += (endX - startX) / scale
-                            item.y += (endY - startY) / scale
-                            activeData.x = item.x
-                            activeData.y = item.y
-                            const children = getAllChildren(item)
-                            if (children.length > 0) {
-                                for (let i=0; i<children.length; i++) {
-                                    children[i].x += (endX - startX) / scale
-                                    children[i].y += (endY - startY) / scale
-                                    const data = getDataById(children[i].name, newDataMap)
-                                    data.x = children[i].x
-                                    data.y = children[i].y
-                                }
-                            }
-
-                            changeDataMap(newDataMap)
-                            startX = endX
-                            startY = endY
-                        }
-                    })
-                    item.on('pointerup', () => { ing = false })
-                    item.on('pointerupoutside', () => { ing = false })
-                }
-            })
-        })
-    }
-
-    drawNormal = (e) => {
+    drawNormal = () => {
         const { dataMap, scale } = this.props
         const { app } = window
         const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
@@ -233,25 +185,22 @@ class ToolBar extends PureComponent {
     render() {
         const { mode, scale } = this.props
         return (
-            <div>
-                <div className="toolbar">
-                    <div>
-                        <button onClick={this.choose} className={mode === 'choose' ? 'active': ''}>选择</button>
-                        <button onClick={this.drawNormal} className={mode === 'rect' ? 'active': ''}>矩形</button>
-                        <span>当前缩放度：{scale}</span>
-                        <button onClick={() => this.resizeTo( 0.5)}>缩放到50%</button>
-                        <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
-                        <UploadImage />
-                        <button onClick={this.test}>测试标记</button>
-                        <button onClick={this.test2}>1_1</button>
-                    </div>
-                    <div>
-                        <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>
-                        <span>command+滚轮放大缩小</span>
-                    </div>
-
+            <StyledToolbar>
+                <div>
+                    <button onClick={startChoose} className={mode === 'choose' ? 'active': ''}>选择</button>
+                    <button onClick={this.drawNormal} className={mode === 'rect' ? 'active': ''}>矩形</button>
+                    <span>当前缩放度：{scale}</span>
+                    <button onClick={() => this.resizeTo( 0.5)}>缩放到50%</button>
+                    <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
+                    <UploadImage />
+                    <button onClick={this.test}>测试标记</button>
+                    <button onClick={this.test2}>1_1</button>
                 </div>
-            </div>
+                <div>
+                    <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>
+                    <span>command+滚轮放大缩小</span>
+                </div>
+            </StyledToolbar>
         )
     }
 }

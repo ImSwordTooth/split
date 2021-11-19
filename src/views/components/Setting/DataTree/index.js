@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Tree, Input, message } from 'antd'
-import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../store/action";
-import Icon from "../Icon";
+import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../../store/action";
+import Icon from "../../Icon";
 import { StyledDataTree } from './styles'
-import {getDataById} from "../../utils/common";
+import {getDataById, startChoose} from "../../../utils/common";
 
 const { TreeNode } = Tree
 
@@ -85,12 +85,11 @@ class DataTree extends PureComponent {
     treeNodeOnClick = (keys, e) => {
         changeActiveId(e.node.key)
         changeEditId('')
-        // TODO watch 一下
-        changeMode('choose')
+        startChoose()
     }
 
-    treeNodeOnRightClick = (e) => {
-        const id = e.node.key
+    treeNodeOnRightClick = (e, treeNode) => {
+        const id = treeNode.key
         changeActiveId(id)
         changeEditId(id)
     }
@@ -148,7 +147,7 @@ class DataTree extends PureComponent {
                       expandedKeys={expandedKeys}
                     // onRightClick={(e)=>this.treeNodeonRightClick(e)}
                       onExpand={this.handleExpand}
-                      onRightClick={this.treeNodeOnRightClick}
+                      onDoubleClick={this.treeNodeOnRightClick}
                       onSelect={this.treeNodeOnClick}
                       onDrop={this.drop}
                 >
