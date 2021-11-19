@@ -1,9 +1,12 @@
 import React, {PureComponent} from 'react'
 import DragLine from "../../DragLine";
 import { StyledProperty } from './styles'
-import { Tabs } from 'antd'
+import { Tabs, Breadcrumb } from 'antd'
 import Maidian from "./Maidian";
 import { connect } from 'react-redux'
+import {getDataById} from "../../../utils/common";
+import { changeActiveId } from '../../../../store/action'
+import Icon from "../../Icon";
 
 const { TabPane } = Tabs
 
@@ -29,6 +32,41 @@ class Setting extends PureComponent {
         return width > 300 ? width : 300
     }
 
+    getPath = ()=>{
+        const { activeId, dataMap } = this.props
+        let path = [];
+        if (activeId !== '' && activeId !== '0') {
+            let selectedKeyArr = activeId.split('_');
+            for (let i=0; i<selectedKeyArr.length; i++){
+                let data = getDataById(selectedKeyArr.slice(0,i+1).join('_'), dataMap);
+                path.push({
+                    id: data.id,
+                    icon: 'div',
+                    name: data.name
+                })
+            }
+        }
+        return (
+            <Breadcrumb separator={'>'}>
+                <Breadcrumb.Item onClick={() => changeActiveId('0')}>
+                    <Icon icon="all" />
+                    总容器
+                </Breadcrumb.Item>
+                {
+                    path.map((item,index)=>{
+                        return (
+                            <Breadcrumb.Item key={index} onClick={() => changeActiveId(item.id)}>
+                                <Icon icon={item.icon} />
+                                {item.name}
+                            </Breadcrumb.Item>
+                        )
+                    })
+                }
+            </Breadcrumb>
+        )
+    }
+
+
     render() {
         const { settingWidth } = this.props
         const finalWidth = this.getWidth()
@@ -36,7 +74,7 @@ class Setting extends PureComponent {
         return (
             <StyledProperty width={finalWidth}>
                 <DragLine width={finalWidth} min={300} max={Math.max(settingWidth * 0.4, settingWidth - 200)} onChange={this.handleWidthChange}/>
-                <div style={{ padding: '0 10px 0' }}>
+                <div className="main" >
                     <Tabs size="small">
                         <TabPane
                             tab={<div className="tabDiv">组件</div>}
@@ -49,16 +87,16 @@ class Setting extends PureComponent {
                             <Maidian/>
                         </TabPane>
                     </Tabs>
+                    <div className="breadcrumb">{this.getPath()}</div>
                 </div>
-
             </StyledProperty>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { settingWidth } = state;
-    return { settingWidth }
+    const { activeId, settingWidth, dataMap } = state;
+    return { activeId, settingWidth, dataMap }
 }
 
 export default connect(mapStateToProps)(Setting)

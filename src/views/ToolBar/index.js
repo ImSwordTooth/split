@@ -145,9 +145,7 @@ class ToolBar extends PureComponent {
                 hitObject: hit
             })
         }
-
     }
-
 
     resize = (e, to) => {
         const { scale } = this.props

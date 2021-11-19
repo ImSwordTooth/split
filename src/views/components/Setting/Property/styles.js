@@ -7,7 +7,43 @@ export const StyledProperty = styled.div`
   height: 100%;
   z-index: 2;
   background-color: #ffffff;
-  padding: 4px 0 10px;
+  padding: 4px 0 0;
+  
+  .main {
+    height: 100%;
+    padding: 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    
+    .breadcrumb {
+      white-space: nowrap;
+      overflow: auto hidden;
+      
+      .ant-breadcrumb > span {
+        display: inline-flex;
+        align-items: center;
+
+        .ant-breadcrumb-link {
+          display: inline-flex;
+          align-items: center;
+          cursor: pointer;
+          font-size: 12px;
+          height: 24px;
+          border-radius: 4px;
+          padding-right: 1px;
+
+          &:hover {
+            background-color: #f5f5f5;
+          }
+        }
+        
+        .ant-breadcrumb-separator {
+          margin: 0 4px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
 
   .ant-tabs-tab {
 
