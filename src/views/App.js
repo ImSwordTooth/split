@@ -6,7 +6,7 @@ import ToolBar from "./ToolBar";
 import { changeMode, changeScale, deleteData} from "../store/action";
 import { StyledApp } from './styles'
 import {getAllChildren} from "./utils/pixiUtils";
-import Setting from "./components/Setting";
+import Setting from "./Setting";
 
 class App extends PureComponent{
     state = {
@@ -57,6 +57,10 @@ class App extends PureComponent{
         const { isMoveMode } = this.state
         const { app } = window
         const { scale, activeId } = this.props
+        const ignoreTag = ['input', 'textarea', 'select', 'button']
+        if (ignoreTag.includes(e.target.tagName.toLowerCase())) {
+            return
+        }
         // Delete 并且选中了一个图形
         if (e.keyCode === 46 && activeId !== '') {
             const active = app.stage.children.find(a => activeId === a.name)

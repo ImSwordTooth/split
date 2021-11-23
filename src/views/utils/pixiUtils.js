@@ -1,5 +1,3 @@
-import {getDataById} from "./common";
-
 /**
  * 判断点击的是哪个图形，按照图形创建顺序倒叙
  *

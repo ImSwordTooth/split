@@ -6,11 +6,41 @@ import UploadImage from "../components/UploadImage";
 import {hitTest} from "../utils/pixiUtils";
 import {getDataById,startChoose} from "../utils/common";
 import { StyledToolbar } from './styles'
+import {Button, message} from "antd";
 
 class ToolBar extends PureComponent {
 
     state = {
         hitObject: null
+    }
+
+    componentDidMount() {
+        document.addEventListener('keydown', this.keyEvent, false)
+    }
+
+    componentWillUnmount() {
+        const { app } = window
+        document.removeEventListener('keydown', this.keyEvent, false)
+        app.stage.removeAllListeners()
+    }
+
+    keyEvent = (e) => {
+        const { mode } = this.props
+
+        // Esc 取消创建
+        if (e.keyCode === 27 && mode === 'rect') {
+            startChoose()
+        }
+
+        // ---------------  在文本框等内不监听的情况
+        const ignoreTag = ['input', 'textarea', 'select', 'button']
+        if (ignoreTag.includes(e.target.tagName.toLowerCase())) {
+            return
+        }
+        // R 创建矩形
+        if (e.keyCode === 82 && mode !== 'rect') {
+            this.drawNormal()
+        }
     }
 
     drawNormal = () => {
@@ -180,6 +210,12 @@ class ToolBar extends PureComponent {
         console.log(res)
     }
 
+    print = () => {
+        const { dataMap } = this.props
+        message.success('已打印到控制台')
+        console.log('dataMap：', dataMap)
+    }
+
     render() {
         const { mode, scale } = this.props
         return (
@@ -196,7 +232,8 @@ class ToolBar extends PureComponent {
                 </div>
                 <div>
                     <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>
-                    <span>command+滚轮放大缩小</span>
+                    <span style={{marginRight: '20px'}}>command+滚轮放大缩小</span>
+                    <Button type="primary" onClick={this.print}>数据</Button>
                 </div>
             </StyledToolbar>
         )

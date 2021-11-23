@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Tree, Input, message } from 'antd'
-import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../../store/action";
-import Icon from "../../Icon";
+import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../store/action";
+import Icon from "../../components/Icon";
 import { StyledDataTree } from './styles'
-import {getDataById, startChoose} from "../../../utils/common";
+import {getDataById, startChoose} from "../../utils/common";
 
 const { TreeNode } = Tree
 
@@ -133,7 +133,6 @@ class DataTree extends PureComponent {
             })
         }
     }
-
 
     render() {
         const { dataMap, activeId, editId } = this.props

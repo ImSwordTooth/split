@@ -1,6 +1,7 @@
 import store from '../../store'
-import {changeActiveId, changeDataMap, changeMode} from "../../store/action";
+import {changeActiveId, changeDataMap, changeEditId, changeMode} from "../../store/action";
 import {getAllChildren} from "./pixiUtils";
+import PIXI from "pixi.js";
 
 export const getDataById = (id, obj, isPixi = false) => {
     const key = isPixi ? 'name': 'id'

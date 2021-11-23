@@ -9,16 +9,16 @@ class Point extends PureComponent {
         pointGraphics: []
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.activeId !== this.props.activeId || prevProps.dataMap !== this.props.dataMap) {
-            this.update()
-        }
-    }
-
     componentWillUnmount() {
         const { app } = window
         const { pointGraphics } = this.state
         pointGraphics.forEach(p => app.stage.removeChild(p))
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.activeId !== this.props.activeId || prevProps.dataMap !== this.props.dataMap) {
+            this.update()
+        }
     }
 
     handlePoint = (e, point, i) => {
