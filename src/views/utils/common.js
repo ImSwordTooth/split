@@ -1,26 +1,27 @@
 import store from '../../store'
-import {changeActiveId, changeDataMap, changeEditId, changeMode} from "../../store/action";
+import {changeActiveId, changeDataMap, changeMode} from "../../store/action";
 import {getAllChildren} from "./pixiUtils";
-import PIXI from "pixi.js";
 
-export const getDataById = (id, obj, isPixi = false) => {
-    const key = isPixi ? 'name': 'id'
-    if (obj[key] === id){
+// 通过id从树中获取object
+export const getDataById = (id, obj) => {
+    if (obj.id === id){
         return obj;
     } else {
         for (let i=0; i<obj.children.length;i++){
-            if (id.indexOf(obj.children[i][key]) === 0){
-                return getDataById(id, obj.children[i], isPixi);
+            if (id.split('_').length === 1) {
+                if (id === obj.children[i].id){
+                    return getDataById(id, obj.children[i]);
+                }
+            } else {
+                if (id.indexOf(obj.children[i].id + '_') === 0 || id === obj.children[i].id){
+                    return getDataById(id, obj.children[i]);
+                }
             }
         }
     }
 }
 
-
-/**
- * 切换到选择模式
- *
- * */
+// 切换到选择模式
 export const startChoose = () => {
     const { app } = window
     changeMode('choose')
@@ -67,4 +68,17 @@ export const startChoose = () => {
             }
         })
     })
+}
+
+// 生成随机的 hex 颜色
+export const getRandomColor = () => {
+    let r = Math.floor(Math.random()*256);
+    let g = Math.floor(Math.random()*256);
+    let b = Math.floor(Math.random()*256);
+    return '#'+(Array(6).join(0) + (r.toString(16)+g.toString(16)+b.toString(16))).slice(-6);
+}
+
+// hex 颜色 -> pixi 颜色
+export const hex2PixiColor = (color) => {
+    return parseInt(color.replace('#', '0x'), 16)
 }

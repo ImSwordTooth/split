@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {changeMode, changeScale, changeDataMap, changeActiveId, changeEditId} from '../../store/action'
 import UploadImage from "../components/UploadImage";
 import {hitTest} from "../utils/pixiUtils";
-import {getDataById,startChoose} from "../utils/common";
+import {getDataById, getRandomColor, hex2PixiColor, startChoose} from "../utils/common";
 import { StyledToolbar } from './styles'
 import {Button, message} from "antd";
 
@@ -55,14 +55,16 @@ class ToolBar extends PureComponent {
         let ing = false
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
+        const color = getRandomColor()
+        const pixiColor = hex2PixiColor(color)
 
         const handleEnd = (event) => {
             if (ing) {
                 const end = {...event.data.global}
                 const shape = new PIXI.Graphics()
                 app.stage.removeChild(duringRect)
-                shape.lineStyle(2, 0x1099bb, .85)
-                shape.beginFill(0x1099bb, 0.1)
+                shape.lineStyle(2, pixiColor, 1)
+                shape.beginFill(pixiColor, 0.2)
                 const width = Math.abs(end.x-start.x) / scale
                 const height = Math.abs(end.y-start.y) / scale
                 shape.drawRect(
@@ -92,6 +94,7 @@ class ToolBar extends PureComponent {
                         width,
                         height,
                         children: [],
+                        color,
                         willCreateKey: 1
                     })
                     parent.willCreateKey++
@@ -119,6 +122,7 @@ class ToolBar extends PureComponent {
                                 width,
                                 height,
                                 children: [],
+                                color,
                                 willCreateKey: 1
                             }
                         ]
@@ -145,8 +149,8 @@ class ToolBar extends PureComponent {
                 if (ing) {
                     const current = {...event.data.global}
                     duringRect.clear()
-                    duringRect.lineStyle(2, 0x1099bb, 1)
-                    duringRect.beginFill(0x1099bb, 0.1)
+                    duringRect.lineStyle(2, pixiColor, 1)
+                    duringRect.beginFill(pixiColor, 0.2)
                     duringRect.drawRect(
                         (start.x - app.stage.x) / app.stage.scale.x,
                         (start.y - app.stage.y) / app.stage.scale.y,
@@ -169,7 +173,7 @@ class ToolBar extends PureComponent {
                 hitObject.tint = 0xffffff
             }
             if (hit) {
-                hit.tint = 0x7c7c7c;
+                hit.tint = 0xc7c7c7;
             }
             this.setState({
                 hitObject: hit

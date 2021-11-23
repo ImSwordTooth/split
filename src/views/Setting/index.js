@@ -6,10 +6,6 @@ import Property from "./Property";
 import {changeSettingWidth} from "../../store/action";
 
 class EditPart extends PureComponent {
-    state = {
-        width: 500,
-    }
-
     render() {
         const { settingWidth } = this.props
         return (

@@ -74,6 +74,7 @@ class App extends PureComponent{
 
         // 空格 并且没有在移动模式
         if(e.keyCode === 32 && !isMoveMode) {
+            e.stopPropagation()
             app.stage.cursor = 'grab'
             changeMode('choose')
             this.setState({ // 改为选择模式

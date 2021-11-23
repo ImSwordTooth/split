@@ -1,17 +1,19 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Tree, Input, message } from 'antd'
+import {Tree, Input, message, Popover} from 'antd'
 import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../store/action";
 import Icon from "../../components/Icon";
 import { StyledDataTree } from './styles'
 import {getDataById, startChoose} from "../../utils/common";
+import {updateLineStyle} from "../../utils/pixiUtils";
 
 const { TreeNode } = Tree
 
 class DataTree extends PureComponent {
 
     state = {
-        expandedKeys: ['0']
+        expandedKeys: ['0'],
+        isVisible: false
     }
     
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -43,7 +45,13 @@ class DataTree extends PureComponent {
             <TreeNode
                 key={val.id}
                 className={this.getClassName(val.id)}
-                icon={<Icon icon="div" />}
+                icon={
+                    <Popover visible={this.state.isVisible} trigger={['click']} content="content">
+                        <div onClick={() => this.setState({ isVisible: true })}>
+                            <Icon icon="div" color={val.color}/>
+                        </div>
+                    </Popover>
+                }
                 title={
                     editId === val.id
                         ? 
@@ -88,7 +96,7 @@ class DataTree extends PureComponent {
         startChoose()
     }
 
-    treeNodeOnRightClick = (e, treeNode) => {
+    treeNodeOnDoubleClick = (e, treeNode) => {
         const id = treeNode.key
         changeActiveId(id)
         changeEditId(id)
@@ -134,6 +142,25 @@ class DataTree extends PureComponent {
         }
     }
 
+    treeNodeonRightClick = (e) => {
+        // const { activeId, dataMap } = this.props
+        // const { app } = window
+        // const graphics = app.stage.children.find(a => a.name === e.node.key)
+        // graphics.clear()
+        // graphics.lineStyle(2, 0xff0000, .85)
+        // graphics.beginFill(0x1099bb, 0.1)
+        // const data = getDataById(activeId, dataMap)
+        // graphics.drawRect(
+        //     0,
+        //     0,
+        //     data.width,
+        //     data.height
+        // )
+        // graphics.endFill()
+        // updateLineStyle(graphics, 2, 0xff0000, 1)
+        
+    }
+
     render() {
         const { dataMap, activeId, editId } = this.props
         const { expandedKeys } = this.state
@@ -144,9 +171,9 @@ class DataTree extends PureComponent {
                       allowDrop={() => true}
                       selectedKeys={[activeId]}
                       expandedKeys={expandedKeys}
-                    // onRightClick={(e)=>this.treeNodeonRightClick(e)}
+                      onRightClick={this.treeNodeonRightClick}
                       onExpand={this.handleExpand}
-                      onDoubleClick={this.treeNodeOnRightClick}
+                      onDoubleClick={this.treeNodeOnDoubleClick}
                       onSelect={this.treeNodeOnClick}
                       onDrop={this.drop}
                 >

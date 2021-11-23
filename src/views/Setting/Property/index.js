@@ -39,11 +39,13 @@ class Setting extends PureComponent {
             let selectedKeyArr = activeId.split('_');
             for (let i=0; i<selectedKeyArr.length; i++){
                 let data = getDataById(selectedKeyArr.slice(0,i+1).join('_'), dataMap);
-                path.push({
-                    id: data.id,
-                    icon: 'div',
-                    name: data.name
-                })
+                if (data) {
+                    path.push({
+                        id: data.id,
+                        icon: 'div',
+                        name: data.name
+                    })
+                }
             }
         }
         return (
