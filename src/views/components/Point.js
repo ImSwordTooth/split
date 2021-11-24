@@ -2,7 +2,7 @@ import { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import { changeDataMap } from '../../store/action'
-import { getDataById, hex2PixiColor } from '../utils/common'
+import {getDataById, hex2PixiColor, startChoose} from '../utils/common'
 
 class Point extends PureComponent {
     state = {
@@ -23,13 +23,17 @@ class Point extends PureComponent {
 
     handlePoint = (e, point, i) => {
         const { app } = window
-        const { activeId, scale, dataMap } = this.props
+        const { mode, activeId, scale, dataMap } = this.props
+        if (mode !== 'choose') {
+            startChoose()
+        }
         const graphics = app.stage.children.find(c => c.name === activeId)
         const data = getDataById(activeId, dataMap)
         const points = this.getPoints()
         let { x: startX, y: startY } = {...e.data.global}
 
         point.on('pointermove', (e) => {
+            e.data.originalEvent.preventDefault()
             const { x: endX, y: endY } = {...e.data.global}
             const deltaX = endX - startX
             const deltaY = endY - startY
@@ -173,8 +177,8 @@ class Point extends PureComponent {
 
 
 function mapStateToProps(state) {
-    const { scale, activeId,  dataMap } = state;
-    return { scale, activeId, dataMap: {...dataMap} }
+    const { mode, scale, activeId,  dataMap } = state;
+    return { mode, scale, activeId, dataMap: {...dataMap} }
 }
 
 export default connect(mapStateToProps)(Point)

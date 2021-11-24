@@ -13,12 +13,6 @@ import store from '../../store'
  * */
 export const hitTest = (point) => {
     let allChildren = getAllChildren()
-    const firstIndex = allChildren.findIndex(b => b.hitFirst)
-    // 如果有被标记的图形，就把他置为首位
-    if (firstIndex > -1) {
-        const first = allChildren.splice(firstIndex, 1)
-        allChildren.push(first[0])
-    }
     for (let i=allChildren.length - 1; i>=0; i--) {
         const block = allChildren[i]
         const isIn = isPointInRect(point, { ...block.getLocalBounds(), x: block.x, y: block.y })

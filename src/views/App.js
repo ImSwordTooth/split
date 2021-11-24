@@ -5,6 +5,7 @@ import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
 import { changeMode, changeParentId, changeScale, deleteData } from '../store/action'
+import { resize } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
 
@@ -43,13 +44,13 @@ class App extends PureComponent{
         appElement.appendChild(app.view);
         window.app = app
         document.addEventListener('keydown', this.keyEvent, false)
-        document.addEventListener('wheel', this.resize, false)
+        document.addEventListener('wheel', resize, false)
     }
 
     componentWillUnmount() {
         const { app } = window
         document.removeEventListener('keydown', this.keyEvent, false)
-        document.removeEventListener('wheel', this.resize, false)
+        document.removeEventListener('wheel', resize, false)
         app.stage.removeAllListeners()
     }
 
@@ -133,12 +134,13 @@ class App extends PureComponent{
     }
 
     resize = (e, to) => {
+        const { scale } = this.props
         const { app } = window
         // 要按 command
         if (e && !e.metaKey) {
             return
         }
-        const { x, y, scale } = app.stage
+        const { x, y } = app.stage
         const newScale = to || Number((scale.y - e.deltaY / 300).toFixed(2))
         if (newScale <= 4 && newScale >= 0.1) {
             app.stage.setTransform(x,y, newScale, newScale)
@@ -149,6 +151,8 @@ class App extends PureComponent{
             changeScale(newScale)
         }
     }
+
+
 
     render() {
         return (

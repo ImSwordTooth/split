@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import { Button, message, Select, Tooltip } from 'antd'
+import { Button, message, Select, Tooltip, Popover } from 'antd'
 import UploadImage from '../components/UploadImage'
 import Icon from '../components/Icon'
 import { changeMode, changeScale, changeDataMap, changeActiveId, changeEditId, changeParentId } from '../../store/action'
-import { copyText, getDataById, getRandomColor, hex2PixiColor, startChoose } from '../utils/common'
+import {copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose} from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
@@ -75,7 +75,7 @@ class ToolBar extends PureComponent {
 
                 const shape = new PIXI.Graphics()
                 app.stage.removeChild(duringRect)
-                if (end.x-start.x <2 && end.y-start.y < 2) {
+                if (Math.abs(end.x - start.x) < 2 && Math.abs(end.y-start.y) < 2) {
                     return
                 }
                 shape.lineStyle(4, pixiColor, 1)
@@ -200,28 +200,8 @@ class ToolBar extends PureComponent {
         }
     }
 
-    resize = (e, to) => {
-        const { scale } = this.props
-        const { app } = window
-        // 要按 command
-        if (e && !e.metaKey) {
-            return
-        }
-        const { x, y } = app.stage
-        const newScale = to || Number((scale.y - e.deltaY / 300).toFixed(2))
-        if (newScale <= 4 && newScale >= 0.1) {
-            app.stage.setTransform(x,y, newScale, newScale)
-            app.stage.hitArea.x = -app.stage.x / newScale
-            app.stage.hitArea.y = -app.stage.y / newScale
-            app.stage.hitArea.width = app.view.width / newScale
-            app.stage.hitArea.height = app.view.height / newScale
-
-            changeScale(newScale)
-        }
-    }
-
     resizeTo = e => {
-        this.resize(null, e.value)
+        resize(null, e.value)
     }
 
     print = () => {
@@ -242,12 +222,12 @@ class ToolBar extends PureComponent {
             const index = SCALE_LIST.findIndex(s => s >= scale)
 
             if (index > 0) {
-               this.resize(null, SCALE_LIST[index - 1])
+               resize(null, SCALE_LIST[index - 1])
             }
         } else {
             const index = SCALE_LIST.findIndex(s => s > scale)
             if (index < SCALE_LIST.length) {
-                this.resize(null, SCALE_LIST[index])
+                resize(null, SCALE_LIST[index])
             }
         }
     }
@@ -306,19 +286,18 @@ class ToolBar extends PureComponent {
                     </Tooltip>
                 </div>
                 <div>
-                    <Tooltip title={
+                    <Popover content={
                         <div style={{ fontSize: '12px' }}>
-                            <ul style={{paddingBottom: 0, paddingLeft: '14px'}}>
-                                <li>空格+鼠标拖拽移动画布</li>
-                                <li>command+滚轮放大缩小</li>
+                            <ul style={{paddingBottom: 0, paddingLeft: '14px', margin: 0}}>
+                                <li>空格 + 鼠标拖拽移动画布</li>
+                                <li>command + 滚轮放大缩小</li>
+                                <li>delete 删除图形</li>
                                 <li>移动图形时按住 command 可单独移动</li>
                             </ul>
                         </div>
                     }>
-                        <Button className="btn">
-                            <Icon icon="tip"/>
-                        </Button>
-                    </Tooltip>
+                        <button className="btn"><Icon icon="tip"/></button>
+                    </Popover>
                     <div className="resize">
                         <button data-type="-" className="btn" style={{ margin: '0 2px' }} onClick={this.clickToScale}>-</button>
                         <Select

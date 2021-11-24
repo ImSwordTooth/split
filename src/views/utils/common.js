@@ -1,6 +1,6 @@
 import store from '../../store'
-import { changeActiveId, changeDataMap, changeMode } from '../../store/action'
-import { getAllChildren } from './pixiUtils'
+import {changeActiveId, changeDataMap, changeMode, changeScale} from '../../store/action'
+import {getAllChildren, hitTest} from './pixiUtils'
 
 // 通过id从树中获取object
 export const getDataById = (id, obj) => {
@@ -72,6 +72,26 @@ export const startChoose = () => {
             }
         })
     })
+}
+
+export const  resize = (e, to) => {
+    const { app } = window
+    const { scale } = store.getState()
+    // 要按 command
+    if (e && !e.metaKey) {
+        return
+    }
+    const { x, y } = app.stage
+    const newScale = to || Number((scale - e.deltaY / 300).toFixed(2))
+    if (newScale <= 4 && newScale >= 0.1) {
+        app.stage.setTransform(x,y, newScale, newScale)
+        app.stage.hitArea.x = -app.stage.x / newScale
+        app.stage.hitArea.y = -app.stage.y / newScale
+        app.stage.hitArea.width = app.view.width / newScale
+        app.stage.hitArea.height = app.view.height / newScale
+
+        changeScale(newScale)
+    }
 }
 
 // 生成随机的 hex 颜色

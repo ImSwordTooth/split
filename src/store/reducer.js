@@ -12,8 +12,11 @@ function reducer (state = defaultState, action) {
 
         case 'change_activeId': {
             const { app } = window
-            app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point').forEach(a => a.zIndex = 0)
-            app.stage.children.find(c => c.name === action.activeId).zIndex = 999
+            const { activeId } = action
+            if (activeId !== '' && activeId !== '0') {
+                app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point').forEach(a => a.zIndex = 0)
+                app.stage.children.find(c => c.name === action.activeId).zIndex = 999
+            }
             return { ...state, activeId: action.activeId }
         }
         case 'delete_data': {
