@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import DragLine from "../components/DragLine";
-import DataTree from "./DataTree";
-import Property from "./Property";
-import {changeSettingWidth} from "../../store/action";
+import DataTree from './DataTree'
+import Property from './Property'
+import DragLine from '../components/DragLine'
+import { changeSettingWidth } from '../../store/action'
 
 class EditPart extends PureComponent {
     render() {

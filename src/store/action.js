@@ -4,6 +4,7 @@ export const changeMode = mode => store.dispatch({ type:'change_mode', mode })
 export const changeScale = scale => store.dispatch({ type:'change_scale', scale })
 export const changeActiveId = activeId => store.dispatch({ type:'change_activeId', activeId })
 export const changeEditId = editId => store.dispatch({ type: 'change_editId', editId })
+export const changeParentId = parentId => store.dispatch({ type: 'change_parentId', parentId })
 export const changeSettingWidth = settingWidth => store.dispatch({ type: 'change_settingWidth', settingWidth })
 
 export const changeDataMap = dataMap => store.dispatch({ type:'change_dataMap', dataMap })

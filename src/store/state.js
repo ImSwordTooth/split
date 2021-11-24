@@ -8,5 +8,6 @@ export const defaultState = {
     },
     activeId: '', // 当前激活的图形的id
     editId: '', // 修改名称的图形的id
+    parentId: '', // 强制的父容器的id
     settingWidth: 600 // 设置面板宽度
 };

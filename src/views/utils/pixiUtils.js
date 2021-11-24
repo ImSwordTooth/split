@@ -1,5 +1,5 @@
-import {getDataById} from "./common";
-import store from "../../store";
+import { getDataById } from './common'
+import store from '../../store'
 
 /**
  * 判断点击的是哪个图形，按照图形创建顺序倒叙
@@ -11,8 +11,6 @@ import store from "../../store";
  * @return {Object} 点击命中的图形
  *
  * */
-
-
 export const hitTest = (point) => {
     let allChildren = getAllChildren()
     const firstIndex = allChildren.findIndex(b => b.hitFirst)

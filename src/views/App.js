@@ -1,12 +1,12 @@
-import React, {PureComponent} from "react";
+import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import Point from "./components/Point"
-import ToolBar from "./ToolBar";
-import { changeMode, changeScale, deleteData} from "../store/action";
+import ToolBar from './ToolBar'
+import Setting from './Setting'
+import Point from './components/Point'
+import { changeMode, changeParentId, changeScale, deleteData } from '../store/action'
+import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
-import {getAllChildren} from "./utils/pixiUtils";
-import Setting from "./Setting";
 
 class App extends PureComponent{
     state = {
@@ -56,7 +56,7 @@ class App extends PureComponent{
     keyEvent = (e) => {
         const { isMoveMode } = this.state
         const { app } = window
-        const { scale, activeId } = this.props
+        const { scale, activeId, parentId } = this.props
         const ignoreTag = ['input', 'textarea', 'select', 'button']
         if (ignoreTag.includes(e.target.tagName.toLowerCase())) {
             return
@@ -69,11 +69,15 @@ class App extends PureComponent{
             for (let i=0; i<children.length; i++) {
                 app.stage.removeChild(children[i])
             }
+            if (activeId === parentId) {
+                changeParentId('')
+            }
             deleteData(activeId)
         }
 
         // 空格 并且没有在移动模式
         if(e.keyCode === 32 && !isMoveMode) {
+            app.stage.children.filter(c => c.name !== 'bc').forEach(c => c.interactive = false)
             e.stopPropagation()
             app.stage.cursor = 'grab'
             changeMode('choose')
@@ -123,6 +127,7 @@ class App extends PureComponent{
         this.setState({
             isMoveMode: false
         })
+        app.stage.children.filter(c => c.name !== 'bc').forEach(c => c.interactive = true)
         app.stage.removeAllListeners()
         document.removeEventListener('keyup', this.cancelMove)
     }
@@ -165,8 +170,8 @@ class App extends PureComponent{
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, activeId,  dataMap } = state;
-    return { mode, scale, activeId, dataMap }
+    const { mode, scale, activeId, parentId, dataMap } = state;
+    return { mode, scale, activeId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(App);

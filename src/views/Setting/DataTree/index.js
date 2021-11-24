@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {Tree, Input, message, Popover} from 'antd'
-import {changeActiveId, changeDataMap, changeEditId, changeMode, dragData} from "../../../store/action";
-import Icon from "../../components/Icon";
+import { Tree, Input, message } from 'antd'
+import Icon from '../../components/Icon'
+import { changeActiveId, changeDataMap, changeEditId, dragData } from '../../../store/action'
+import { getDataById, startChoose } from '../../utils/common'
 import { StyledDataTree } from './styles'
-import {getDataById, startChoose} from "../../utils/common";
-import {updateLineStyle} from "../../utils/pixiUtils";
 
 const { TreeNode } = Tree
 
@@ -23,7 +22,7 @@ class DataTree extends PureComponent {
     }
 
     getClassName = (id) => {
-        const { activeId, editId } = this.props
+        const { activeId, editId, parentId } = this.props
         let str = ''
         if (activeId === id) {
             str += 'ant-tree-node-selected '
@@ -31,11 +30,14 @@ class DataTree extends PureComponent {
         if (editId === id) {
             str += 'edit '
         }
+        if (parentId === id) {
+            str += 'parent '
+        }
         return str
     }
 
     createNodes = (val) => {
-        const { activeId, editId } = this.props
+        const { editId } = this.props
 
         let son = null;
         if (val.children){
@@ -45,13 +47,7 @@ class DataTree extends PureComponent {
             <TreeNode
                 key={val.id}
                 className={this.getClassName(val.id)}
-                icon={
-                    <Popover visible={this.state.isVisible} trigger={['click']} content="content">
-                        <div onClick={() => this.setState({ isVisible: true })}>
-                            <Icon icon="div" color={val.color}/>
-                        </div>
-                    </Popover>
-                }
+                icon={<Icon icon="div" color={val.color}/>}
                 title={
                     editId === val.id
                         ? 
@@ -158,11 +154,10 @@ class DataTree extends PureComponent {
         // )
         // graphics.endFill()
         // updateLineStyle(graphics, 2, 0xff0000, 1)
-        
     }
 
     render() {
-        const { dataMap, activeId, editId } = this.props
+        const { dataMap, activeId } = this.props
         const { expandedKeys } = this.state
         return (
             <StyledDataTree>
@@ -190,8 +185,8 @@ class DataTree extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, editId, dataMap } = state;
-    return { activeId, editId, dataMap }
+    const { activeId, editId, parentId, dataMap } = state;
+    return { activeId, editId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(DataTree)

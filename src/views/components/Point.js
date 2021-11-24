@@ -1,8 +1,8 @@
 import { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
-import {connect} from "react-redux";
-import {getDataById, hex2PixiColor} from "../utils/common";
-import {changeDataMap} from "../../store/action";
+import { connect } from 'react-redux'
+import { changeDataMap } from '../../store/action'
+import { getDataById, hex2PixiColor } from '../utils/common'
 
 class Point extends PureComponent {
     state = {
@@ -79,7 +79,7 @@ class Point extends PureComponent {
             graphics.x = newX
             graphics.y = newY
             const pixiColor = hex2PixiColor(data.color)
-            graphics.lineStyle(2, pixiColor, 1)
+            graphics.lineStyle(4, pixiColor, 1)
             graphics.beginFill(pixiColor, 0.2)
             graphics.drawRect(
                 0,

@@ -7,9 +7,15 @@ function reducer (state = defaultState, action) {
         case 'change_scale': return { ...state, scale: action.scale }
         case 'change_dataMap': return { ...state, dataMap: action.dataMap }
         case 'change_editId': return { ...state, editId: action.editId }
+        case 'change_parentId': return { ...state, parentId: action.parentId }
         case 'change_settingWidth': return { ...state, settingWidth: action.settingWidth }
 
-        case 'change_activeId': return { ...state, activeId: action.activeId }
+        case 'change_activeId': {
+            const { app } = window
+            app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point').forEach(a => a.zIndex = 0)
+            app.stage.children.find(c => c.name === action.activeId).zIndex = 999
+            return { ...state, activeId: action.activeId }
+        }
         case 'delete_data': {
             const ids = action.id.split('_')
             const parentId = ids.length > 1 ? ids.slice(0, -1).join('_'): '0'

@@ -1,12 +1,12 @@
-import React, {PureComponent} from 'react'
-import DragLine from "../../components/DragLine";
-import { StyledProperty } from './styles'
+import React, { PureComponent } from 'react'
 import { Tabs, Breadcrumb } from 'antd'
-import Maidian from "./Maidian";
 import { connect } from 'react-redux'
-import {getDataById} from "../../utils/common";
+import Maidian from './Maidian'
+import DragLine from '../../components/DragLine'
+import Icon from '../../components/Icon'
 import { changeActiveId } from '../../../store/action'
-import Icon from "../../components/Icon";
+import { getDataById } from '../../utils/common'
+import { StyledProperty } from './styles'
 
 const { TabPane } = Tabs
 
@@ -67,7 +67,6 @@ class Setting extends PureComponent {
             </Breadcrumb>
         )
     }
-
 
     render() {
         const { settingWidth, activeId } = this.props

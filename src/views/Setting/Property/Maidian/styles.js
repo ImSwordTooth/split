@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const StyledMaidian = styled.div`
-
   font-size: 12px;
 
   .ant-form-item {
@@ -32,7 +31,6 @@ export const StyledMaidian = styled.div`
     table-layout: fixed;
     font-size: 12px;
     margin: 8px 0;
-
 
     & tr {
       position: relative;
@@ -78,5 +76,4 @@ export const StyledMaidian = styled.div`
       }
     }
   }
-
 `

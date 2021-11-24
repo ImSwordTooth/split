@@ -1,9 +1,9 @@
-import React, {PureComponent} from 'react'
-import {Form, Input, Select, Radio} from 'antd'
+import React, { PureComponent } from 'react'
+import { Form, Input, Select, Radio } from 'antd'
 import { connect } from 'react-redux'
+import { changeDataMap } from '../../../../store/action'
+import { getDataById } from '../../../utils/common'
 import { StyledMaidian } from './styles'
-import {getDataById} from "../../../utils/common";
-import {changeDataMap} from "../../../../store/action";
 
 const { Option } = Select
 
@@ -47,13 +47,17 @@ class Maidian extends PureComponent {
     update = () => {
         const { activeId, dataMap } = this.props
         const data = getDataById(activeId, dataMap)
-        const initConfig = data.config && data.config.maiDian ? data.config.maiDian :
-            {
-                pageName: '',
-                isH5: false,
-                parameterType: 'page',
-                parameterDescription: ''
-            }
+        const initConfig =
+            data.config && data.config.maiDian
+                ?
+                    data.config.maiDian
+                :
+                    {
+                        pageName: '',
+                        isH5: false,
+                        parameterType: 'page',
+                        parameterDescription: ''
+                    }
 
         this.setState({
             initConfig,
@@ -76,13 +80,13 @@ class Maidian extends PureComponent {
     handleFocus = (e)=>{
         const { editingId } = this.state;
         const { index,inputtype } = e.target.dataset;
-        if (editingId !== inputtype+index+''){
-            this.setState({editingId: inputtype+index+''})
+        if (editingId !== inputtype + index + ''){
+            this.setState({editingId: inputtype + index + ''})
         }
     };
 
     handleTabKey = (e)=>{
-        const {editingId} = this.state;
+        const { editingId } = this.state;
         if (e.key === 'Tab'){
             if (/^key/.test(editingId)) {
                 this.setState({

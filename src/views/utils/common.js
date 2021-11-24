@@ -1,6 +1,6 @@
 import store from '../../store'
-import {changeActiveId, changeDataMap, changeMode} from "../../store/action";
-import {getAllChildren} from "./pixiUtils";
+import { changeActiveId, changeDataMap, changeMode } from '../../store/action'
+import { getAllChildren } from './pixiUtils'
 
 // 通过id从树中获取object
 export const getDataById = (id, obj) => {
@@ -47,14 +47,18 @@ export const startChoose = () => {
                         item.y += (endY - startY) / scale
                         activeData.x = item.x
                         activeData.y = item.y
-                        const children = getAllChildren(item)
-                        if (children.length > 0) {
-                            for (let i=0; i<children.length; i++) {
-                                children[i].x += (endX - startX) / scale
-                                children[i].y += (endY - startY) / scale
-                                const data = getDataById(children[i].name, newDataMap)
-                                data.x = children[i].x
-                                data.y = children[i].y
+
+                        // 如果按了 command，就单独移动，否则就和子元素一起移动
+                        if (!event.data.originalEvent.metaKey) {
+                            const children = getAllChildren(item)
+                            if (children.length > 0) {
+                                for (let i=0; i<children.length; i++) {
+                                    children[i].x += (endX - startX) / scale
+                                    children[i].y += (endY - startY) / scale
+                                    const data = getDataById(children[i].name, newDataMap)
+                                    data.x = children[i].x
+                                    data.y = children[i].y
+                                }
                             }
                         }
 
@@ -81,4 +85,18 @@ export const getRandomColor = () => {
 // hex 颜色 -> pixi 颜色
 export const hex2PixiColor = (color) => {
     return parseInt(color.replace('#', '0x'), 16)
+}
+
+// 复制文本
+export const copyText = (text, callback) => {
+    const tag = document.createElement('input');
+    tag.setAttribute('id', 'cp_input');
+    tag.value = text;
+    document.body.appendChild(tag);
+    tag.select();
+    document.execCommand('copy');
+    document.body.removeChild(tag)
+    if(callback) {
+        callback(text)
+    }
 }

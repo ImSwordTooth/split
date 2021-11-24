@@ -1,18 +1,25 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import {changeMode, changeScale, changeDataMap, changeActiveId, changeEditId} from '../../store/action'
-import UploadImage from "../components/UploadImage";
-import {hitTest} from "../utils/pixiUtils";
-import {getDataById, getRandomColor, hex2PixiColor, startChoose} from "../utils/common";
+import { Button, message, Select, Tooltip } from 'antd'
+import UploadImage from '../components/UploadImage'
+import Icon from '../components/Icon'
+import { changeMode, changeScale, changeDataMap, changeActiveId, changeEditId, changeParentId } from '../../store/action'
+import { copyText, getDataById, getRandomColor, hex2PixiColor, startChoose } from '../utils/common'
+import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
-import {Button, message} from "antd";
 
+const { Option } = Select
+
+const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ]
 class ToolBar extends PureComponent {
 
     state = {
-        hitObject: null
+        hitObject: null,
+        nextRectColor: ''
     }
+
+    selectRef = React.createRef();
 
     componentDidMount() {
         document.addEventListener('keydown', this.keyEvent, false)
@@ -56,14 +63,22 @@ class ToolBar extends PureComponent {
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
         const color = getRandomColor()
+        this.setState({
+            nextRectColor: color
+        })
         const pixiColor = hex2PixiColor(color)
 
         const handleEnd = (event) => {
+            const { parentId } = this.props
             if (ing) {
                 const end = {...event.data.global}
+
                 const shape = new PIXI.Graphics()
                 app.stage.removeChild(duringRect)
-                shape.lineStyle(2, pixiColor, 1)
+                if (end.x-start.x <2 && end.y-start.y < 2) {
+                    return
+                }
+                shape.lineStyle(4, pixiColor, 1)
                 shape.beginFill(pixiColor, 0.2)
                 const width = Math.abs(end.x-start.x) / scale
                 const height = Math.abs(end.y-start.y) / scale
@@ -82,9 +97,15 @@ class ToolBar extends PureComponent {
                 // 有命中，在命中的容器内创建
                 const { hitObject: hit } = this.state
 
-                if (hit) {
+                if (parentId || hit) {
                     const newDataMap = { ...dataMap }
-                    const parent = getDataById(hit.name, newDataMap)
+                    let parent
+                    if (parentId) {
+                        parent = getDataById(parentId, newDataMap)
+                    } else {
+                        parent = getDataById(hit.name, newDataMap)
+                    }
+
                     const newId = parent.id + '_' + parent.willCreateKey + ''
                     parent.children.push({
                         id: newId,
@@ -98,8 +119,6 @@ class ToolBar extends PureComponent {
                         willCreateKey: 1
                     })
                     parent.willCreateKey++
-                    // shape.x -= parent.x
-                    // shape.y -= parent.y
                     shape.name = newId
                     app.stage.addChild(shape)
 
@@ -149,7 +168,7 @@ class ToolBar extends PureComponent {
                 if (ing) {
                     const current = {...event.data.global}
                     duringRect.clear()
-                    duringRect.lineStyle(2, pixiColor, 1)
+                    duringRect.lineStyle(4, pixiColor, 1)
                     duringRect.beginFill(pixiColor, 0.2)
                     duringRect.drawRect(
                         (start.x - app.stage.x) / app.stage.scale.x,
@@ -201,42 +220,125 @@ class ToolBar extends PureComponent {
         }
     }
 
-    resizeTo = size => {
-        this.resize(null, size)
-    }
-
-    test = () => {
-        // window.app.stage.children.find(a => a.name === '1_1').hitFirst = true
-    }
-
-    test2 = () => {
-        const res = getDataById('1_1', this.props.dataMap)
-        console.log(res)
+    resizeTo = e => {
+        this.resize(null, e.value)
     }
 
     print = () => {
         const { dataMap } = this.props
-        message.success('已打印到控制台')
+        copyText(JSON.stringify(dataMap))
         console.log('dataMap：', dataMap)
+        message.success('已复制到控制台和剪切板')
+    }
+
+    selectBlur = () => {
+        this.selectRef.current.blur()
+    }
+
+    clickToScale = (e) => {
+        const { type } = e.currentTarget.dataset
+        const { scale } = this.props
+        if (type === '-') {
+            const index = SCALE_LIST.findIndex(s => s >= scale)
+
+            if (index > 0) {
+               this.resize(null, SCALE_LIST[index - 1])
+            }
+        } else {
+            const index = SCALE_LIST.findIndex(s => s > scale)
+            if (index < SCALE_LIST.length) {
+                this.resize(null, SCALE_LIST[index])
+            }
+        }
+    }
+
+    markParent = () => {
+        const { activeId, parentId } = this.props
+        if (activeId === parentId || activeId === '0') {
+            changeParentId('')
+        } else {
+            changeParentId(activeId)
+        }
+    }
+
+    clearParent = (e) => {
+        e.stopPropagation()
+        changeParentId('')
     }
 
     render() {
-        const { mode, scale } = this.props
+        const { mode, scale, parentId, activeId } = this.props
+        const { nextRectColor } = this.state
         return (
             <StyledToolbar>
                 <div>
-                    <button onClick={startChoose} className={mode === 'choose' ? 'active': ''}>选择</button>
-                    <button onClick={this.drawNormal} className={mode === 'rect' ? 'active': ''}>矩形</button>
-                    <span>当前缩放度：{scale}</span>
-                    <button onClick={() => this.resizeTo( 0.5)}>缩放到50%</button>
-                    <button onClick={() => this.resizeTo( 1)}>缩放到100%</button>
-                    <UploadImage />
-                    <button onClick={this.test}>测试标记</button>
-                    <button onClick={this.test2}>1_1</button>
+                    <Tooltip title="选择 (Esc)">
+                        <button onClick={startChoose} className={`btn ${mode === 'choose' ? 'active': ''}`}>
+                            <Icon icon="choose"/>
+                        </button>
+                    </Tooltip>
+
+                    <Tooltip title="创建矩形 (R)">
+                        <button onClick={this.drawNormal} className={`btn ${mode === 'rect' ? 'active': ''}`} style={mode === 'rect' ? { color: nextRectColor } : {}}>
+                            <Icon icon="rect"/>
+                        </button>
+                    </Tooltip>
                 </div>
                 <div>
-                    <span style={{marginRight: '20px'}}>空格+鼠标拖拽移动画布</span>
-                    <span style={{marginRight: '20px'}}>command+滚轮放大缩小</span>
+                    <UploadImage />
+
+                    <Tooltip title={
+                        <div>
+                            <span>指定为父容器</span>
+                            <br/>
+                            <span style={{ fontWeight: 'lighter' }}>新的组件将强制创建在该组件内，表现在树状图中为<span style={{ color: '#ffc864' }}>橙色边框</span></span>
+                        </div>
+                    }>
+                        <button className={`btn ${parentId && parentId === activeId ? 'active': ''}`} onClick={this.markParent}>
+                            <Icon icon="parent"/>
+                            {
+                                parentId &&
+                                <div className="clearParent" onClick={this.clearParent}>
+                                    <Icon icon="x"/>
+                                </div>
+                            }
+                        </button>
+                    </Tooltip>
+                </div>
+                <div>
+                    <Tooltip title={
+                        <div style={{ fontSize: '12px' }}>
+                            <ul style={{paddingBottom: 0, paddingLeft: '14px'}}>
+                                <li>空格+鼠标拖拽移动画布</li>
+                                <li>command+滚轮放大缩小</li>
+                                <li>移动图形时按住 command 可单独移动</li>
+                            </ul>
+                        </div>
+                    }>
+                        <Button className="btn">
+                            <Icon icon="tip"/>
+                        </Button>
+                    </Tooltip>
+                    <div className="resize">
+                        <button data-type="-" className="btn" style={{ margin: '0 2px' }} onClick={this.clickToScale}>-</button>
+                        <Select
+                            ref={this.selectRef}
+                            value={{ value: scale, label: parseInt(scale * 100) + '%' }}
+                            labelInValue
+                            showArrow={false}
+                            onChange={this.resizeTo}
+                            onSelect={this.selectBlur}
+                            dropdownStyle={{ textAlign: 'center' }}
+                            style={{ width: 70, textAlign: 'center' }}
+                        >
+                            {
+                                SCALE_LIST.map((scale, index) => {
+                                    return <Option value={scale} key={index}>{scale * 100 + '%'}</Option>
+                                })
+                            }
+                        </Select>
+                        <button data-type="+" className="btn" style={{ margin: '0 2px' }}  onClick={this.clickToScale}>+</button>
+                    </div>
                     <Button type="primary" onClick={this.print}>数据</Button>
                 </div>
             </StyledToolbar>
@@ -245,8 +347,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, dataMap } = state;
-    return { mode, scale, dataMap }
+    const { mode, scale, activeId, parentId, dataMap } = state;
+    return { mode, scale, activeId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)

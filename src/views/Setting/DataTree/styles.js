@@ -7,4 +7,8 @@ export const StyledDataTree = styled.div`
     white-space: nowrap;
     padding: 2px 4px;
   }
+  
+  .parent .ant-tree-node-content-wrapper{
+    outline: solid 2px #ffc864;
+  }
 `

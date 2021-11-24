@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
+import { Tooltip } from 'antd'
+import Icon from './Icon'
 
 class UploadImage extends PureComponent {
 
@@ -26,7 +28,9 @@ class UploadImage extends PureComponent {
     render() {
         return (
             <>
-                <button onClick={this.upload}>上传图片</button>
+                <Tooltip title="上传新的背景图">
+                    <button className="btn" onClick={this.upload}><Icon icon="addImage"/></button>
+                </Tooltip>
                 <input type="file" accept="image/*" id="uploadImage" hidden onChange={this.finishUpload}/>
             </>
         )
