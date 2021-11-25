@@ -159,10 +159,8 @@ class App extends PureComponent{
             <StyledApp>
                 <ToolBar />
                 <div className="main">
-                    <div className="left">
-                        <div className="operate" id="app">
-                            <Point />
-                        </div>
+                    <div className="operate" id="app">
+                        <Point />
                     </div>
                     <div className="data">
                         <Setting />

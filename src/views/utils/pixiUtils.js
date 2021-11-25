@@ -48,9 +48,9 @@ export const isPointInRect = (point, rect) => {
 export const getAllChildren = (container) => {
     const { app } = window
     if (container) {
-        return app.stage.children.filter(a => /^\d(_\d)*$/g.test(a.name) && a.name.indexOf(container.name) === 0 && container.name !== a.name)
+        return app.stage.children.filter(a => /^\d+(_\d)*$/g.test(a.name) && (a.name + '_').indexOf(container.name + '_') === 0 && container.name !== a.name)
     } else {
-        return app.stage.children.filter(a => /^\d(_\d)*$/g.test(a.name))
+        return app.stage.children.filter(a => /^\d+(_\d)*$/g.test(a.name))
     }
 }
 

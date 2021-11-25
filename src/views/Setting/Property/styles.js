@@ -9,11 +9,12 @@ export const StyledProperty = styled.div`
   background-color: #ffffff;
   padding: 4px 0 0;
   
-  .main {
+  .propertyWp {
     height: 100%;
     padding: 0 10px 0;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     
     .breadcrumb {
       white-space: nowrap;

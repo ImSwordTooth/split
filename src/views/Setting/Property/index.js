@@ -75,7 +75,7 @@ class Setting extends PureComponent {
         return (
             <StyledProperty width={finalWidth}>
                 <DragLine width={finalWidth} min={300} max={Math.max(settingWidth * 0.4, settingWidth - 200)} onChange={this.handleWidthChange}/>
-                <div className="main" >
+                <div className="propertyWp">
                     <div>
                         {
                             activeId && activeId !=='0' &&
@@ -89,6 +89,11 @@ class Setting extends PureComponent {
                                     tab={<div className="tabDiv active">埋点</div>}
                                     key="2">
                                     <Maidian/>
+                                </TabPane>
+                                <TabPane
+                                    tab={<div className="tabDiv">碎片</div>}
+                                    key="3">
+                                    <div>碎片</div>
                                 </TabPane>
                             </Tabs>
                         }

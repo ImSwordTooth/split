@@ -1,6 +1,6 @@
 import store from '../../store'
 import {changeActiveId, changeDataMap, changeMode, changeScale} from '../../store/action'
-import {getAllChildren, hitTest} from './pixiUtils'
+import {getAllChildren} from './pixiUtils'
 
 // 通过id从树中获取object
 export const getDataById = (id, obj) => {
@@ -74,7 +74,7 @@ export const startChoose = () => {
     })
 }
 
-export const  resize = (e, to) => {
+export const resize = (e, to) => {
     const { app } = window
     const { scale } = store.getState()
     // 要按 command
