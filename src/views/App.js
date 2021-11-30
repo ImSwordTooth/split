@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
-import { changeMode, changeParentId, changeScale, deleteData } from '../store/action'
-import { resize } from './utils/common'
+import { changeMode, changeParentId, deleteData } from '../store/action'
+import { resize, startChoose } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
 
@@ -74,6 +74,7 @@ class App extends PureComponent{
                 changeParentId('')
             }
             deleteData(activeId)
+            startChoose()
         }
 
         // 空格 并且没有在移动模式
@@ -132,27 +133,6 @@ class App extends PureComponent{
         app.stage.removeAllListeners()
         document.removeEventListener('keyup', this.cancelMove)
     }
-
-    resize = (e, to) => {
-        const { scale } = this.props
-        const { app } = window
-        // 要按 command
-        if (e && !e.metaKey) {
-            return
-        }
-        const { x, y } = app.stage
-        const newScale = to || Number((scale.y - e.deltaY / 300).toFixed(2))
-        if (newScale <= 4 && newScale >= 0.1) {
-            app.stage.setTransform(x,y, newScale, newScale)
-            app.stage.hitArea.x = -app.stage.x / newScale
-            app.stage.hitArea.y = -app.stage.y / newScale
-            app.stage.hitArea.width = app.view.width / newScale
-            app.stage.hitArea.height = app.view.height / newScale
-            changeScale(newScale)
-        }
-    }
-
-
 
     render() {
         return (

@@ -1,41 +1,55 @@
 import React, { PureComponent } from 'react'
-import { StyledComponent } from './styles'
+import { connect } from 'react-redux'
 import { Select, Input, Button } from 'antd'
+import { getDataById } from '../../../utils/common'
+import { changeDataMap } from '../../../../store/action'
+import { StyledComponent } from './styles'
 
 const { Option } = Select
-
-const TEST_LIST = [
-    {
-        key: 'width',
-        type: 'number',
-        customType: ''
-    },
-    {
-        key: 'onChange',
-        type: 'func',
-        customType: ''
-    },
-    {
-        key: 'isTop',
-        customType: 'PropTypes.oneOf([true, false])'
-    },
-    {
-        key: 'max',
-        type: 'number',
-        customType: ''
-    },
-    {
-        key: 'min',
-        customType: 'PropTypes.oneOfType([PropTypes.number, PropTypes.string])'
-    }
-]
 
 class Component extends PureComponent {
 
     state = {
-        propsList: TEST_LIST,
+        propsList: [], // props 列表，【key】：props 的名称；【type】：仅用于普通props，值是PropTypes里的简单值；【customType】：仅用于自定义props，一个字符串
         editingKey: null, // 正在编辑的key，包含 index 和 value
         editingValue: null, // 正在编辑的value，包含 index 和 value
+    }
+
+    componentDidMount() {
+        this.update()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.activeId !== this.props.activeId) {
+            this.update()
+        }
+    }
+
+    update = () => {
+        const { activeId, dataMap } = this.props
+        const data = getDataById(activeId, dataMap)
+        const initComponentData =
+            data.config && data.config.component
+                ?
+                data.config.component
+                :
+                {
+                    props: []
+                }
+
+        this.setState({
+            propsList: initComponentData.props,
+        }, () => {
+            const newDataMap = {...dataMap}
+            const data = getDataById(activeId, newDataMap)
+            data.config = {
+                ...data.config,
+                component: {
+                    ...initComponentData
+                }
+            }
+            changeDataMap(newDataMap)
+        })
     }
 
     editKey = (e) => {
@@ -63,9 +77,7 @@ class Component extends PureComponent {
         const newList = [...propsList]
         const { value } = e.target
         newList[editingKey.index].key = value
-        this.setState({
-            propsList: newList
-        })
+        this.updatePropsToDataMap(newList)
     }
 
     changeValue = (e) => {
@@ -73,24 +85,20 @@ class Component extends PureComponent {
         const newList = [...propsList]
         const { value } = e.target
         newList[editingValue.index].customType = value
-        this.setState({
-            propsList: newList
-        })
+        this.updatePropsToDataMap(newList)
     }
 
     deleteKey = (e, index) => {
         const { propsList } = this.state
         let dataIndex
-        if (index) {
+        if (index !== undefined) {
             dataIndex = index
         } else {
             dataIndex = +e.target.dataset.index
         }
         const newList = [...propsList]
         newList.splice(dataIndex, 1)
-        this.setState({
-            propsList: newList
-        })
+        this.updatePropsToDataMap(newList)
     }
 
     editType = (index, type) => {
@@ -163,6 +171,23 @@ class Component extends PureComponent {
         })
     }
 
+    updatePropsToDataMap = (propsList) => {
+        this.setState({
+            propsList: propsList
+        })
+        const { activeId, dataMap } = this.props
+        const newDataMap = { ...dataMap }
+        const data = getDataById(activeId, newDataMap)
+        data.config = {
+            ...data.config,
+            component: {
+                ...data.config.component,
+                props: propsList
+            }
+        }
+        changeDataMap(newDataMap)
+    }
+
     render() {
         const { propsList, editingKey, editingValue } = this.state
         return (
@@ -202,6 +227,7 @@ class Component extends PureComponent {
                                                     : <span className="customType" data-index={index} data-value={item.customType} onClick={this.editValue}>{item.customType}</span>
                                             )
                                     }
+                                    {index < propsList.length - 1 && <span className="decoration" style={{ marginLeft: '4px' }}>,</span>}
                                 </div>
                             )
                         })
@@ -217,4 +243,9 @@ class Component extends PureComponent {
     }
 }
 
-export default Component
+function mapStateToProps(state) {
+    const { activeId, dataMap } = state;
+    return { activeId, dataMap }
+}
+
+export default connect(mapStateToProps)(Component)
