@@ -52,7 +52,7 @@ class DataTree extends PureComponent {
                     editId === val.id
                         ? 
                             <span>
-                                <Input autoFocus value={val.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
+                                <Input autoFocus id="treeNodeInput" value={val.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
                             </span>
                         : val.name
                 }
@@ -76,7 +76,10 @@ class DataTree extends PureComponent {
         changeEditId('')
     }
 
-    cancelEdit = () => {
+    cancelEdit = (e) => {
+        if (e.target.id === 'treeNodeInput') {
+            return
+        }
         changeEditId('')
         document.removeEventListener('mousedown', this.cancelEdit)
     }
@@ -87,6 +90,10 @@ class DataTree extends PureComponent {
     }
 
     treeNodeOnClick = (keys, e) => {
+        const { editId } = this.props
+        if (editId === e.node.key) {
+            return
+        }
         changeActiveId(e.node.key)
         changeEditId('')
         startChoose()

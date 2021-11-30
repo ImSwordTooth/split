@@ -186,8 +186,8 @@ class Maidian extends PureComponent {
                     </Form.Item>
                     <Form.Item label="埋点类型" name="parameterType">
                         <Select style={{ width: '120px' }} onChange={this.handleTypeChange}>
-                            <Option value="page" style={{ fontSize: '12px', padding: '0 10px',minHeight: '28px', lineHeight: '28px' }}>page</Option>
-                            <Option value="action" style={{ fontSize: '12px', padding: '0 10px',minHeight: '28px', lineHeight: '28px' }}>action</Option>
+                            <Option value="page">page</Option>
+                            <Option value="action">action</Option>
                         </Select>
                     </Form.Item>
                     <div style={{ fontSize: '12px' }}>埋点参数：</div>

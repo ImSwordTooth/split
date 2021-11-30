@@ -2,7 +2,7 @@ import { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import { changeDataMap } from '../../store/action'
-import {getDataById, hex2PixiColor, startChoose} from '../utils/common'
+import { getDataById, hex2PixiColor, startChoose } from '../utils/common'
 
 class Point extends PureComponent {
     state = {

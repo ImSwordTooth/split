@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react'
 import { Tabs, Breadcrumb } from 'antd'
 import { connect } from 'react-redux'
 import Maidian from './Maidian'
+import Chip from './Chip'
+import Component from './Component'
 import DragLine from '../../components/DragLine'
 import Icon from '../../components/Icon'
 import { changeActiveId } from '../../../store/action'
@@ -79,21 +81,21 @@ class Setting extends PureComponent {
                     <div>
                         {
                             activeId && activeId !=='0' &&
-                            <Tabs size="small" defaultActiveKey="2">
+                            <Tabs size="small" defaultActiveKey="1">
                                 <TabPane
                                     tab={<div className="tabDiv">组件</div>}
                                     key="1">
-                                    props
+                                    <Component/>
                                 </TabPane>
                                 <TabPane
-                                    tab={<div className="tabDiv active">埋点</div>}
+                                    tab={<div className="tabDiv">埋点</div>}
                                     key="2">
                                     <Maidian/>
                                 </TabPane>
                                 <TabPane
                                     tab={<div className="tabDiv">碎片</div>}
                                     key="3">
-                                    <div>碎片</div>
+                                    <Chip/>
                                 </TabPane>
                             </Tabs>
                         }

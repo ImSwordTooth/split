@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { Button, message, Select, Tooltip, Popover } from 'antd'
 import UploadImage from '../components/UploadImage'
 import Icon from '../components/Icon'
-import { changeMode, changeScale, changeDataMap, changeActiveId, changeEditId, changeParentId } from '../../store/action'
-import {copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose} from '../utils/common'
+import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId } from '../../store/action'
+import { copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
@@ -45,7 +45,7 @@ class ToolBar extends PureComponent {
             return
         }
         // R 创建矩形
-        if (e.keyCode === 82 && mode !== 'rect') {
+        if (e.keyCode === 82) {
             this.drawNormal()
         }
     }
@@ -293,6 +293,7 @@ class ToolBar extends PureComponent {
                                 <li>command + 滚轮放大缩小</li>
                                 <li>delete 删除图形</li>
                                 <li>移动图形时按住 command 可单独移动</li>
+                                <li>双击树节点编辑名称</li>
                             </ul>
                         </div>
                     }>

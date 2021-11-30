@@ -1,24 +1,6 @@
 import styled from 'styled-components'
 
 export const StyledMaidian = styled.div`
-  font-size: 12px;
-
-  .ant-form-item {
-    margin-bottom: 12px;
-  }
-
-  .ant-form-item-label > label {
-    font-size: 12px;
-  }
-
-  .ant-radio + span {
-    font-size: 12px;
-  }
-
-  .ant-select-selection-item {
-    font-size: 12px;
-  }
-
   .params {
     padding-left: 20px;
   }

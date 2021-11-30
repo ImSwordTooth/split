@@ -15,6 +15,23 @@ export const StyledProperty = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-size: 12px;
+
+    .ant-form-item {
+      margin-bottom: 12px;
+    }
+
+    .ant-form-item-label > label {
+      font-size: 12px;
+    }
+
+    .ant-radio + span {
+      font-size: 12px;
+    }
+
+    .ant-select-selection-item {
+      font-size: 12px;
+    }
     
     .breadcrumb {
       white-space: nowrap;
