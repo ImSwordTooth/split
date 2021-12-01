@@ -1,0 +1,22 @@
+# This file is a template, and might need editing before it works on your project.
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+image: docker.ifeng.com/test/node:14.17.0
+
+# This folder is cached between builds
+# http://docs.gitlab.com/ee/ci/yaml/README.html#cache
+cache:
+  paths:
+    - node_modules/
+
+pages:
+  stage: deploy
+  script:
+    - yarn
+    - npm run build
+    - cp -r ./build/* public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
