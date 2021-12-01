@@ -15,6 +15,7 @@ class App extends PureComponent{
     }
 
     componentDidMount() {
+        PIXI.utils.skipHello()
         const appElement = document.getElementById('app')
         const appWidth = window.innerWidth
         const appHeight = window.innerHeight - 48 // 减去 toolbar 的高度

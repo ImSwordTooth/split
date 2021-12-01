@@ -319,7 +319,7 @@ class ToolBar extends PureComponent {
                         </Select>
                         <button data-type="+" className="btn" style={{ margin: '0 2px' }}  onClick={this.clickToScale}>+</button>
                     </div>
-                    <Button type="primary" onClick={this.print}>数据</Button>
+                    <Button type="primary" onClick={this.print} style={{ marginLeft: '20px' }}>数据</Button>
                 </div>
             </StyledToolbar>
         )

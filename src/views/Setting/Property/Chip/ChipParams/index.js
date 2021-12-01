@@ -30,6 +30,7 @@ class ChipParams extends PureComponent {
                     </div>
                 )
             }
+            default: return
         }
     }
 

@@ -29,7 +29,7 @@ class Maidian extends PureComponent {
     state = {
         initConfig: {},
         editingId: '',
-        paramsList: PAGE_PARAMS
+        paramsList: []
     }
 
     formRef = React.createRef();
@@ -61,7 +61,16 @@ class Maidian extends PureComponent {
 
         this.setState({
             initConfig,
-            paramsList: initConfig.parameter || PAGE_PARAMS
+            paramsList: initConfig.parameter || [
+                {
+                    key: 'id',
+                    value: ''
+                },
+                {
+                    key: 'type',
+                    value: 'other'
+                }
+            ]
         }, () => {
             this.formRef.current.resetFields();
             const newDataMap = {...dataMap}
@@ -81,8 +90,11 @@ class Maidian extends PureComponent {
         const { editingId } = this.state;
         const { index,inputtype } = e.target.dataset;
         if (editingId !== inputtype + index + ''){
-            this.setState({editingId: inputtype + index + ''})
+            this.setState({
+                editingId: inputtype + index + '',
+            })
         }
+        document.addEventListener('click', this.hideShadow)
     };
 
     handleTabKey = (e)=>{
@@ -133,7 +145,8 @@ class Maidian extends PureComponent {
         const newParamsList = [...paramsList]
         newParamsList.splice(+index, 1)
         this.setState({
-            paramsList: newParamsList
+            paramsList: newParamsList,
+            editingId: ''
         })
         this.updateParams(newParamsList)
     }
@@ -167,6 +180,16 @@ class Maidian extends PureComponent {
         changeDataMap(newDataMap)
     }
 
+    hideShadow = (e) => {
+        const table = document.getElementById('maiDianTable')
+        if (!table.contains(e.target)) {
+            this.setState({
+                editingId: ''
+            })
+            document.removeEventListener('click', this.hideShadow)
+        }
+    }
+
     render() {
         const { editingId, paramsList, initConfig } = this.state
         return (
@@ -193,7 +216,7 @@ class Maidian extends PureComponent {
                     <div style={{ fontSize: '12px' }}>埋点参数：</div>
 
                     <div className="params">
-                        <table className={'customer_table'} border="1">
+                        <table className={'customer_table'} border="1" id="maiDianTable">
                             <tbody>
                                 <tr>
                                     <th style={{ width:'32px',textAlign:'center' }}/>

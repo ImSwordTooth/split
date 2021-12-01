@@ -6,8 +6,6 @@ import { changeActiveId, changeDataMap, changeEditId, dragData } from '../../../
 import { getDataById, startChoose } from '../../utils/common'
 import { StyledDataTree } from './styles'
 
-const { TreeNode } = Tree
-
 class DataTree extends PureComponent {
 
     state = {
@@ -35,32 +33,6 @@ class DataTree extends PureComponent {
         }
         return str
     }
-
-    createNodes = (val) => {
-        const { editId } = this.props
-
-        let son = null;
-        if (val.children){
-            son = [...val.children.map(val => this.createNodes(val))];
-        }
-        return (
-            <TreeNode
-                key={val.id}
-                className={this.getClassName(val.id)}
-                icon={<Icon icon="div" color={val.color}/>}
-                title={
-                    editId === val.id
-                        ? 
-                            <span>
-                                <Input autoFocus id="treeNodeInput" value={val.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
-                            </span>
-                        : val.name
-                }
-            >
-                {son}
-            </TreeNode>
-        )
-    };
 
     changeName = (e) => {
         const { value } = e.target
@@ -163,6 +135,27 @@ class DataTree extends PureComponent {
         // updateLineStyle(graphics, 2, 0xff0000, 1)
     }
 
+    getTreeData = (list) => {
+        const { editId } = this.props
+        return list
+            ?
+                list.map(data => {
+                    return {
+                        key: data.id,
+                        className: this.getClassName(data.id),
+                        icon: <Icon icon="div" color={data.color}/>,
+                        title: editId === data.id
+                            ?
+                            <span>
+                                <Input autoFocus id="treeNodeInput" value={data.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
+                            </span>
+                            : data.name,
+                        children: this.getTreeData(data.children)
+                    }
+                })
+            : []
+    }
+
     render() {
         const { dataMap, activeId } = this.props
         const { expandedKeys } = this.state
@@ -178,14 +171,17 @@ class DataTree extends PureComponent {
                       onDoubleClick={this.treeNodeOnDoubleClick}
                       onSelect={this.treeNodeOnClick}
                       onDrop={this.drop}
-                >
-                    {
-                        dataMap && dataMap.children &&
-                        <TreeNode icon={<Icon icon="all" />} title='总容器' key="0">
-                            {dataMap.children.map(val=>this.createNodes(val))}
-                        </TreeNode>
-                    }
-                </Tree>
+                      treeData={
+                          [
+                              {
+                                  key: '0',
+                                  icon: <Icon icon="all" />,
+                                  title: '总容器',
+                                  children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
+                              }
+                          ]
+                      }
+                />
             </StyledDataTree>
         )
     }
