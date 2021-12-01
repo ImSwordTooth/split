@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Select, Input, Button } from 'antd'
 import { getDataById } from '../../../utils/common'
-import { changeDataMap } from '../../../../store/action'
+import { changeDataMap } from '@action'
 import { StyledComponent } from './styles'
 
 const { Option } = Select

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import DataTree from './DataTree'
 import Property from './Property'
 import DragLine from '../components/DragLine'
-import { changeSettingWidth } from '../../store/action'
+import { changeSettingWidth } from '@action'
 
 class EditPart extends PureComponent {
     render() {

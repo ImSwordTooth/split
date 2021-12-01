@@ -1,5 +1,5 @@
 import store from '../../store'
-import { changeActiveId, changeDataMap, changeMode, changeScale } from '../../store/action'
+import { changeActiveId, changeDataMap, changeMode, changeScale } from '@action'
 import { getAllChildren } from './pixiUtils'
 
 // 通过id从树中获取object

@@ -6,7 +6,7 @@ import Chip from './Chip'
 import Component from './Component'
 import DragLine from '../../components/DragLine'
 import Icon from '../../components/Icon'
-import { changeActiveId } from '../../../store/action'
+import { changeActiveId } from '@action'
 import { getDataById } from '../../utils/common'
 import { StyledProperty } from './styles'
 

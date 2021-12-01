@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Form, Input, Select, Radio } from 'antd'
 import { connect } from 'react-redux'
-import { changeDataMap } from '../../../../store/action'
+import { changeDataMap } from '@action'
 import { getDataById } from '../../../utils/common'
 import { StyledMaidian } from './styles'
 

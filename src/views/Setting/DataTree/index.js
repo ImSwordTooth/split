@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Tree, Input, message } from 'antd'
 import Icon from '../../components/Icon'
-import { changeActiveId, changeDataMap, changeEditId, dragData } from '../../../store/action'
+import { changeActiveId, changeDataMap, changeEditId, dragData } from '@action'
 import { getDataById, startChoose } from '../../utils/common'
 import { StyledDataTree } from './styles'
 
