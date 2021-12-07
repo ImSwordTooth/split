@@ -11,12 +11,12 @@ import { StyledToolbar } from './styles'
 
 const { Option } = Select
 
-const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ]
+const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ] // 缩放值列表，放在 Select 里快速选择
 class ToolBar extends PureComponent {
 
     state = {
-        hitObject: null,
-        nextRectColor: ''
+        hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
+        nextRectColor: '' // 即将创建的图形的颜色，随机颜色
     }
 
     selectRef = React.createRef();

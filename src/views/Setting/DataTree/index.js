@@ -23,13 +23,13 @@ class DataTree extends PureComponent {
         const { activeId, editId, parentId } = this.props
         let str = ''
         if (activeId === id) {
-            str += 'ant-tree-node-selected '
+            str += 'ant-tree-node-selected'
         }
         if (editId === id) {
-            str += 'edit '
+            str += ' edit'
         }
         if (parentId === id) {
-            str += 'parent '
+            str += ' parent'
         }
         return str
     }
@@ -117,24 +117,6 @@ class DataTree extends PureComponent {
         }
     }
 
-    treeNodeonRightClick = (e) => {
-        // const { activeId, dataMap } = this.props
-        // const { app } = window
-        // const graphics = app.stage.children.find(a => a.name === e.node.key)
-        // graphics.clear()
-        // graphics.lineStyle(2, 0xff0000, .85)
-        // graphics.beginFill(0x1099bb, 0.1)
-        // const data = getDataById(activeId, dataMap)
-        // graphics.drawRect(
-        //     0,
-        //     0,
-        //     data.width,
-        //     data.height
-        // )
-        // graphics.endFill()
-        // updateLineStyle(graphics, 2, 0xff0000, 1)
-    }
-
     getTreeData = (list) => {
         const { editId } = this.props
         return list
@@ -166,7 +148,6 @@ class DataTree extends PureComponent {
                       allowDrop={() => true}
                       selectedKeys={[activeId]}
                       expandedKeys={expandedKeys}
-                      onRightClick={this.treeNodeonRightClick}
                       onExpand={this.handleExpand}
                       onDoubleClick={this.treeNodeOnDoubleClick}
                       onSelect={this.treeNodeOnClick}

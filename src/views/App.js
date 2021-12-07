@@ -11,23 +11,23 @@ import { StyledApp } from './styles'
 
 class App extends PureComponent{
     state = {
-        isMoveMode: false
+        isMoveMode: false // 是否为移动模式，移动模式代表可以拖拽画布
     }
 
     componentDidMount() {
-        PIXI.utils.skipHello()
+        PIXI.utils.skipHello() // 跳过 pixi 的欢迎语
         const appElement = document.getElementById('app')
         const appWidth = window.innerWidth
         const appHeight = window.innerHeight - 48 // 减去 toolbar 的高度
         const app = new PIXI.Application({
             width: appWidth,
             height: appHeight,
-            antialias: true,
-            transparent: true,
-            resolution: 1,
+            antialias: true, // 抗锯齿
+            transparent: true, // 背景透明
+            resolution: 1, // 解析度
         })
-        app.stage.interactive = true
-        app.stage.hitArea = new PIXI.Rectangle(0, 0, appWidth, appHeight)
+        app.stage.interactive = true // 舞台可点击
+        app.stage.hitArea = new PIXI.Rectangle(0, 0, appWidth, appHeight) // 点击区域为跟着屏幕大小的矩形
 
         // canvas 要覆盖住整个image
         app.renderer.view.style.position = 'absolute';

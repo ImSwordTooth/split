@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = {
     webpack: {
       configure: (webpackConfig) => {
-          webpackConfig.output.publicPath = process.env.NODE_ENV === 'production' ? '/doc/split/' : ''
+          webpackConfig.output.publicPath = process.env.NODE_ENV === 'production' ? '/utils/split/' : ''
           return webpackConfig
       },
       alias: {

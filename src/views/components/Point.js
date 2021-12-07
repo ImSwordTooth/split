@@ -4,6 +4,12 @@ import { connect } from 'react-redux'
 import { changeDataMap } from '@action'
 import { getDataById, hex2PixiColor, startChoose } from '../utils/common'
 
+/**
+ * 本组件处理矩形的四个点，包括：
+ * 1. 显示矩形顶点
+ * 2. 根据画布 x、y、scale 调整
+ * 3. 拖拽点修改矩形大小，还可以反向拖拽
+ * */
 class Point extends PureComponent {
     state = {
         pointGraphics: []
@@ -15,15 +21,18 @@ class Point extends PureComponent {
         pointGraphics.forEach(p => app.stage.removeChild(p))
     }
 
+    // 当前矩形变化，或者树的数据变了都会更新点位
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.activeId !== this.props.activeId || prevProps.dataMap !== this.props.dataMap) {
             this.update()
         }
     }
 
+    // 点的事件，拖拽点修改矩形大小
     handlePoint = (e, point, i) => {
         const { app } = window
         const { mode, activeId, scale, dataMap } = this.props
+        // 在创建模式点击顶点，需要切换到选择模式
         if (mode !== 'choose') {
             startChoose()
         }
@@ -112,12 +121,13 @@ class Point extends PureComponent {
         const { pointGraphics } = this.state
         const points = this.getPoints()
 
-        // 有坐标
+        // 有坐标，说明是更新点位或者初始化
         if (points.length > 0) {
             let arr = []
 
             for (let i=0; i<points.length; i++) {
                 let point = pointGraphics[i]
+                // 没有 graphics，需要初始化
                 if (!point) {
                     point = new PIXI.Graphics()
                     point.interactive = true
@@ -127,6 +137,7 @@ class Point extends PureComponent {
                     point.cursor = i % 2 === 0 ? 'nwse-resize' : 'nesw-resize'
                     point.on('pointerdown', (e) => this.handlePoint(e, point, i))
                 }
+                // 有 graphics，更新点位，需要重新绘制
                 point.x = points[i].x
                 point.y = points[i].y
                 point.clear()
@@ -143,8 +154,7 @@ class Point extends PureComponent {
             }
         } else {
             /**
-             * 无坐标，说明图形被删除了或者是初始化
-             * 初始化不用管
+             * 无坐标，说明图形被删除了
              */
             if (pointGraphics[0]) {
                 for (let i=0; i<4; i++) {
@@ -154,6 +164,7 @@ class Point extends PureComponent {
         }
     }
 
+    // 获取当前矩形的顶点
     getPoints = () => {
         const { activeId, dataMap } = this.props
         const data = getDataById(activeId, dataMap)

@@ -2,7 +2,14 @@ import store from '../../store'
 import { changeActiveId, changeDataMap, changeMode, changeScale } from '@action'
 import { getAllChildren } from './pixiUtils'
 
-// 通过id从树中获取object
+/**
+ * 通过id从树中获取节点
+ *
+ * @param {String} id 节点id
+ * @param {Object} obj 搜寻的范围
+ *
+ * @return {Object} 节点
+ * */
 export const getDataById = (id, obj) => {
     if (obj.id === id){
         return obj;
@@ -21,7 +28,11 @@ export const getDataById = (id, obj) => {
     }
 }
 
-// 切换到选择模式
+
+/**
+ * 切换到选择模式，有不少地方需要用到
+ *
+ * */
 export const startChoose = () => {
     const { app } = window
     changeMode('choose')
