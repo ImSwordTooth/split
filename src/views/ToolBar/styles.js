@@ -10,7 +10,55 @@ export const StyledToolbar = styled.div`
   z-index: 4;
   box-shadow: 0 0 4px 2px #e1e1e1;
   padding: 0 8px;
-  
+
+  .centerPart {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+
+    .fileNameWp {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      
+      .en, .cn {
+        cursor: pointer;
+        
+        &:hover {
+          color: #76abe2;
+        }
+      }
+
+      .en {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .cn {
+        font-size: 12px;
+      }
+
+      i {
+        margin-left: 2px;
+        cursor: pointer;
+
+        :hover {
+          color: #2b96ff;
+        }
+      }
+      
+      input {
+        font-weight: normal;
+      }
+
+    }
+
+
+  }
+
   .btn {
     position: relative;
     display: inline-flex;
@@ -27,20 +75,21 @@ export const StyledToolbar = styled.div`
     border-radius: 5px;
     cursor: pointer;
     transition: all .3s;
-    
+
     &:hover {
-      background-color: rgba(181,227,253,.3);
+      background-color: rgba(181, 227, 253, .3);
     }
+
     &:active {
       border-color: #76abe2;
     }
 
     &.active {
       border-color: #76abe2;
-      background-color: rgba(219,245,255,.52);
-      box-shadow: 1px 1px 3px 0 rgba(111,172,224,0.38);
+      background-color: rgba(219, 245, 255, .52);
+      box-shadow: 1px 1px 3px 0 rgba(111, 172, 224, 0.38);
     }
-    
+
     .clearParent {
       position: absolute;
       width: 16px;
@@ -55,22 +104,24 @@ export const StyledToolbar = styled.div`
       background-color: #e5e5e5;
       color: #666A6D;
       transition: all .3s;
-      
+
       & i {
         font-size: 12px;
         font-weight: bold;
       }
-      
+
       &:hover {
         background-color: red;
         color: white;
       }
     }
   }
-  
+
   .resize {
     display: inline-flex;
     align-items: center;
   }
+
+
 
 `

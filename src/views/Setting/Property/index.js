@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Tabs, Breadcrumb } from 'antd'
 import { connect } from 'react-redux'
-import Maidian from './Maidian'
+import Track from './Track'
 import Chip from './Chip'
 import Component from './Component'
 import DragLine from '../../components/DragLine'
@@ -71,8 +71,9 @@ class Setting extends PureComponent {
     }
 
     render() {
-        const { settingWidth, activeId } = this.props
+        const { settingWidth, activeId, dataMap } = this.props
         const finalWidth = this.getWidth()
+        const data = getDataById(activeId, dataMap)
 
         return (
             <StyledProperty width={finalWidth}>
@@ -88,9 +89,9 @@ class Setting extends PureComponent {
                                     <Component/>
                                 </TabPane>
                                 <TabPane
-                                    tab={<div className="tabDiv">埋点</div>}
+                                    tab={<div className={`tabDiv ${data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
                                     key="2">
-                                    <Maidian/>
+                                    <Track />
                                 </TabPane>
                                 <TabPane
                                     tab={<div className="tabDiv">碎片</div>}

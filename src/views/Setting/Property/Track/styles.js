@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
-export const StyledMaidian = styled.div`
+export const StyledTrack = styled.div`
+  position: relative;
+
   .params {
     padding-left: 20px;
   }
@@ -48,14 +50,55 @@ export const StyledMaidian = styled.div`
         background-color: transparent;
         width: 100%;
       }
-      
+
       &.delete {
         cursor: pointer;
-        
+
         &:hover {
           color: red;
         }
       }
+    }
+  }
+
+  .btnBox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    button {
+      margin: 0 4px;
+      padding: 0 12px;
+      font-size: 12px;
+      border-radius: 20px;
+      width: 80px;
+      line-height: 12px;
+    }
+  }
+
+  .tip {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 12px;
+    font-weight: lighter;
+  }
+
+  .spinning {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .error {
+      font-size: 12px;
+      color: #ff6e6e;
+      cursor: pointer;
+    }
+
+    .success {
+      font-size: 12px;
+      color: #05ac0c;
+      cursor: pointer;
     }
   }
 `

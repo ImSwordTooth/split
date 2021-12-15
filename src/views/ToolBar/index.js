@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import { Button, message, Select, Tooltip, Popover } from 'antd'
+import { Button, message, Select, Tooltip, Popover, Input } from 'antd'
 import UploadImage from '../components/UploadImage'
 import Icon from '../components/Icon'
-import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId } from '@action'
+import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId, changeName, changeCName } from '@action'
 import { copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
@@ -15,6 +15,7 @@ const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ] // 缩放值列表，放在 
 class ToolBar extends PureComponent {
 
     state = {
+        reNaming: '', // 正在重命名的字段, '' || 'cn' || 'en'
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
         nextRectColor: '' // 即将创建的图形的颜色，随机颜色
     }
@@ -246,11 +247,50 @@ class ToolBar extends PureComponent {
         changeParentId('')
     }
 
+    startReName = (e) => {
+        e.stopPropagation()
+        const { type } = e.currentTarget.dataset
+        this.setState({ reNaming: type })
+        document.addEventListener('click', this.cancelReName)
+    }
+
+    finishReName = (e) => {
+        const { reNaming } = this.state
+        if (reNaming === 'en') {
+            changeName(e.target.value)
+        }
+        if (reNaming === 'cn') {
+            changeCName(e.target.value)
+        }
+        this.setState({ reNaming: '' })
+    }
+
+    cancelReName = (e) => {
+        const { reNaming } = this.state
+        if (reNaming === 'en') {
+            const en = document.getElementById('en')
+            if (en.contains(e.target)) {
+                return
+            }
+            changeName(en.value)
+        }
+        if (reNaming === 'cn') {
+            const cn = document.getElementById('cn')
+            if (cn.contains(e.target)) {
+                return
+            }
+            changeCName(cn.value)
+        }
+        this.setState({ reNaming: '' })
+        document.removeEventListener('click', this.cancelReName)
+    }
+
     render() {
-        const { mode, scale, parentId, activeId } = this.props
-        const { nextRectColor } = this.state
+        const { name, cname, mode, scale, parentId, activeId } = this.props
+        const { nextRectColor, reNaming } = this.state
         return (
             <StyledToolbar>
+                {/*左侧*/}
                 <div>
                     <Tooltip title="选择 (Esc)">
                         <button onClick={startChoose} className={`btn ${mode === 'choose' ? 'active': ''}`}>
@@ -264,9 +304,25 @@ class ToolBar extends PureComponent {
                         </button>
                     </Tooltip>
                 </div>
+                {/*中间，为保持视觉居中，需要absolute*/}
+                <div className="centerPart">
+                    <div className="fileNameWp">
+                        {
+                            reNaming === 'en'
+                                ? <Input id="en" defaultValue={name} autoFocus style={{ width: '160px' }} onPressEnter={this.finishReName}/>
+                                :  <span className="en" data-type="en" onClick={this.startReName}>{name}</span>
+                        }
+                        <span>-</span>
+                        {
+                            reNaming === 'cn'
+                                ? <Input id="cn" defaultValue={cname} autoFocus style={{ width: '160px', fontSize: '12px' }} onPressEnter={this.finishReName}/>
+                                : <span className="cn" data-type="cn" onClick={this.startReName}>{cname}</span>
+                        }
+                    </div>
+                </div>
+                {/*右侧*/}
                 <div>
                     <UploadImage />
-
                     <Tooltip title={
                         <div>
                             <span>指定为父容器</span>
@@ -284,8 +340,6 @@ class ToolBar extends PureComponent {
                             }
                         </button>
                     </Tooltip>
-                </div>
-                <div>
                     <Popover content={
                         <div style={{ fontSize: '12px' }}>
                             <ul style={{paddingBottom: 0, paddingLeft: '14px', margin: 0}}>
@@ -327,8 +381,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, activeId, parentId, dataMap } = state;
-    return { mode, scale, activeId, parentId, dataMap }
+    const { name, cname, mode, scale, activeId, parentId, dataMap } = state;
+    return { name, cname, mode, scale, activeId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)
