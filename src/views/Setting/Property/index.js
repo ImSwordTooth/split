@@ -76,20 +76,20 @@ class Setting extends PureComponent {
         const data = getDataById(activeId, dataMap)
 
         return (
-            <StyledProperty width={finalWidth}>
+            <StyledProperty style={{ width: finalWidth + 'px' }}>
                 <DragLine width={finalWidth} min={300} max={Math.max(settingWidth * 0.4, settingWidth - 200)} onChange={this.handleWidthChange}/>
                 <div className="propertyWp">
-                    <div>
+                    <div className="property">
                         {
                             activeId && activeId !=='0' &&
-                            <Tabs size="small" defaultActiveKey="1">
+                            <Tabs size="small" defaultActiveKey="1" style={{ height: '100%' }}>
                                 <TabPane
                                     tab={<div className="tabDiv">组件</div>}
                                     key="1">
                                     <Component/>
                                 </TabPane>
                                 <TabPane
-                                    tab={<div className={`tabDiv ${data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
+                                    tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
                                     key="2">
                                     <Track />
                                 </TabPane>

@@ -12,6 +12,7 @@ function reducer (state = defaultState, action) {
         case 'change_name': return { ...state, name: action.name }
         case 'change_cname': return { ...state, cname: action.cname }
         case 'change_trackProjectId': return { ...state, trackProjectId: action.trackProjectId }
+        case 'change_channel': return { ...state, channel: action.channel }
 
         case 'change_activeId': {
             const { app } = window
@@ -71,7 +72,7 @@ function reducer (state = defaultState, action) {
                 handleDrag(originObj ,will);
                 target.children.push(originObj); // 然后直接push到末尾就行
                 target.willCreateKey++; // 因为用过一次了，所以要获取新的willCreateKey
-                return { ...state, dataMap: newDataMap };
+                return { ...state, activeId: originObj.id, dataMap: newDataMap };
             } else {
                 //拖拽到线上，要添加到线的父对象里
                 const targetParentId = targetKey.split('_').length > 1 ? targetKey.split('_').slice(0, -1).join('_'): '0'
@@ -103,7 +104,7 @@ function reducer (state = defaultState, action) {
                     }
                 }
                 targetParent.willCreateKey++;
-                return {...state, dataMap: newDataMap};
+                return {...state, activeId: originObj.id, dataMap: newDataMap};
             }
         }
         default: return state

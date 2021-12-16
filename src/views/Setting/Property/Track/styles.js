@@ -61,21 +61,6 @@ export const StyledTrack = styled.div`
     }
   }
 
-  .btnBox {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    button {
-      margin: 0 4px;
-      padding: 0 12px;
-      font-size: 12px;
-      border-radius: 20px;
-      width: 80px;
-      line-height: 12px;
-    }
-  }
-
   .tip {
     display: flex;
     align-items: center;

@@ -55,6 +55,28 @@ export const StyledToolbar = styled.div`
       }
 
     }
+    
+    .channel {
+      cursor: pointer;
+      margin-left: 4px;
+      
+      .ant-select {
+        font-size: 12px;
+        color: #08979c;
+        background: #e6fffb;
+        border: solid 1px #87e8de;
+        text-align: center;
+      }
+      .ant-select-selector {
+        padding: 0;
+        height: 20px;
+        line-height: 20px;
+
+        .ant-select-selection-search-input {
+          height: 20px;
+        }
+      }
+    }
 
 
   }
@@ -106,7 +128,7 @@ export const StyledToolbar = styled.div`
       transition: all .3s;
 
       & i {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: bold;
       }
 

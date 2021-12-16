@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Select, Input, Button } from 'antd'
+import {Select, Input, Button, Tooltip, Collapse} from 'antd'
+import Icon from '../../../components/Icon'
+import PreComponent from './PreComponent'
+import { preComponentList } from './PRE'
 import { getDataById } from '../../../utils/common'
 import { changeDataMap } from '@action'
 import { StyledComponent } from './styles'
@@ -11,6 +14,7 @@ class Component extends PureComponent {
 
     state = {
         propsList: [], // props 列表，【key】：props 的名称；【type】：仅用于普通props，值是PropTypes里的简单值；【customType】：仅用于自定义props，一个字符串
+        preComponent: {}, // 预设组件列表，pc: [], mobile: []
         editingKey: null, // 正在编辑的key，包含 index 和 value
         editingValue: null, // 正在编辑的value，包含 index 和 value
     }
@@ -34,11 +38,13 @@ class Component extends PureComponent {
                 data.config.component
                 :
                 {
-                    props: []
+                    props: [],
+                    preComponent: { pc: [], mobile: [] }
                 }
 
         this.setState({
             propsList: initComponentData.props,
+            preComponent: initComponentData.preComponent
         }, () => {
             const newDataMap = {...dataMap}
             const data = getDataById(activeId, newDataMap)
@@ -171,10 +177,21 @@ class Component extends PureComponent {
         })
     }
 
-    updatePropsToDataMap = (propsList) => {
-        this.setState({
-            propsList: propsList
-        })
+    updatePropsToDataMap = (propsList = null, preComponent = null) => {
+        const finalParam = {}
+        if (propsList) {
+            finalParam.props = propsList
+            this.setState({
+                propsList: propsList
+            })
+        }
+        if (preComponent) {
+            finalParam.preComponent = preComponent
+            this.setState({
+                preComponent: preComponent
+            })
+        }
+
         const { activeId, dataMap } = this.props
         const newDataMap = { ...dataMap }
         const data = getDataById(activeId, newDataMap)
@@ -182,14 +199,26 @@ class Component extends PureComponent {
             ...data.config,
             component: {
                 ...data.config.component,
-                props: propsList
+                ...finalParam
             }
         }
         changeDataMap(newDataMap)
     }
 
+    handlePreComponentChange = (type, name, isDelete) => {
+        const { preComponent } = this.state
+        const newPre = { ...preComponent }
+        if (isDelete) {
+            const index = newPre[type].findIndex(a => a === name)
+            newPre[type].splice(index, 1)
+        } else {
+            newPre[type].push(name)
+        }
+        this.updatePropsToDataMap(undefined, newPre)
+    }
+
     render() {
-        const { propsList, editingKey, editingValue } = this.state
+        const { propsList, editingKey, editingValue, preComponent } = this.state
         return (
             <StyledComponent>
                 <div className="propsList">
@@ -237,6 +266,75 @@ class Component extends PureComponent {
                     <span>添加 propTypes：</span>
                     <Button type="primary" size="small" data-type="normal" onClick={this.add}>基础</Button>
                     <Button type="primary" size="small" ghost data-type="custom" onClick={this.add}>自定义</Button>
+                </div>
+                <div className="pre">
+                    <span className="preTitle">
+                        <span>预设组件</span>
+                        <Tooltip title="1234">
+                            <span className="icon">
+                                <Icon icon="help" color="#787878" style={{ fontSize: '16px' }}/>
+                            </span>
+                        </Tooltip>
+                    </span>
+
+                    <Collapse defaultActiveKey={['1', '2']} ghost style={{ fontSize:'12px' }}>
+                        <Collapse.Panel
+                            key="1"
+                            header={
+                                <div className="collapseTitle">
+                                    <span>
+                                        <Icon icon="mobile" style={{ fontSize: '14px', marginRight: '4px' }}/>PC端
+                                    </span>
+                                    {
+                                        preComponent.pc && preComponent.pc.length > 0 &&
+                                        <span>已选择<strong>{preComponent.pc.length}</strong>个</span>
+                                    }
+                                </div>
+                            }>
+                            <div>
+                                {
+                                    preComponentList.pc.map((c, index) => {
+                                        return <PreComponent
+                                                    isActive={preComponent && preComponent.pc && preComponent.pc.includes(c.name)}
+                                                    type="pc"
+                                                    key={index}
+                                                    name={c.name}
+                                                    desc={c.desc}
+                                                    img={c.img}
+                                                    onChange={this.handlePreComponentChange}/>
+                                    })
+                                }
+                            </div>
+                        </Collapse.Panel>
+                        <Collapse.Panel
+                            key="2"
+                            header={
+                                <div className="collapseTitle">
+                                    <span>
+                                        <Icon icon="mobile" style={{ fontSize: '14px', marginRight: '4px' }}/>移动端
+                                    </span>
+                                    {
+                                        preComponent.mobile && preComponent.mobile.length > 0 &&
+                                        <span>已选择<strong>{preComponent.mobile.length}</strong>个</span>
+                                    }
+                                </div>
+                            }>
+                            <div>
+                                {
+                                    preComponentList.mobile.map((c, index) => {
+                                        return <PreComponent
+                                                    isActive={preComponent && preComponent.mobile && preComponent.mobile.includes(c.name)}
+                                                    type="mobile"
+                                                    key={index}
+                                                    name={c.name}
+                                                    desc={c.desc}
+                                                    img={c.img}
+                                                    onChange={this.handlePreComponentChange}/>
+                                    })
+                                }
+                            </div>
+                        </Collapse.Panel>
+                    </Collapse>
                 </div>
             </StyledComponent>
         )

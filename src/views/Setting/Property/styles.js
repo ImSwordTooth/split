@@ -3,19 +3,34 @@ import styled from "styled-components";
 export const StyledProperty = styled.div`
   position: absolute;
   right: 0;
-  width: ${props => props.width + 'px'};
   height: 100%;
-  z-index: 2;
+
   background-color: #ffffff;
   padding: 4px 0 0;
   
   .propertyWp {
+    position: relative;
     height: 100%;
     padding: 0 10px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     font-size: 12px;
+    z-index: 3;
+
+    .property {
+      height: 100%;
+    }
+    
+    .ant-tabs-nav {
+      margin-bottom: 0;
+    }
+    
+    .ant-tabs-content-holder {
+      height: 100%;
+      overflow: auto;
+      padding-top: 12px;
+    }
 
     .ant-form-item {
       margin-bottom: 12px;
@@ -85,6 +100,21 @@ export const StyledProperty = styled.div`
       border-radius: 50%;
       transition: opacity ease-in-out .3s;
       animation: colorChange 2s infinite ease-in-out;
+    }
+  }
+
+  .btnBox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    button {
+      margin: 0 4px;
+      padding: 0 12px;
+      font-size: 12px;
+      border-radius: 20px;
+      width: 80px;
+      line-height: 12px;
     }
   }
 

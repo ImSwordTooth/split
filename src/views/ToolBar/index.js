@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
-import { Button, message, Select, Tooltip, Popover, Input } from 'antd'
+import { Button, message, Select, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
+import axios from 'axios'
 import UploadImage from '../components/UploadImage'
 import Icon from '../components/Icon'
-import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId, changeName, changeCName } from '@action'
+import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId, changeName, changeCName, changeChannel } from '@action'
 import { copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
@@ -16,6 +17,7 @@ class ToolBar extends PureComponent {
 
     state = {
         reNaming: '', // 正在重命名的字段, '' || 'cn' || 'en'
+        channelList: [], // 频道列表
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
         nextRectColor: '' // 即将创建的图形的颜色，随机颜色
     }
@@ -24,12 +26,26 @@ class ToolBar extends PureComponent {
 
     componentDidMount() {
         document.addEventListener('keydown', this.keyEvent, false)
+        this.fetchChannelList()
     }
 
     componentWillUnmount() {
         const { app } = window
         document.removeEventListener('keydown', this.keyEvent, false)
         app.stage.removeAllListeners()
+    }
+
+    fetchChannelList = async () => {
+        const res = await axios.get(`https://ucms.ifeng.com/platform/area/areaApi/area/ucms/searchpath/root/list`)
+        const { code, data } = res.data
+        if (code === 0) {
+            this.setState({
+                channelList: data
+            })
+        } else {
+            message.error('获取频道列表失败')
+            this.setState({ channelList: [] }) // 失败不至于影响整个项目
+        }
     }
 
     keyEvent = (e) => {
@@ -285,9 +301,14 @@ class ToolBar extends PureComponent {
         document.removeEventListener('click', this.cancelReName)
     }
 
+    handleChannelChange = (e) => {
+        const [ id, name ] = e.key.split(':')
+        changeChannel({ id, name })
+    }
+
     render() {
-        const { name, cname, mode, scale, parentId, activeId } = this.props
-        const { nextRectColor, reNaming } = this.state
+        const { name, cname, channel, mode, scale, parentId, activeId } = this.props
+        const { nextRectColor, reNaming, channelList } = this.state
         return (
             <StyledToolbar>
                 {/*左侧*/}
@@ -318,6 +339,24 @@ class ToolBar extends PureComponent {
                                 ? <Input id="cn" defaultValue={cname} autoFocus style={{ width: '160px', fontSize: '12px' }} onPressEnter={this.finishReName}/>
                                 : <span className="cn" data-type="cn" onClick={this.startReName}>{cname}</span>
                         }
+                    </div>
+                    <div className="channel">
+                        <Dropdown
+                            trigger="click"
+                            overlay={
+                                <Menu selectedKeys={[`${channel.id}:${channel.name}`]} style={{ maxHeight: '500px', overflow: 'auto' }}>
+                                    {channelList.map((item) => (
+                                        <Menu.Item key={`${item.channel}:${item.title}`} value={item.channel} onClick={this.handleChannelChange}>
+                                            {item.title}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu>
+                            }
+                        >
+                            {
+                                channel.name ? <Tag color="cyan">{channel.name}</Tag> : <Tag>未指定频道</Tag>
+                            }
+                        </Dropdown>
                     </div>
                 </div>
                 {/*右侧*/}
@@ -381,8 +420,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { name, cname, mode, scale, activeId, parentId, dataMap } = state;
-    return { name, cname, mode, scale, activeId, parentId, dataMap }
+    const { name, cname, channel, mode, scale, activeId, parentId, dataMap } = state;
+    return { name, cname, channel, mode, scale, activeId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)

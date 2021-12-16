@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 export const StyledComponent = styled.div`
+  height: 100%;
+  overflow: auto;
+  
   .propsList {
 
     .props {
@@ -92,6 +95,45 @@ export const StyledComponent = styled.div`
       font-size: 12px;
       border-radius: 20px;
       width: 80px;
+    }
+  }
+  
+  .pre {
+    margin-top: 20px;
+    
+    .preTitle {
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 500;
+      margin: 0;
+      font-size: 14px;
+      
+      .icon {
+        margin-left: 4px;
+        cursor: pointer;
+      }
+    }
+
+    .ant-collapse-header {
+      padding: 6px 4px;
+      user-select: none;
+      display: flex;
+      align-items: center;
+
+      .ant-collapse-arrow {
+        font-size: 10px;
+      }
+    }
+    
+    .collapseTitle {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: 12px;
+      
+      strong {
+        margin: 0 2px;
+      }
     }
   }
 `
