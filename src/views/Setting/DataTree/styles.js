@@ -50,6 +50,7 @@ export const StyledDataTree = styled.div`
 
   .parent .ant-tree-node-content-wrapper {
     outline: solid 2px #ffc864;
+    transition: all 0.3s, border 0s, line-height 0s, box-shadow 0s, outline 0s;
   }
 
   .treeTitle {

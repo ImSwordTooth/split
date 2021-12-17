@@ -1,8 +1,7 @@
 import crypto from 'crypto'
 import store from '../../store'
-import { changeActiveId, changeDataMap, changeMode, changeScale } from '@action'
+import { changeActiveId, changeDataMap, changeMode, changeScale, changeEditId } from '@action'
 import { getAllChildren } from './pixiUtils'
-import {changeEditId} from "../../store/action";
 
 /**
  * 通过id从树中获取节点

@@ -1,5 +1,5 @@
 import { defaultState } from './state'
-import { getDataById } from "../views/utils/common";
+import { getDataById } from '../views/utils/common'
 
 function reducer (state = defaultState, action) {
     switch (action.type) {

@@ -4,6 +4,7 @@ import {Tree, Input, message, Tooltip} from 'antd'
 import Icon from '../../components/Icon'
 import { changeActiveId, changeDataMap, changeEditId, dragData } from '@action'
 import { getDataById, startChoose } from '../../utils/common'
+import { preComponentList } from '../Property/Component/PRE'
 import { StyledDataTree } from './styles'
 
 class DataTree extends PureComponent {
@@ -146,10 +147,24 @@ class DataTree extends PureComponent {
         return list
             ?
                 list.map(data => {
+                    let iconName = 'div'
+                    if (data.config && data.config.component) {
+                        const { pc, mobile } = data.config.component.preComponent
+                        if (pc.length + mobile.length > 1) {
+                            iconName = 'div'
+                        } else {
+                            if (mobile.length > 0) {
+                                iconName = preComponentList.mobile.find(a => a.name === mobile[0]).icon
+                            }
+                            if (pc.length > 0) {
+                                iconName = preComponentList.pc.find(a => a.name === pc[0]).icon
+                            }
+                        }
+                    }
                     return {
                         key: data.id,
                         className: this.getClassName(data.id),
-                        icon: <Icon icon="div" color={data.color}/>,
+                        icon: <Icon icon={iconName || 'div'} color={data.color}/>,
                         title:
                             <div className="treeTitle">
                                 <span>

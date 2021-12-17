@@ -8,8 +8,9 @@ import DragLine from '../../components/DragLine'
 import Icon from '../../components/Icon'
 import { changeActiveId } from '@action'
 import { getDataById } from '../../utils/common'
+import MainSetting from './MainSetting'
+import { preComponentList } from './Component/PRE'
 import { StyledProperty } from './styles'
-import MainSetting from "./MainSetting";
 
 const { TabPane } = Tabs
 
@@ -43,9 +44,23 @@ class Setting extends PureComponent {
             for (let i=0; i<selectedKeyArr.length; i++){
                 let data = getDataById(selectedKeyArr.slice(0,i+1).join('_'), dataMap);
                 if (data) {
+                    let iconName = ''
+                    if (data.config && data.config.component) {
+                        const { pc, mobile } = data.config.component.preComponent
+                        if (pc.length + mobile.length > 1) {
+                            iconName = 'div'
+                        } else {
+                            if (mobile.length > 0) {
+                                iconName = preComponentList.mobile.find(a => a.name === mobile[0]).icon
+                            }
+                            if (pc.length > 0) {
+                                iconName = preComponentList.pc.find(a => a.name === pc[0]).icon
+                            }
+                        }
+                    }
                     path.push({
                         id: data.id,
-                        icon: 'div',
+                        icon: iconName || 'div',
                         name: data.name
                     })
                 }
