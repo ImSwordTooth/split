@@ -2,6 +2,14 @@ import styled from 'styled-components'
 
 export const StyledPreComponent = styled.div`
 
+  &:hover {
+    .preWp {
+      padding: 0 12px 0 24px;
+      background-color: #3e3c3d;
+      color: white;
+    }
+  }
+
   .preWp {
     position: relative;
     display: flex;
@@ -32,18 +40,11 @@ export const StyledPreComponent = styled.div`
       }
     }
 
-    &:hover {
-      padding: 0 12px 0 24px;
-      background-color: #3e3c3d;
-      color: white;
-    }
-
     .name {
 
     }
 
     .desc {
-      //font-style: italic;
       font-weight: lighter;
     }
   }

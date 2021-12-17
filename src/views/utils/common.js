@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import store from '../../store'
 import { changeActiveId, changeDataMap, changeMode, changeScale } from '@action'
 import { getAllChildren } from './pixiUtils'
@@ -131,3 +132,15 @@ export const copyText = (text, callback) => {
         callback(text)
     }
 }
+
+/**
+ * MD5 签名
+ * @param {String} str
+ * @returns {string}
+ */
+export const md5 = str => {
+    const md5 = crypto.createHash('md5');
+    md5.update(str || '', 'utf8');
+    return md5.digest('hex');
+};
+

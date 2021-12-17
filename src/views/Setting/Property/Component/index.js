@@ -283,7 +283,7 @@ class Component extends PureComponent {
                             header={
                                 <div className="collapseTitle">
                                     <span>
-                                        <Icon icon="mobile" style={{ fontSize: '14px', marginRight: '4px' }}/>PC端
+                                        <Icon icon="pc" style={{ fontSize: '14px', marginRight: '4px' }}/>PC端
                                     </span>
                                     {
                                         preComponent.pc && preComponent.pc.length > 0 &&
@@ -301,6 +301,7 @@ class Component extends PureComponent {
                                                     name={c.name}
                                                     desc={c.desc}
                                                     img={c.img}
+                                                    moreUrl={c.moreUrl}
                                                     onChange={this.handlePreComponentChange}/>
                                     })
                                 }
@@ -329,6 +330,7 @@ class Component extends PureComponent {
                                                     name={c.name}
                                                     desc={c.desc}
                                                     img={c.img}
+                                                    moreUrl={c.moreUrl}
                                                     onChange={this.handlePreComponentChange}/>
                                     })
                                 }
