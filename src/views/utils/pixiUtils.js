@@ -15,7 +15,7 @@ export const hitTest = (point) => {
     let allChildren = getAllChildren()
     for (let i=allChildren.length - 1; i>=0; i--) {
         const block = allChildren[i]
-        const isIn = isPointInRect(point, { ...block.getLocalBounds(), x: block.x, y: block.y })
+        const isIn = isPointInRect(point, { ...block.getBounds() })
         if (isIn) {
             return block
         }

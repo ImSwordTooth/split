@@ -58,7 +58,7 @@ export const StyledToolbar = styled.div`
     
     .channel {
       cursor: pointer;
-      margin-left: 4px;
+      margin: 0 0 2px 8px;
       
       .ant-select {
         font-size: 12px;
@@ -77,8 +77,6 @@ export const StyledToolbar = styled.div`
         }
       }
     }
-
-
   }
 
   .btn {

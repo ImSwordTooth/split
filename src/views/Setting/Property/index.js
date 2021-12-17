@@ -9,6 +9,7 @@ import Icon from '../../components/Icon'
 import { changeActiveId } from '@action'
 import { getDataById } from '../../utils/common'
 import { StyledProperty } from './styles'
+import MainSetting from "./MainSetting";
 
 const { TabPane } = Tabs
 
@@ -81,24 +82,26 @@ class Setting extends PureComponent {
                 <div className="propertyWp">
                     <div className="property">
                         {
-                            activeId && activeId !=='0' &&
-                            <Tabs size="small" defaultActiveKey="1" style={{ height: '100%' }}>
-                                <TabPane
-                                    tab={<div className="tabDiv">组件</div>}
-                                    key="1">
-                                    <Component/>
-                                </TabPane>
-                                <TabPane
-                                    tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
-                                    key="2">
-                                    <Track />
-                                </TabPane>
-                                <TabPane
-                                    tab={<div className="tabDiv">碎片</div>}
-                                    key="3">
-                                    <Chip/>
-                                </TabPane>
-                            </Tabs>
+                            (activeId && activeId !== '0')
+                                ?
+                                    <Tabs size="small" defaultActiveKey="1" style={{ height: '100%' }}>
+                                        <TabPane
+                                            tab={<div className="tabDiv">组件</div>}
+                                            key="1">
+                                            <Component/>
+                                        </TabPane>
+                                        <TabPane
+                                            tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
+                                            key="2">
+                                            <Track />
+                                        </TabPane>
+                                        <TabPane
+                                            tab={<div className="tabDiv">碎片</div>}
+                                            key="3">
+                                            <Chip/>
+                                        </TabPane>
+                                    </Tabs>
+                                : <MainSetting/>
                         }
                     </div>
                     <div className="breadcrumb">{this.getPath()}</div>

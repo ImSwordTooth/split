@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import store from '../../store'
 import { changeActiveId, changeDataMap, changeMode, changeScale } from '@action'
 import { getAllChildren } from './pixiUtils'
+import {changeEditId} from "../../store/action";
 
 /**
  * 通过id从树中获取节点
@@ -37,6 +38,7 @@ export const getDataById = (id, obj) => {
 export const startChoose = () => {
     const { app } = window
     changeMode('choose')
+    changeEditId('')
     app.stage.cursor = 'default'
     app.stage.removeAllListeners()
     const blocks = getAllChildren()

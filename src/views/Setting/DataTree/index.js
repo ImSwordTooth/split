@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Tree, Input, message } from 'antd'
+import {Tree, Input, message, Tooltip} from 'antd'
 import Icon from '../../components/Icon'
 import { changeActiveId, changeDataMap, changeEditId, dragData } from '@action'
 import { getDataById, startChoose } from '../../utils/common'
@@ -10,7 +10,10 @@ class DataTree extends PureComponent {
 
     state = {
         expandedKeys: ['0'],
-        isVisible: false
+        localEditId: '',
+        isVisible: false,
+        isShowTreeIcon: true,
+        isAutoFocus: true
     }
     
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -21,11 +24,12 @@ class DataTree extends PureComponent {
 
     getClassName = (id) => {
         const { activeId, editId, parentId } = this.props
+        const { isAutoFocus } = this.state
         let str = ''
         if (activeId === id) {
             str += 'ant-tree-node-selected'
         }
-        if (editId === id) {
+        if (isAutoFocus && editId === id) {
             str += ' edit'
         }
         if (parentId === id) {
@@ -52,6 +56,9 @@ class DataTree extends PureComponent {
         if (e.target.id === 'treeNodeInput') {
             return
         }
+        this.setState({
+            localEditId: ''
+        })
         changeEditId('')
         document.removeEventListener('mousedown', this.cancelEdit)
     }
@@ -67,12 +74,18 @@ class DataTree extends PureComponent {
             return
         }
         changeActiveId(e.node.key)
+        this.setState({
+            localEditId: ''
+        })
         changeEditId('')
         startChoose()
     }
 
     treeNodeOnDoubleClick = (e, treeNode) => {
         const id = treeNode.key
+        this.setState({
+            localEditId: id
+        })
         changeActiveId(id)
         changeEditId(id)
     }
@@ -117,8 +130,19 @@ class DataTree extends PureComponent {
         }
     }
 
+    toggleSetting = (e) => {
+        const { setting } = e.currentTarget.dataset
+        if (setting === 'isAutoFocus') {
+            changeEditId('')
+        }
+        this.setState({
+            [setting]: !this.state[setting]
+        })
+    }
+
     getTreeData = (list) => {
         const { editId } = this.props
+        const { isShowTreeIcon, isAutoFocus, localEditId } = this.state
         return list
             ?
                 list.map(data => {
@@ -126,12 +150,30 @@ class DataTree extends PureComponent {
                         key: data.id,
                         className: this.getClassName(data.id),
                         icon: <Icon icon="div" color={data.color}/>,
-                        title: editId === data.id
-                            ?
-                            <span>
-                                <Input autoFocus id="treeNodeInput" value={data.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
-                            </span>
-                            : data.name,
+                        title:
+                            <div className="treeTitle">
+                                <span>
+                                    {
+                                        (isAutoFocus && editId === data.id) || localEditId === data.id
+                                            ?
+                                            <span>
+                                                <Input autoFocus id="treeNodeInput" value={data.name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
+                                            </span>
+                                            : data.name
+                                    }
+                                </span>
+                                <span className="iconPart">
+                                    {
+                                        isShowTreeIcon && data.config && data.config.track && data.config.track.trackId &&
+                                        <img style={{ width: '14px' }} src="https://x0.ifengimg.com/ucms/2021_51/04BF5ED7540F3BC2AE6D3AC19C0D10974FA606B5_size2_w50_h48.png" alt=""/>
+                                    }
+                                    {
+                                        isShowTreeIcon && data.config && data.config.chip && data.config.chip.chipType &&
+                                        <img src="https://x0.ifengimg.com/ucms/2021_51/CD0B86062ED829ECCAF0B9635F42E3A629DBF2AE_size2_w48_h48.png" alt=""/>
+                                    }
+                                </span>
+                            </div>
+                            ,
                         children: this.getTreeData(data.children)
                     }
                 })
@@ -139,10 +181,22 @@ class DataTree extends PureComponent {
     }
 
     render() {
-        const { dataMap, activeId } = this.props
-        const { expandedKeys } = this.state
+        const { dataMap, activeId, cname } = this.props
+        const { expandedKeys, isShowTreeIcon, isAutoFocus } = this.state
         return (
             <StyledDataTree>
+                <div className="toolbar">
+                    <Tooltip title="显示小图标">
+                        <button data-setting="isShowTreeIcon" onClick={this.toggleSetting} className={`btn ${isShowTreeIcon ? 'active': ''}`}>
+                            <Icon icon="treeIcon" style={{ fontSize: '18px' }} color="rgb(116 116 116)"/>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="树节点文本框自动获得焦点">
+                        <button data-setting="isAutoFocus" onClick={this.toggleSetting} className={`btn ${isAutoFocus ? 'active': ''}`}>
+                            <Icon icon="treeAutoFocus" style={{ fontSize: '18px' }} color="rgb(116 116 116)"/>
+                        </button>
+                    </Tooltip>
+                </div>
                 <Tree showIcon
                       draggable
                       allowDrop={() => true}
@@ -157,7 +211,7 @@ class DataTree extends PureComponent {
                               {
                                   key: '0',
                                   icon: <Icon icon="all" />,
-                                  title: '总容器',
+                                  title: cname,
                                   children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
                               }
                           ]
@@ -169,8 +223,8 @@ class DataTree extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, editId, parentId, dataMap } = state;
-    return { activeId, editId, parentId, dataMap }
+    const { activeId, cname, editId, parentId, dataMap } = state;
+    return { activeId, cname, editId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(DataTree)
