@@ -37,7 +37,7 @@ class Setting extends PureComponent {
     }
 
     getPath = ()=>{
-        const { activeId, dataMap } = this.props
+        const { activeId, cname, dataMap } = this.props
         let path = [];
         if (activeId !== '' && activeId !== '0') {
             let selectedKeyArr = activeId.split('_');
@@ -61,7 +61,8 @@ class Setting extends PureComponent {
                     path.push({
                         id: data.id,
                         icon: iconName || 'div',
-                        name: data.name
+                        name: data.name,
+                        color: data.color
                     })
                 }
             }
@@ -70,13 +71,13 @@ class Setting extends PureComponent {
             <Breadcrumb separator={'>'}>
                 <Breadcrumb.Item onClick={() => changeActiveId('0')}>
                     <Icon icon="all" />
-                    总容器
+                    {cname}
                 </Breadcrumb.Item>
                 {
                     path.map((item,index)=>{
                         return (
                             <Breadcrumb.Item key={index} onClick={() => changeActiveId(item.id)}>
-                                <Icon icon={item.icon} />
+                                <Icon icon={item.icon} color={item.color}/>
                                 {item.name}
                             </Breadcrumb.Item>
                         )
@@ -127,8 +128,8 @@ class Setting extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, settingWidth, dataMap } = state;
-    return { activeId, settingWidth, dataMap }
+    const { activeId, settingWidth, cname, dataMap } = state;
+    return { activeId, settingWidth, cname, dataMap }
 }
 
 export default connect(mapStateToProps)(Setting)

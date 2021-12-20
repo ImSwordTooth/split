@@ -354,7 +354,7 @@ class ToolBar extends PureComponent {
                             }
                         >
                             {
-                                channel.name ? <Tag color="cyan">{channel.name}</Tag> : <Tag>未指定频道</Tag>
+                                channel.name ? <Tag color="blue">{channel.name}</Tag> : <Tag>未指定频道</Tag>
                             }
                         </Dropdown>
                     </div>
