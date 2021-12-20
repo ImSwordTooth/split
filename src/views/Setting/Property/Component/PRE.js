@@ -3,7 +3,7 @@ export const preComponentList = {
         {
             name: 'Offline',
             desc: '离线页面',
-            img: 'https://x0.ifengimg.com/ucms/2021_51/778B1CA310EDC179B1CEE62EF57BBCF746D49225_size46_w306_h568.png',
+            img: 'https://x0.ifengimg.com/ucms/2021_52/BC1A481C15707E79BF4D474BA10F66049198AEF8_size21_w361_h653.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-offline--offline'
         },
         {
@@ -19,6 +19,13 @@ export const preComponentList = {
             img: 'https://x0.ifengimg.com/ucms/2021_51/6DFC77739A136E0C5DAFB8677CD5CA00EF9D3401_size61_w374_h667.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-comment--share-comment',
             icon: 'comment'
+        },
+        {
+            name: 'PageBottomBrand',
+            desc: '浮动底',
+            img: 'https://x0.ifengimg.com/ucms/2021_52/B9B318D3C3123B1E4463B006A545D78DBA1EF7BB_size16_w359_h665.png',
+            moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-pagebottombrand--atlas',
+            icon: 'yinliu'
         }
     ],
     pc: [
@@ -28,6 +35,13 @@ export const preComponentList = {
             img: 'https://x0.ifengimg.com/ucms/2021_51/C64A57A0FD1D79DCEC5B7883451A3BB787589FF7_size30_w930_h527.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-pc-video--player',
             icon: 'video'
+        },
+        {
+            name: 'Comment',
+            desc: '评论',
+            img: 'https://x0.ifengimg.com/ucms/2021_52/418861D2DC0518C43ED3EB8CE7A2921BE6D6F5F4_size39_w764_h409.png',
+            moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-pc-comment--comment',
+            icon: 'comment'
         }
     ]
 }

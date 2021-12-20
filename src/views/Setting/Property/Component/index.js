@@ -270,7 +270,7 @@ class Component extends PureComponent {
                 <div className="pre">
                     <span className="preTitle">
                         <span>预设组件</span>
-                        <Tooltip title="1234">
+                        <Tooltip title="选择若干个组件，然后我们会在文件中把它们引入并初始化">
                             <span className="icon">
                                 <Icon icon="help" color="#787878" style={{ fontSize: '16px' }}/>
                             </span>

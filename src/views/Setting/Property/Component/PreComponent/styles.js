@@ -18,20 +18,19 @@ export const StyledPreComponent = styled.div`
     background-color: #f5f5f5;
     height: 32px;
     margin: 2px 0;
-    padding: 0 12px 0 8px;
+    padding: 0 12px;
     cursor: pointer;
     transition: padding .3s;
     user-select: none;
-    border-left: solid 4px transparent;
     
     &::before {
       content: '';
       position: absolute;
-      left: -4px;
+      left: 0;
       height: 100%;
       width: 0;
       background-color: #1890ff;
-      transition: width .3s;
+      transition: width ease-in .2s;
     }
 
     &.active {
@@ -53,7 +52,7 @@ export const StyledPreComponent = styled.div`
     padding: 2px;
 
     img {
-      object-fit: cover;
+      object-fit: contain;
       cursor: zoom-in;
 
       &.pc {

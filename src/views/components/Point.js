@@ -30,6 +30,9 @@ class Point extends PureComponent {
 
     // 点的事件，拖拽点修改矩形大小
     handlePoint = (e, point, i) => {
+        if (e.data.button !== 0) { // 只响应鼠标左键
+            return
+        }
         const { app } = window
         const { mode, activeId, scale, dataMap } = this.props
         // 在创建模式点击顶点，需要切换到选择模式

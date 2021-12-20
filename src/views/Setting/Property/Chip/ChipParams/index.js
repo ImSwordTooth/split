@@ -96,117 +96,71 @@ class ChipParams extends PureComponent {
         onChange(newChipData)
     }
 
-    DataId = () => {
-        const { chipData } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-id:</span>
-                <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('id', value)}>{chipData.id}</LabelInput>
-            </div>
-        )
-    }
-
-    DataName = () => {
-        const { chipData } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-name:</span>
-                <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('name', value)}>{chipData.name}</LabelInput>
-            </div>
-        )
-    }
-
-    DataTitle = () => {
-        const { chipData } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-title:</span>
-                <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('title', value)}>{chipData.title}</LabelInput>
-            </div>
-        )
-    }
-
-    DataGroup = () => {
-        const { chipData } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-group:</span>
-                <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('group', value)}>{chipData.group}</LabelInput>
-            </div>
-        )
-    }
-
-    DataTransform = () => {
-        const { chipData } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-transform:</span>
-                <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('transform', value)}>{chipData.transform}</LabelInput>
-            </div>
-        )
-    }
-
-    DataCallBack = () => {
-        const { chipData, dataId } = this.state
-        return (
-            <div className="param">
-                <span className="paramName">data-callback:</span>
-                <Switch size="small" style={{ marginRight: '10px' }} checked={chipData.callback} onChange={(checked) => this.updateChipData('callback', checked ? `chip${dataId}Callback` : checked)} />
-                {
-                    chipData.callback && <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('callback', value)}>{chipData.callback}</LabelInput>
-                }
-            </div>
-        )
-    }
-
-    GetFormItemsByType = () => {
-        const { type } = this.props
-        switch (type) {
-            case 'static': {
-                return (
-                    <div>
-                        {this.DataName()}
-                        {this.DataTitle()}
-                        {this.DataGroup()}
-                    </div>
-                )
-            }
-            case 'recommend': {
-                return (
-                    <div>
-                        {this.DataName()}
-                        {this.DataTitle()}
-                        {this.DataGroup()}
-                        {this.DataTransform()}
-                        {this.DataCallBack()}
-                    </div>
-                )
-            }
-            case 'struct': {
-                return (
-                    <div>
-                        {this.DataId()}
-                        {this.DataName()}
-                        {this.DataTitle()}
-                        {this.DataGroup()}
-                        {this.DataTransform()}
-                        {this.DataCallBack()}
-                    </div>
-                )
-            }
-
-            default: return
-        }
-    }
-
     render() {
         const { type } = this.props
+        const { chipData, dataId } = this.state
+        const chipType = Object.keys(chipData)
 
         return (
             <StyledChipParams>
                 <Divider orientation="left" style={{ fontSize: '12px' }} plain>碎片参数{type ? ` - ${TYPE_MAP[type]}` : ''}</Divider>
                 <div className="paramsList">
-                    {this.GetFormItemsByType()}
+                    {/*data-id*/}
+                    {
+                        chipType.includes('id') &&
+                        <div className="param">
+                            <span className="paramName">data-id:</span>
+                            <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('id', value)}>{chipData.id}</LabelInput>
+                        </div>
+                    }
+
+                    {/*data-name*/}
+                    {
+                        chipType.includes('name') &&
+                        <div className="param">
+                            <span className="paramName">data-name:</span>
+                            <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('name', value)}>{chipData.name}</LabelInput>
+                        </div>
+                    }
+
+                    {/*data-title*/}
+                    {
+                        chipType.includes('title') &&
+                        <div className="param">
+                            <span className="paramName">data-title:</span>
+                            <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('title', value)}>{chipData.title}</LabelInput>
+                        </div>
+                    }
+
+                    {/*data-group*/}
+                    {
+                        chipType.includes('group') &&
+                        <div className="param">
+                            <span className="paramName">data-group:</span>
+                            <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('group', value)}>{chipData.group}</LabelInput>
+                        </div>
+                    }
+
+                    {/*data-transform*/}
+                    {
+                        chipType.includes('transform') &&
+                        <div className="param">
+                            <span className="paramName">data-transform:</span>
+                            <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('transform', value)}>{chipData.transform}</LabelInput>
+                        </div>
+                    }
+
+                    {/*data-callback*/}
+                    {
+                        chipType.includes('callback') &&
+                        <div className="param">
+                            <span className="paramName">data-callback:</span>
+                            <Switch size="small" style={{ marginRight: '10px' }} checked={chipData.callback} onChange={(checked) => this.updateChipData('callback', checked ? `chip${dataId}Callback` : checked)} />
+                            {
+                                chipData.callback && <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('callback', value)}>{chipData.callback}</LabelInput>
+                            }
+                        </div>
+                    }
                 </div>
             </StyledChipParams>
         )

@@ -23,10 +23,10 @@ export const StyledToolbar = styled.div`
       display: flex;
       align-items: center;
       cursor: pointer;
-      
+
       .en, .cn {
         cursor: pointer;
-        
+
         &:hover {
           color: #76abe2;
         }
@@ -36,7 +36,7 @@ export const StyledToolbar = styled.div`
         font-size: 16px;
         font-weight: bold;
       }
-      
+
       .cn {
         font-size: 12px;
       }
@@ -49,33 +49,16 @@ export const StyledToolbar = styled.div`
           color: #2b96ff;
         }
       }
-      
+
       input {
         font-weight: normal;
       }
 
     }
-    
+
     .channel {
       cursor: pointer;
       margin: 0 0 2px 8px;
-      
-      .ant-select {
-        font-size: 12px;
-        color: #08979c;
-        background: #e6fffb;
-        border: solid 1px #87e8de;
-        text-align: center;
-      }
-      .ant-select-selector {
-        padding: 0;
-        height: 20px;
-        line-height: 20px;
-
-        .ant-select-selection-search-input {
-          height: 20px;
-        }
-      }
     }
   }
 
@@ -142,6 +125,16 @@ export const StyledToolbar = styled.div`
     align-items: center;
   }
 
-
+  .colorType {
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 2px;
+    box-sizing: content-box;
+    width: 50px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+  }
 
 `

@@ -46,6 +46,9 @@ export const startChoose = () => {
         item.removeAllListeners()
         item.interactive = true
         item.on('pointerdown',  (event) => {
+            if (event.data.button !== 0) { // 只响应鼠标左键
+                return
+            }
             const { scale, dataMap } = store.getState()
             let ing = true
             let { x: startX, y: startY } = {...event.data.global}
@@ -105,14 +108,6 @@ export const resize = (e, to) => {
 
         changeScale(newScale)
     }
-}
-
-// 生成随机的 hex 颜色
-export const getRandomColor = () => {
-    let r = Math.floor(Math.random()*256);
-    let g = Math.floor(Math.random()*256);
-    let b = Math.floor(Math.random()*256);
-    return '#'+(Array(6).join(0) + (r.toString(16)+g.toString(16)+b.toString(16))).slice(-6);
 }
 
 // hex 颜色 -> pixi 颜色

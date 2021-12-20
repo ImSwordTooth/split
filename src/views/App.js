@@ -36,8 +36,8 @@ class App extends PureComponent{
         app.renderer.view.style.zIndex = '3';
 
         // 添加图片
-        const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_46/4616816EE196C3DDF3FD415009BEB5D27901E2C8_size392_w750_h1624.png')
-        // const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_52/794948470A6EE07046E74B580BC6EAB9D2AC1DD8_size2664_w1125_h2436.png')
+        // const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_46/4616816EE196C3DDF3FD415009BEB5D27901E2C8_size392_w750_h1624.png')
+        const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_52/794948470A6EE07046E74B580BC6EAB9D2AC1DD8_size2664_w1125_h2436.png')
         const image = new PIXI.Sprite(texture);
         image.name = 'bc'
         image.zIndex = -1

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {Tree, Input, message, Tooltip} from 'antd'
+import { Tree, Input, message, Tooltip } from 'antd'
 import Icon from '../../components/Icon'
 import { changeActiveId, changeDataMap, changeEditId, dragData } from '@action'
 import { getDataById, startChoose } from '../../utils/common'
@@ -50,6 +50,9 @@ class DataTree extends PureComponent {
 
     handleEnter = (e) => {
         this.changeName(e)
+        this.setState({
+            localEditId: ''
+        })
         changeEditId('')
     }
 
@@ -206,7 +209,7 @@ class DataTree extends PureComponent {
                             <Icon icon="treeIcon" style={{ fontSize: '18px' }} color="rgb(116 116 116)"/>
                         </button>
                     </Tooltip>
-                    <Tooltip title="树节点文本框自动获得焦点">
+                    <Tooltip title="创建树节点时自动开启文本框修改名称">
                         <button data-setting="isAutoFocus" onClick={this.toggleSetting} className={`btn ${isAutoFocus ? 'active': ''}`}>
                             <Icon icon="treeAutoFocus" style={{ fontSize: '18px' }} color="rgb(116 116 116)"/>
                         </button>

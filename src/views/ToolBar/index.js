@@ -3,10 +3,11 @@ import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
 import { Button, message, Select, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
+import RandomColor from 'randomcolor'
 import UploadImage from '../components/UploadImage'
 import Icon from '../components/Icon'
 import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId, changeName, changeCName, changeChannel } from '@action'
-import { copyText, getDataById, getRandomColor, hex2PixiColor, resize, startChoose } from '../utils/common'
+import { copyText, getDataById, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
@@ -19,7 +20,8 @@ class ToolBar extends PureComponent {
         reNaming: '', // 正在重命名的字段, '' || 'cn' || 'en'
         channelList: [], // 频道列表
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
-        nextRectColor: '' // 即将创建的图形的颜色，随机颜色
+        nextRectColor: '', // 即将创建的图形的颜色，随机颜色
+        randomColorType: '', // 随机颜色的范围，'' || 'light' || 'dark'
     }
 
     selectRef = React.createRef();
@@ -69,6 +71,7 @@ class ToolBar extends PureComponent {
 
     drawNormal = () => {
         const { dataMap, scale } = this.props
+        const { randomColorType } = this.state
         const { app } = window
         const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
         changeMode('rect')
@@ -79,7 +82,7 @@ class ToolBar extends PureComponent {
         let ing = false
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
-        const color = getRandomColor()
+        const color = RandomColor({ luminosity: randomColorType })
         this.setState({
             nextRectColor: color
         })
@@ -306,13 +309,19 @@ class ToolBar extends PureComponent {
         changeChannel({ id, name })
     }
 
+    handleRandomColorTypeChange = (e) => {
+        this.setState({ randomColorType: e.key }, () => {
+            this.drawNormal()
+        })
+    }
+
     render() {
         const { name, cname, channel, mode, scale, parentId, activeId } = this.props
-        const { nextRectColor, reNaming, channelList } = this.state
+        const { nextRectColor, reNaming, channelList, randomColorType } = this.state
         return (
             <StyledToolbar>
                 {/*左侧*/}
-                <div>
+                <div className="flex">
                     <Tooltip title="选择 (Esc)">
                         <button onClick={startChoose} className={`btn ${mode === 'choose' ? 'active': ''}`}>
                             <Icon icon="choose"/>
@@ -324,6 +333,26 @@ class ToolBar extends PureComponent {
                             <Icon icon="rect"/>
                         </button>
                     </Tooltip>
+
+                    <Dropdown
+                        trigger="click"
+                        overlayStyle={{ backgroundColor: '#ffffff' }}
+                        overlay={
+                            <Menu selectedKeys={[randomColorType]} style={{ maxHeight: '500px', overflow: 'auto' }}>
+                                <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>完全随机</Menu.Item>
+                                <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>亮色</Menu.Item>
+                                <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>暗色</Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <span className="colorType">
+                            {
+                                randomColorType
+                                    ? randomColorType === 'light' ? '亮色' : '暗色'
+                                    : '完全随机'
+                            }
+                            </span>
+                    </Dropdown>
                 </div>
                 {/*中间，为保持视觉居中，需要absolute*/}
                 <div className="centerPart">
@@ -343,6 +372,7 @@ class ToolBar extends PureComponent {
                     <div className="channel">
                         <Dropdown
                             trigger="click"
+                            overlayStyle={{ backgroundColor: '#ffffff' }}
                             overlay={
                                 <Menu selectedKeys={[`${channel.id}:${channel.name}`]} style={{ maxHeight: '500px', overflow: 'auto' }}>
                                     {channelList.map((item) => (
