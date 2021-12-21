@@ -26,6 +26,13 @@ export const preComponentList = {
             img: 'https://x0.ifengimg.com/ucms/2021_52/B9B318D3C3123B1E4463B006A545D78DBA1EF7BB_size16_w359_h665.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-pagebottombrand--atlas',
             icon: 'yinliu'
+        },
+        {
+            name: 'SimpleGuideLayer',
+            desc: '中部引流弹窗',
+            img: 'https://x0.ifengimg.com/ucms/2021_52/45B18C4E8DAE422C22AF9D1C170ED5D06FA05DA7_size56_w374_h666.png',
+            moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-simpleguidelayer--simple-guide-layer',
+            icon: 'yinliu'
         }
     ],
     pc: [

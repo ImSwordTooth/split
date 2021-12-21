@@ -47,6 +47,11 @@ class App extends PureComponent{
         window.app = app
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', resize, false)
+        window.onbeforeunload = (e) => {
+            if (this.props.dataMap.children.length > 0) {
+                e.returnValue = false
+            }
+        }
     }
 
     componentWillUnmount() {

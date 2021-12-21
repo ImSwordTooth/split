@@ -136,5 +136,56 @@ export const StyledToolbar = styled.div`
     line-height: 24px;
     text-align: center;
   }
+  
+  .paste {
+    margin-left: 4px;
+    
+    &.active {
+      background-color: green;
+      border-color: green;
+    }
+    
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+    
+    &:hover {
+      img {
+        animation: shake linear .7s;
+      }
+    }
+  }
+
+  @keyframes shake {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    15% {
+      transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+    }
+
+    30% {
+      transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+    }
+
+    45% {
+      transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+    }
+
+    60% {
+      transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+    }
+
+    75% {
+      transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
 
 `
