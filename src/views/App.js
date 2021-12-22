@@ -1,17 +1,22 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { connect } from 'react-redux'
+import axios from 'axios'
+import { message, notification } from 'antd'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
-import { changeMode, changeParentId, deleteData } from '@action'
-import { resize, startChoose } from './utils/common'
+import { changeMode, changeParentId, deleteData, changeDataMap } from '@action'
+import { getDataById, resize, startChoose } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
 
+let deleteTimer = null
+
 class App extends PureComponent{
     state = {
-        isMoveMode: false // 是否为移动模式，移动模式代表可以拖拽画布
+        isMoveMode: false, // 是否为移动模式，移动模式代表可以拖拽画布
+        isDeleting: false // 删除节点的timer
     }
 
     componentDidMount() {
@@ -62,9 +67,9 @@ class App extends PureComponent{
     }
 
     keyEvent = (e) => {
-        const { isMoveMode } = this.state
+        const { isMoveMode, isDeleting } = this.state
         const { app } = window
-        const { scale, activeId, parentId } = this.props
+        const { scale, activeId, parentId, dataMap } = this.props
         const ignoreTag = ['input', 'textarea', 'select', 'button']
         if (ignoreTag.includes(e.target.tagName.toLowerCase())) {
             return
@@ -72,16 +77,65 @@ class App extends PureComponent{
         // Delete || Backspace 并且选中了一个图形
         if ((e.keyCode === 46 || e.keyCode === 8) && activeId !== '') {
             const active = app.stage.children.find(a => activeId === a.name)
-            app.stage.removeChild(active)
-            const children = getAllChildren(active)
-            for (let i=0; i<children.length; i++) {
-                app.stage.removeChild(children[i])
+            const newDataMap = {...dataMap}
+            const activeNode = getDataById(activeId, newDataMap)
+            const isWithTrack = activeNode.config && activeNode.config.track && activeNode.config.track.trackId
+            if (isDeleting || !isWithTrack) {
+                app.stage.removeChild(active)
+                const children = getAllChildren(active)
+                for (let i=0; i<children.length; i++) {
+                    app.stage.removeChild(children[i])
+                }
+                if (activeId === parentId) {
+                    changeParentId('')
+                }
+                deleteData(activeId)
+                startChoose()
+                if (isDeleting) {
+                    axios.post('http://test0.platform.ifengidc.com/platform/server/trackApi/deleteTrack', {
+                        id: activeNode.config.track.trackId
+                    }).then(res => {
+                        if (res.data.code === 0) {
+                            activeNode.config = {
+                                ...activeNode.config,
+                                track: {
+                                    ...(activeNode.config ? activeNode.config.track : {}),
+                                    trackId: ''
+                                }
+                            }
+                            changeDataMap(newDataMap)
+                            this.setState({ isDeleting: false })
+                            message.success('删除成功')
+                            notification.destroy('delete')
+                            clearTimeout(deleteTimer)
+                            deleteTimer = null
+                        }
+                    })
+                }
+                return
             }
-            if (activeId === parentId) {
-                changeParentId('')
+            if (isWithTrack && !isDeleting) {
+                this.setState({ isDeleting: true })
+                deleteTimer = setTimeout(() => {
+                    this.setState({ isDeleting: false })
+                }, 5000)
+                notification.warning({
+                    key: 'delete',
+                    message: <h5>该节点带有埋点，删除节点会同时删除埋点信息</h5>,
+                    description:
+                        <div style={{fontSize: '12px'}}>
+                            <strong>5</strong> 秒内再次点击 <span className="key">Delete</span> 或者 <span
+                            className="key">Backspace</span> 立即删除
+                            <div className="progress" style={{marginTop: '4px'}}/>
+                        </div>
+                    ,
+                    duration: 5,
+                    style: {
+                        width: '400px'
+                    },
+                    onClose: () => this.setState({ isDeleting: false })
+                })
             }
-            deleteData(activeId)
-            startChoose()
         }
 
         // 空格 并且没有在移动模式

@@ -19,6 +19,30 @@ img {
   align-items: center;
 }
 
+.progress {
+  height: 4px;
+  background-color: #faad14;
+  animation: progress linear forwards 5s;
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+
+.key {
+  padding: 2px 4px;
+  background-color: white;
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  box-shadow: 1px 1px 4px 0 rgb(217, 217, 217);
+  cursor: pointer;
+}
+
 .iconfont {
   font-size: 22px;
   display: inline-flex;
@@ -30,7 +54,6 @@ img {
 .ant-tooltip-inner {
   font-size: 12px;
 }
-
 
 // select 的 option
 .ant-select-item {
