@@ -255,7 +255,7 @@ class ToolBar extends PureComponent {
 
     markParent = () => {
         const { activeId, parentId } = this.props
-        if (activeId === parentId || activeId === '0') {
+        if (activeId === parentId) {
             changeParentId('')
         } else {
             changeParentId(activeId)

@@ -229,6 +229,7 @@ class DataTree extends PureComponent {
                               {
                                   key: '0',
                                   icon: <Icon icon="all" />,
+                                  className: this.getClassName('0'),
                                   title: cname,
                                   children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
                               }

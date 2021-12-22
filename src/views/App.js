@@ -97,11 +97,11 @@ class App extends PureComponent{
             // 注册鼠标按下事件，记录起点
             app.stage.on('mousedown', (e) => {
                 app.stage.cursor = 'grabbing'
-                let { offsetX: oldX, offsetY: oldY } = e.data.originalEvent
+                let { x: oldX, y: oldY } = {...e.data.global}
 
                 // 移动时记录终点，更新画布的坐标，修改画布点击区域位置，然后更新起点
                 const handleStageMove = (e) => {
-                    const { offsetX: newX, offsetY: newY } = e
+                    const { x: newX, y: newY } = {...e.data.global}
                     app.stage.x += newX - oldX
                     app.stage.y += newY - oldY
                     app.stage.hitArea.x -= (newX - oldX) / scale
@@ -117,14 +117,12 @@ class App extends PureComponent{
                     })
                     app.stage.cursor = 'default'
                     app.stage.removeAllListeners()
-                    document.removeEventListener('mousemove', handleStageMove)
-                    document.removeEventListener('mouseup', cancelStageMove)
                 }
 
                 // 注册鼠标移动和抬起事件
-                document.addEventListener('mousemove', handleStageMove)
-                document.addEventListener('mouseup', cancelStageMove)
-            })
+                app.stage.on('mousemove', handleStageMove)
+                app.stage.on('mouseup', cancelStageMove)
+             })
             // 注册键盘抬起事件，抬起了事件就结束了
             document.addEventListener('keyup', this.cancelMove)
         }
