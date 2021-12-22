@@ -15,6 +15,7 @@ class App extends PureComponent{
     }
 
     componentDidMount() {
+        const { dataMap } = this.props
         PIXI.utils.skipHello() // 跳过 pixi 的欢迎语
         const appElement = document.getElementById('app')
         const appWidth = window.innerWidth
@@ -36,8 +37,7 @@ class App extends PureComponent{
         app.renderer.view.style.zIndex = '3';
 
         // 添加图片
-        // const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_46/4616816EE196C3DDF3FD415009BEB5D27901E2C8_size392_w750_h1624.png')
-        const texture = PIXI.Texture.from('https://x0.ifengimg.com/ucms/2021_52/794948470A6EE07046E74B580BC6EAB9D2AC1DD8_size2664_w1125_h2436.png')
+        const texture = PIXI.Texture.from(dataMap.bc.image)
         const image = new PIXI.Sprite(texture);
         image.name = 'bc'
         image.zIndex = -1
@@ -69,8 +69,8 @@ class App extends PureComponent{
         if (ignoreTag.includes(e.target.tagName.toLowerCase())) {
             return
         }
-        // Delete 并且选中了一个图形
-        if (e.keyCode === 46 && activeId !== '') {
+        // Delete || Backspace 并且选中了一个图形
+        if ((e.keyCode === 46 || e.keyCode === 8) && activeId !== '') {
             const active = app.stage.children.find(a => activeId === a.name)
             app.stage.removeChild(active)
             const children = getAllChildren(active)

@@ -6,10 +6,7 @@ export const changeActiveId = activeId => store.dispatch({ type:'change_activeId
 export const changeEditId = editId => store.dispatch({ type: 'change_editId', editId })
 export const changeParentId = parentId => store.dispatch({ type: 'change_parentId', parentId })
 export const changeSettingWidth = settingWidth => store.dispatch({ type: 'change_settingWidth', settingWidth })
-export const changeName = name => store.dispatch({ type: 'change_name', name })
-export const changeCName = cname => store.dispatch({ type: 'change_cname', cname })
 export const changeTrackProjectId = trackProjectId => store.dispatch({ type: 'change_trackProjectId', trackProjectId })
-export const changeChannel = channel => store.dispatch({ type: 'change_channel', channel })
 
 export const changeDataMap = dataMap => store.dispatch({ type:'change_dataMap', dataMap })
 export const deleteData = id => store.dispatch({ type: 'delete_data', id })

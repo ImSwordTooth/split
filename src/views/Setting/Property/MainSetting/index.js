@@ -4,22 +4,28 @@ import { Dropdown, Menu, message, Slider, Tag, Tooltip } from 'antd'
 import axios from 'axios'
 import LabelInput from '../../../components/LabelInput'
 import Icon from '../../../components/Icon'
-import { changeName, changeCName, changeChannel } from '@action'
+import { changeDataMap } from '@action'
 import { StyledMainSetting } from './styles'
 
 class MainSetting extends PureComponent {
     
     state = {
         channelList: [],
-        bcScale: 100
+        bcScale: 100 // 不放到state里，点击Slider的marks的时候不会更新视图，不知道原因
     }
 
     componentDidMount() {
+        const { dataMap } = this.props
         this.fetchChannelList()
-        if (window.app && window.app.stage) {
-            const bc = window.app.stage.children.find(a => a.name === 'bc')
+        this.setState({
+            bcScale: Math.round(dataMap.bc.scale * 100)
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.dataMap !== this.props.dataMap) {
             this.setState({
-                bcScale: bc.transform.scale._x * 100
+                bcScale: Math.round(this.props.dataMap.bc.scale * 100)
             })
         }
     }
@@ -38,21 +44,39 @@ class MainSetting extends PureComponent {
     }
 
     handleChannelChange = (e) => {
+        const { dataMap } = this.props
+        const newDataMap = {...dataMap}
         const [ id, name ] = e.key.split(':')
-        changeChannel({ id, name })
+        newDataMap.channel = { id, name }
+        changeDataMap(newDataMap)
     }
 
     handleBcScaleChange = (value) => {
+        const { dataMap } = this.props
+        const newDataMap = {...dataMap}
+        newDataMap.bc.scale = value / 100
+        changeDataMap(newDataMap)
+        this.setState({ bcScale: value })
         const bc = window.app.stage.children.find(a => a.name === 'bc')
         bc.setTransform(0, 0, value / 100, value / 100)
-        this.setState({
-            bcScale: value
-        })
+    }
+
+    updateName = (type, value) => {
+        const { dataMap } = this.props
+        const newDataMap = {...dataMap}
+        if (type === 'en') {
+            newDataMap.name = value
+        }
+        if (type === 'cn') {
+            newDataMap.cname = value
+        }
+        changeDataMap(newDataMap)
     }
 
     render() {
-        const { name, cname, channel, trackProjectId } = this.props
+        const { trackProjectId, dataMap } = this.props
         const { channelList, bcScale } = this.state
+        const { name, cname, channel } = dataMap
         return (
             <StyledMainSetting>
                 <h2 className="settingTitle"><Icon icon="setting"/>项目设置</h2>
@@ -63,13 +87,13 @@ class MainSetting extends PureComponent {
                             <Tooltip placement="left" title="项目的英文名称">
                                 <span className="prop">项目名称:</span>
                             </Tooltip>
-                            <LabelInput inputStyle={{ width: '180px', fontSize: '12px' }} size="small" onChange={changeName}>{name}</LabelInput>
+                            <LabelInput inputStyle={{ width: '180px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('en', value)}>{name}</LabelInput>
                         </div>
                         <div className="settingItem">
                             <Tooltip placement="left" title="项目的中文名称">
                                 <span className="prop">项目中文名称:</span>
                             </Tooltip>
-                            <LabelInput inputStyle={{ width: '180px', fontSize: '12px' }} size="small" onChange={changeCName}>{cname}</LabelInput>
+                            <LabelInput inputStyle={{ width: '180px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
                         </div>
                         <div className="settingItem">
                             <Tooltip
@@ -157,8 +181,8 @@ class MainSetting extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { name, cname, channel, trackProjectId } = state;
-    return { name, cname, channel, trackProjectId }
+    const { trackProjectId, dataMap } = state;
+    return { trackProjectId, dataMap }
 }
 
 export default connect(mapStateToProps)(MainSetting)

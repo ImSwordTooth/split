@@ -199,8 +199,9 @@ class DataTree extends PureComponent {
     }
 
     render() {
-        const { dataMap, activeId, cname } = this.props
+        const { dataMap, activeId } = this.props
         const { expandedKeys, isShowTreeIcon, isAutoFocus } = this.state
+        const { cname } = dataMap
         return (
             <StyledDataTree>
                 <div className="toolbar">
@@ -242,8 +243,8 @@ class DataTree extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, cname, editId, parentId, dataMap } = state;
-    return { activeId, cname, editId, parentId, dataMap }
+    const { activeId, editId, parentId, dataMap } = state;
+    return { activeId, editId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(DataTree)

@@ -9,10 +9,7 @@ function reducer (state = defaultState, action) {
         case 'change_editId': return { ...state, editId: action.editId }
         case 'change_parentId': return { ...state, parentId: action.parentId }
         case 'change_settingWidth': return { ...state, settingWidth: action.settingWidth }
-        case 'change_name': return { ...state, name: action.name }
-        case 'change_cname': return { ...state, cname: action.cname }
         case 'change_trackProjectId': return { ...state, trackProjectId: action.trackProjectId }
-        case 'change_channel': return { ...state, channel: action.channel }
 
         case 'change_activeId': {
             const { app } = window

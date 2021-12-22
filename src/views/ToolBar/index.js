@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 import { Button, message, Select, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
 import RandomColor from 'randomcolor'
-import UploadImage from '../components/UploadImage'
+import UploadImage from './features/UploadImage'
+import Paste from './features/Paste'
 import Icon from '../components/Icon'
-import { changeMode, changeDataMap, changeActiveId, changeEditId, changeParentId, changeName, changeCName, changeChannel } from '@action'
+import { changeMode, changeDataMap, changeActiveId, changeEditId } from '@action'
 import { copyText, getDataById, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
+import Parent from "./features/Parent";
 
 const { Option } = Select
 
@@ -21,8 +23,7 @@ class ToolBar extends PureComponent {
         channelList: [], // 频道列表
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
         nextRectColor: '', // 即将创建的图形的颜色，随机颜色
-        randomColorType: '', // 随机颜色的范围，'' || 'light' || 'dark'
-        isShowPasteInput: false, // 是否显示粘贴的文本框
+        randomColorType: '' // 随机颜色的范围，'' || 'light' || 'dark'
     }
 
     selectRef = React.createRef()
@@ -253,20 +254,6 @@ class ToolBar extends PureComponent {
         }
     }
 
-    markParent = () => {
-        const { activeId, parentId } = this.props
-        if (activeId === parentId) {
-            changeParentId('')
-        } else {
-            changeParentId(activeId)
-        }
-    }
-
-    clearParent = (e) => {
-        e.stopPropagation()
-        changeParentId('')
-    }
-
     startReName = (e) => {
         e.stopPropagation()
         const { type } = e.currentTarget.dataset
@@ -275,39 +262,49 @@ class ToolBar extends PureComponent {
     }
 
     finishReName = (e) => {
+        const { dataMap } = this.props
         const { reNaming } = this.state
+        const newDataMap = {...dataMap}
         if (reNaming === 'en') {
-            changeName(e.target.value)
+            newDataMap.name = e.target.value
         }
         if (reNaming === 'cn') {
-            changeCName(e.target.value)
+            newDataMap.cname = e.target.value
         }
+        changeDataMap(newDataMap)
         this.setState({ reNaming: '' })
     }
 
     cancelReName = (e) => {
+        const { dataMap } = this.props
         const { reNaming } = this.state
+        const newDataMap = {...dataMap}
+
         if (reNaming === 'en') {
             const en = document.getElementById('en')
             if (en.contains(e.target)) {
                 return
             }
-            changeName(en.value)
+            newDataMap.name = en.value
         }
         if (reNaming === 'cn') {
             const cn = document.getElementById('cn')
             if (cn.contains(e.target)) {
                 return
             }
-            changeCName(cn.value)
+            newDataMap.cname = cn.value
         }
+        changeDataMap(newDataMap)
         this.setState({ reNaming: '' })
         document.removeEventListener('click', this.cancelReName)
     }
 
     handleChannelChange = (e) => {
+        const { dataMap } = this.props
+        const newDataMap = {...dataMap}
         const [ id, name ] = e.key.split(':')
-        changeChannel({ id, name })
+        newDataMap.channel = { id, name }
+        changeDataMap(newDataMap)
     }
 
     handleRandomColorTypeChange = (e) => {
@@ -316,105 +313,10 @@ class ToolBar extends PureComponent {
         })
     }
 
-    paste = (e) => {
-        const { isShowPasteInput } = this.state
-        e.stopPropagation()
-        const input = document.getElementById('pasteInput')
-        if (isShowPasteInput) {
-            if (input.value) {
-                this.transferPaste(input.value)
-            }
-            this.setState({ isShowPasteInput: false })
-        } else {
-            if (navigator.clipboard) {
-                navigator.clipboard.readText()
-                    .then((text) => {
-                        if (text) {
-                            this.transferPaste(text)
-                        } else {
-                            message.error('剪切板为空')
-                        }
-                    })
-                    .catch(e => {
-                        message.info('未获取到剪切板权限，请手动粘贴到右侧文本框中')
-                        document.addEventListener('click', this.cancelPaste)
-                        this.setState({
-                            isShowPasteInput: true
-                        })
-                        console.log(input)
-                        if (input) {
-                            input.focus()
-                        }
-                    })
-            } else {
-                message.info('未获取到剪切板权限，请手动粘贴到右侧文本框中')
-                document.addEventListener('click', this.cancelPaste)
-                this.setState({
-                    isShowPasteInput: true
-                })
-            }
-        }
-    }
-
-    cancelPaste = (e) => {
-        const input = document.getElementById('pasteInput')
-        if (input !== e.target) {
-            this.setState({ isShowPasteInput: false })
-            document.removeEventListener('click', this.cancelPaste)
-        }
-    }
-
-    transferPaste = (text) => {
-        let res = {}
-        try{
-            // eslint-disable-next-line no-new-func
-            res = new Function(`return ${text}`)()
-        } catch (e) {
-            try {
-                res = JSON.parse(text)
-            } catch (e) {
-                message.error('转换失败')
-                return
-            }
-        }
-        try {
-            changeActiveId('')
-            changeDataMap(res)
-            for (let i of window.app.stage.children.filter(a => a.name !== 'bc' && a.name !== 'point')) {
-                window.app.stage.removeChild(i)
-            }
-            this.transferPaste_pixi(res)
-            startChoose()
-            message.success('粘贴成功！')
-            this.setState({
-                isShowPasteInput: false
-            })
-        } catch (e) {
-            message.error('转换失败')
-        }
-    }
-
-    transferPaste_pixi = (obj) => {
-        if (obj.children.length > 0) {
-            for (let c of obj.children) {
-                const graphics = new PIXI.Graphics()
-                const color = hex2PixiColor(c.color)
-                graphics.name = c.id
-                graphics.lineStyle(4, color, 1)
-                graphics.beginFill(color, 0.2)
-                graphics.x = c.x
-                graphics.y = c.y
-                graphics.drawRect(0, 0, c.width, c.height)
-                graphics.endFill()
-                window.app.stage.addChild(graphics)
-                this.transferPaste_pixi(c)
-            }
-        }
-    }
-
     render() {
-        const { name, cname, channel, mode, scale, parentId, activeId } = this.props
-        const { nextRectColor, reNaming, channelList, randomColorType, isShowPasteInput } = this.state
+        const { mode, scale, dataMap } = this.props
+        const { nextRectColor, reNaming, channelList, randomColorType } = this.state
+        const { name, cname, channel } = dataMap
         return (
             <StyledToolbar>
                 {/*左侧*/}
@@ -489,23 +391,7 @@ class ToolBar extends PureComponent {
                 {/*右侧*/}
                 <div>
                     <UploadImage />
-                    <Tooltip title={
-                        <div>
-                            <span>指定为父容器</span>
-                            <br/>
-                            <span style={{ fontWeight: 'lighter' }}>新的组件将强制创建在该组件内，表现在树状图中为<span style={{ color: '#ffc864' }}>橙色边框</span></span>
-                        </div>
-                    }>
-                        <button className={`btn ${parentId && parentId === activeId ? 'active': ''}`} onClick={this.markParent}>
-                            <Icon icon="parent"/>
-                            {
-                                parentId &&
-                                <div className="clearParent" onClick={this.clearParent}>
-                                    <Icon icon="x"/>
-                                </div>
-                            }
-                        </button>
-                    </Tooltip>
+                    <Parent />
                     <Popover content={
                         <div style={{ fontSize: '12px' }}>
                             <ul style={{paddingBottom: 0, paddingLeft: '14px', margin: 0}}>
@@ -540,17 +426,7 @@ class ToolBar extends PureComponent {
                         <button data-type="+" className="btn" style={{ margin: '0 2px' }}  onClick={this.clickToScale}>+</button>
                     </div>
                     <Button type="primary" onClick={this.print} style={{ marginLeft: '20px' }}>数据</Button>
-                    <Popover
-                        visible={isShowPasteInput}
-                        placement="bottomRight"
-                        arrowPointAtCenter={false}
-                        destroyTooltipOnHide
-                        content={<Input id="pasteInput" placeholder="粘贴..." autoFocus style={{ width: '240px' }} onPressEnter={(e) => this.transferPaste(e.target.value)}/>}>
-                        <Button className={`paste ${isShowPasteInput ? 'active' : ''}`} type="primary" onClick={this.paste}>
-                            <img src="https://x0.ifengimg.com/ucms/2021_50/84364D5CBFFF49F0CA5599277E70616B715E99A8_size2_w48_h48.png" alt="paste"/>
-                            {isShowPasteInput ? '确认' : '粘贴'}
-                        </Button>
-                    </Popover>
+                    <Paste />
                 </div>
             </StyledToolbar>
         )
@@ -558,8 +434,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { name, cname, channel, mode, scale, activeId, parentId, dataMap } = state;
-    return { name, cname, channel, mode, scale, activeId, parentId, dataMap }
+    const { mode, scale, parentId, dataMap } = state;
+    return { mode, scale, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)

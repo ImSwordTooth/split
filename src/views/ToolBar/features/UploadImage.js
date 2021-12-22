@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { Tooltip } from 'antd'
-import Icon from './Icon'
+import Icon from '../../components/Icon'
 
 class UploadImage extends PureComponent {
 
