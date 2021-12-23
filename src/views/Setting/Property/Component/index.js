@@ -230,7 +230,7 @@ class Component extends PureComponent {
                                     {
                                         editingKey && editingKey.index === index
                                             ? <Input size="small" id="editComponentPropKey" autoFocus defaultValue={editingKey.value} style={{ width: '100px' }} onChange={this.changeKey} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
-                                            : <span className="key" data-index={index} data-value={item.key} onClick={this.editKey}>{item.key}</span>
+                                            : <span className="propKey" data-index={index} data-value={item.key} onClick={this.editKey}>{item.key}</span>
                                     }
                                     <span className="colon decoration">:</span>
                                     {

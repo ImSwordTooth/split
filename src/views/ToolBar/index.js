@@ -122,7 +122,7 @@ class ToolBar extends PureComponent {
                     fontWeight: 'bold',
                     fill: color,
                     stroke: '#000000',
-                    strokeThickness: 3,
+                    strokeThickness: 2,
                     dropShadow: true,
                     dropShadowColor: '#000000',
                     dropShadowAngle: Math.PI / 6,
@@ -374,7 +374,7 @@ class ToolBar extends PureComponent {
                                     ? randomColorType === 'light' ? '亮色' : '暗色'
                                     : '完全随机'
                             }
-                            </span>
+                        </span>
                     </Dropdown>
                 </div>
                 {/*中间，为保持视觉居中，需要absolute*/}
@@ -413,7 +413,7 @@ class ToolBar extends PureComponent {
                     </div>
                 </div>
                 {/*右侧*/}
-                <div>
+                <div className="flex">
                     <UploadImage />
                     <Parent />
                     <Popover content={

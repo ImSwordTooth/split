@@ -6,7 +6,7 @@ import { message, notification } from 'antd'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
-import { changeMode, changeParentId, deleteData, changeDataMap } from '@action'
+import { changeParentId, deleteData, changeDataMap } from '@action'
 import { getDataById, resize, startChoose } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
@@ -142,8 +142,8 @@ class App extends PureComponent{
         if(e.keyCode === 32 && !isMoveMode) {
             app.stage.children.filter(c => c.name !== 'bc').forEach(c => c.interactive = false)
             e.stopPropagation()
+            startChoose()
             app.stage.cursor = 'grab'
-            changeMode('choose')
             this.setState({ // 改为选择模式
                 isMoveMode: true,
             })

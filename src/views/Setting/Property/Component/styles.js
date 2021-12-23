@@ -47,7 +47,7 @@ export const StyledComponent = styled.div`
         }
       }
 
-      .key {
+      .propKey {
         cursor: text;
         color: black;
         

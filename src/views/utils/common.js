@@ -100,7 +100,7 @@ export const resize = (e, to) => {
     const { x, y } = app.stage
     const newScale = to || Number((scale - e.deltaY / 300).toFixed(2))
     if (newScale <= 4 && newScale >= 0.1) {
-        app.stage.setTransform(x,y, newScale, newScale)
+        app.stage.setTransform(x, y, newScale, newScale)
         app.stage.hitArea.x = -app.stage.x / newScale
         app.stage.hitArea.y = -app.stage.y / newScale
         app.stage.hitArea.width = app.view.width / newScale

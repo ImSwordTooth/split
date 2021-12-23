@@ -99,6 +99,21 @@ class Paste extends PureComponent {
     transferPaste_pixi = (obj) => {
         if (obj.children.length > 0) {
             for (let c of obj.children) {
+                const textStyle = {
+                    fontFamily: 'Arial',
+                    fontSize: '14px',
+                    fontStyle: 'italic',
+                    fontWeight: 'bold',
+                    fill: c.color,
+                    stroke: '#000000',
+                    strokeThickness: 2,
+                    dropShadow: true,
+                    dropShadowColor: '#000000',
+                    dropShadowAngle: Math.PI / 6,
+                    dropShadowDistance: 2,
+                    wordWrap: true, //是否允许换行
+                    wordWrapWidth: 440 //换行执行宽度
+                }
                 const graphics = new PIXI.Graphics()
                 const color = hex2PixiColor(c.color)
                 graphics.name = c.id
@@ -106,8 +121,14 @@ class Paste extends PureComponent {
                 graphics.beginFill(color, 0.2)
                 graphics.x = c.x
                 graphics.y = c.y
+                graphics.text = c.name
                 graphics.drawRect(0, 0, c.width, c.height)
                 graphics.endFill()
+                let basicText = new PIXI.Text(graphics.text, textStyle)
+                basicText.name = 'text'
+                basicText.x = 0
+                basicText.y = -24
+                graphics.addChild(basicText)
                 window.app.stage.addChild(graphics)
                 this.transferPaste_pixi(c)
             }
