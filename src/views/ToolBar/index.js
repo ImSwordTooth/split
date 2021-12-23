@@ -114,6 +114,23 @@ class ToolBar extends PureComponent {
                 shape.x = (Math.min(start.x, end.x) - app.stage.x) / scale
                 shape.y = (Math.min(start.y, end.y) - app.stage.y) / scale
                 shape.endFill()
+
+                const textStyle = {
+                    fontFamily: 'Arial',
+                    fontSize: '14px',
+                    fontStyle: 'italic',
+                    fontWeight: 'bold',
+                    fill: color,
+                    stroke: '#000000',
+                    strokeThickness: 3,
+                    dropShadow: true,
+                    dropShadowColor: '#000000',
+                    dropShadowAngle: Math.PI / 6,
+                    dropShadowDistance: 2,
+                    wordWrap: true, //是否允许换行
+                    wordWrapWidth: 440 //换行执行宽度
+                }
+
                 ing = false
                 start = {}
                 // 有命中，在命中的容器内创建
@@ -142,6 +159,7 @@ class ToolBar extends PureComponent {
                     })
                     parent.willCreateKey++
                     shape.name = newId
+                    shape.text = `组件${newId}`
                     app.stage.addChild(shape)
 
                     changeActiveId(newId)
@@ -169,10 +187,16 @@ class ToolBar extends PureComponent {
                         ]
                     })
                     shape.name = newId
+                    shape.text = `组件${newId}`
                     app.stage.addChild(shape)
                     changeActiveId(newId)
                     changeEditId(newId)
                 }
+                let basicText = new PIXI.Text(shape.text, textStyle)
+                basicText.name = 'text'
+                basicText.x = 0
+                basicText.y = -24
+                shape.addChild(basicText)
                 this.drawNormal()
             }
         }

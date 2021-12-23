@@ -14,7 +14,8 @@ class DataTree extends PureComponent {
         localEditId: '',
         isVisible: false,
         isShowTreeIcon: true,
-        isAutoFocus: true
+        isAutoFocus: true,
+        isShowText: true
     }
     
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -45,6 +46,11 @@ class DataTree extends PureComponent {
         const newDataMap = {...dataMap}
         const data = getDataById(editId, newDataMap)
         data.name = value
+        const graphic = window.app.stage.children.find(a => a.name === editId)
+        if (graphic) {
+            const text = graphic.children.find(a => a.name === 'text')
+            text.text = value
+        }
         changeDataMap(newDataMap)
     }
 
@@ -139,6 +145,16 @@ class DataTree extends PureComponent {
         if (setting === 'isAutoFocus') {
             changeEditId('')
         }
+        if (setting === 'isShowText') {
+            const graphics = window.app.stage.children.filter(a => a.name !== 'bc' && a.name !=='point')
+            let text = []
+            for (let i of graphics) {
+                text.push(i.children.find(a => a.name === 'text'))
+            }
+            for (let j of text) {
+                j.visible = !this.state.isShowText
+            }
+        }
         this.setState({
             [setting]: !this.state[setting]
         })
@@ -200,7 +216,7 @@ class DataTree extends PureComponent {
 
     render() {
         const { dataMap, activeId } = this.props
-        const { expandedKeys, isShowTreeIcon, isAutoFocus } = this.state
+        const { expandedKeys, isShowTreeIcon, isAutoFocus, isShowText } = this.state
         const { cname } = dataMap
         return (
             <StyledDataTree>
@@ -213,6 +229,11 @@ class DataTree extends PureComponent {
                     <Tooltip title="创建树节点时自动开启文本框修改名称">
                         <button data-setting="isAutoFocus" onClick={this.toggleSetting} className={`btn ${isAutoFocus ? 'active': ''}`}>
                             <Icon icon="treeAutoFocus" style={{ fontSize: '18px' }} color="rgb(116 116 116)"/>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="是否在画布中显示文本">
+                        <button data-setting="isShowText" onClick={this.toggleSetting} className={`btn ${isShowText ? 'active': ''}`}>
+                            <Icon icon="text" color="rgb(116 116 116)"/>
                         </button>
                     </Tooltip>
                 </div>
