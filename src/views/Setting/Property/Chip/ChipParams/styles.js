@@ -12,6 +12,7 @@ export const StyledChipParams = styled.div`
         margin-right: 4px;
         font-weight: bold;
         color: rgba(0, 0, 0, 0.8);
+        cursor: help;
       }
     }
   }

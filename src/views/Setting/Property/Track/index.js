@@ -30,11 +30,11 @@ let updateTimer = null
 
 class Track extends PureComponent {
     state = {
-        initConfig: {},
-        editingId: '',
-        paramsList: [],
-        isUpdating: false,
-        updateRes: null
+        initConfig: {}, // 表单的初始值，不管是新建的还是从已有的读的，都放在这里
+        editingId: '', // 正在编辑的格子，用于参数表格
+        paramsList: [], // 参数表格的参数
+        isUpdating: false, // 表示正在调接口的 loading
+        updateRes: null // 调接口的结果
     }
 
     formRef = React.createRef();

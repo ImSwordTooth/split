@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import Proptypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Divider, Switch } from 'antd'
+import { Divider, Switch, Tooltip } from 'antd'
 import LabelInput from '../../../../components/LabelInput/index'
 import { getDataById } from '../../../../utils/common'
 import { StyledChipParams } from './styles'
@@ -109,7 +109,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('id') &&
                         <div className="param">
-                            <span className="paramName">data-id:</span>
+                            <Tooltip placement="left" title="碎片的唯一 id。">
+                                <span className="paramName">data-id:</span>
+                            </Tooltip>
                             <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('id', value)}>{chipData.id}</LabelInput>
                         </div>
                     }
@@ -118,7 +120,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('name') &&
                         <div className="param">
-                            <span className="paramName">data-name:</span>
+                            <Tooltip placement="left" title="碎片在库中、allData 里的 key 值，通过该值来找到对应的数据。">
+                                <span className="paramName">data-name:</span>
+                            </Tooltip>
                             <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('name', value)}>{chipData.name}</LabelInput>
                         </div>
                     }
@@ -127,7 +131,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('title') &&
                         <div className="param">
-                            <span className="paramName">data-title:</span>
+                            <Tooltip placement="left" title="碎片的说明，命名没有规范，但是要让用户知道这个碎片是干嘛的。">
+                                <span className="paramName">data-title:</span>
+                            </Tooltip>
                             <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('title', value)}>{chipData.title}</LabelInput>
                         </div>
                     }
@@ -136,7 +142,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('group') &&
                         <div className="param">
-                            <span className="paramName">data-group:</span>
+                            <Tooltip placement="left" title={<div>碎片的组的名称，如果两个碎片来自同一部分，就可以放在同一个组。<br/>和 title 一样，命名规则的要求就是语义化。单个碎片也应该有个 group 来包裹。</div>}>
+                                <span className="paramName">data-group:</span>
+                            </Tooltip>
                             <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('group', value)}>{chipData.group}</LabelInput>
                         </div>
                     }
@@ -145,7 +153,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('transform') &&
                         <div className="param">
-                            <span className="paramName">data-transform:</span>
+                            <Tooltip placement="left" title="一个函数名，该函数要定义在 script 标签中，用于整理数据。">
+                                <span className="paramName">data-transform:</span>
+                            </Tooltip>
                             <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('transform', value)}>{chipData.transform}</LabelInput>
                         </div>
                     }
@@ -154,7 +164,9 @@ class ChipParams extends PureComponent {
                     {
                         chipType.includes('callback') &&
                         <div className="param">
-                            <span className="paramName">data-callback:</span>
+                            <Tooltip placement="left" title="一个函数名，该函数要定义在 script 标签中，用于数据整理后的回调。">
+                                <span className="paramName">data-callback:</span>
+                            </Tooltip>
                             <Switch size="small" style={{ marginRight: '10px' }} checked={chipData.callback} onChange={(checked) => this.updateChipData('callback', checked ? `chip${dataId}Callback` : checked)} />
                             {
                                 chipData.callback && <LabelInput inputStyle={{ width: '120px', fontSize: '12px' }} size="small" onChange={(value) => this.updateChipData('callback', value)}>{chipData.callback}</LabelInput>
