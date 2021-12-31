@@ -35,7 +35,6 @@ class Paste extends PureComponent {
                         this.setState({
                             isShowPasteInput: true
                         })
-                        console.log(input)
                         if (input) {
                             input.focus()
                         }

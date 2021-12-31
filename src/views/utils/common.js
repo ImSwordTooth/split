@@ -40,7 +40,10 @@ export const startChoose = () => {
     changeEditId('')
     app.stage.cursor = 'default'
     app.stage.removeAllListeners()
-    app.stage.children.find(a => !!a.isHit).filters = []
+    const hit = app.stage.children.find(a => !!a.isHit)
+    if (hit) {
+        hit.filters = []
+    }
     const blocks = getAllChildren()
     blocks.forEach((item, index) => {
         item.cursor = 'move'

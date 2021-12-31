@@ -1,7 +1,7 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {Tooltip} from "antd";
-import Icon from "../../components/Icon";
+import { Tooltip } from 'antd'
+import Icon from '../../components/Icon'
 import { changeParentId } from '@action'
 
 class Parent extends PureComponent {

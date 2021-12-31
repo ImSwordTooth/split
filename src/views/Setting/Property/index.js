@@ -3,12 +3,12 @@ import { Tabs, Breadcrumb } from 'antd'
 import { connect } from 'react-redux'
 import Track from './Track'
 import Chip from './Chip'
+import MainSetting from './MainSetting'
 import Component from './Component'
 import DragLine from '../../components/DragLine'
 import Icon from '../../components/Icon'
 import { changeActiveId } from '@action'
 import { getDataById } from '../../utils/common'
-import MainSetting from './MainSetting'
 import { preComponentList } from './Component/PRE'
 import { StyledProperty } from './styles'
 
@@ -36,7 +36,7 @@ class Setting extends PureComponent {
         return width > 300 ? width : 300
     }
 
-    getPath = ()=>{
+    getPath = () => {
         const { activeId, cname, dataMap } = this.props
         let path = [];
         if (activeId !== '' && activeId !== '0') {

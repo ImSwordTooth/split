@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {Select, Input, Button, Tooltip, Collapse} from 'antd'
+import { Select, Input, Button, Tooltip, Collapse } from 'antd'
 import Icon from '../../../components/Icon'
 import PreComponent from './PreComponent'
 import { preComponentList } from './PRE'

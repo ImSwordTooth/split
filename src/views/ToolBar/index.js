@@ -2,22 +2,21 @@ import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { GlowFilter } from '@pixi/filter-glow'
 import { connect } from 'react-redux'
-import { Button, message, Select, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
+import { Button, message, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
 import RandomColor from 'randomcolor'
 import UploadImage from './features/UploadImage'
 import Paste from './features/Paste'
 import Parent from './features/Parent'
+import Resize from './features/Resize'
 import Icon from '../components/Icon'
 import { changeMode, changeDataMap, changeActiveId, changeEditId } from '@action'
-import { copyText, getDataById, hex2PixiColor, resize, startChoose } from '../utils/common'
+import { copyText, getDataById, hex2PixiColor, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
-const { Option } = Select
-
-const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ] // 缩放值列表，放在 Select 里快速选择
 const outlineFilter = new GlowFilter({ distance: 10, outerStrength: 2, color: 0xaaaaaa, quality: .8 })
+
 class ToolBar extends PureComponent {
 
     state = {
@@ -27,8 +26,6 @@ class ToolBar extends PureComponent {
         nextRectColor: '', // 即将创建的图形的颜色，随机颜色
         randomColorType: '' // 随机颜色的范围，'' || 'light' || 'dark'
     }
-
-    selectRef = React.createRef()
 
     componentDidMount() {
         document.addEventListener('keydown', this.keyEvent, false)
@@ -250,36 +247,11 @@ class ToolBar extends PureComponent {
         }
     }
 
-    resizeTo = e => {
-        resize(null, e.value)
-    }
-
     print = () => {
         const { dataMap } = this.props
         copyText(JSON.stringify(dataMap))
         console.log('dataMap：', dataMap)
         message.success('已复制到控制台和剪切板')
-    }
-
-    selectBlur = () => {
-        this.selectRef.current.blur()
-    }
-
-    clickToScale = (e) => {
-        const { type } = e.currentTarget.dataset
-        const { scale } = this.props
-        if (type === '-') {
-            const index = SCALE_LIST.findIndex(s => s >= scale)
-
-            if (index > 0) {
-               resize(null, SCALE_LIST[index - 1])
-            }
-        } else {
-            const index = SCALE_LIST.findIndex(s => s > scale)
-            if (index < SCALE_LIST.length) {
-                resize(null, SCALE_LIST[index])
-            }
-        }
     }
 
     startReName = (e) => {
@@ -342,7 +314,7 @@ class ToolBar extends PureComponent {
     }
 
     render() {
-        const { mode, scale, dataMap } = this.props
+        const { mode, dataMap } = this.props
         const { nextRectColor, reNaming, channelList, randomColorType } = this.state
         const { name, cname, channel } = dataMap
         return (
@@ -433,26 +405,7 @@ class ToolBar extends PureComponent {
                     }>
                         <button className="btn"><Icon icon="tip"/></button>
                     </Popover>
-                    <div className="resize">
-                        <button data-type="-" className="btn" style={{ margin: '0 2px' }} onClick={this.clickToScale}>-</button>
-                        <Select
-                            ref={this.selectRef}
-                            value={{ value: scale, label: parseInt(scale * 100) + '%' }}
-                            labelInValue
-                            showArrow={false}
-                            onChange={this.resizeTo}
-                            onSelect={this.selectBlur}
-                            dropdownStyle={{ textAlign: 'center' }}
-                            style={{ width: 70, textAlign: 'center' }}
-                        >
-                            {
-                                SCALE_LIST.map((scale, index) => {
-                                    return <Option value={scale} key={index}>{scale * 100 + '%'}</Option>
-                                })
-                            }
-                        </Select>
-                        <button data-type="+" className="btn" style={{ margin: '0 2px' }}  onClick={this.clickToScale}>+</button>
-                    </div>
+                    <Resize />
                     <Button type="primary" onClick={this.print} style={{ marginLeft: '20px' }}>数据</Button>
                     <Paste />
                 </div>
