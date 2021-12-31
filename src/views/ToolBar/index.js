@@ -1,21 +1,23 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
+import { GlowFilter } from '@pixi/filter-glow'
 import { connect } from 'react-redux'
 import { Button, message, Select, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
 import RandomColor from 'randomcolor'
 import UploadImage from './features/UploadImage'
 import Paste from './features/Paste'
+import Parent from './features/Parent'
 import Icon from '../components/Icon'
 import { changeMode, changeDataMap, changeActiveId, changeEditId } from '@action'
 import { copyText, getDataById, hex2PixiColor, resize, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
-import Parent from "./features/Parent";
 
 const { Option } = Select
 
 const SCALE_LIST = [ 0.1, 0.25, 0.5, 1, 1.5, 2, 4 ] // 缩放值列表，放在 Select 里快速选择
+const outlineFilter = new GlowFilter({ distance: 10, outerStrength: 2, color: 0xaaaaaa, quality: .8 })
 class ToolBar extends PureComponent {
 
     state = {
@@ -235,10 +237,12 @@ class ToolBar extends PureComponent {
         const hit = hitTest(event.data.global)
         if (!hitObject || !hit || (hitObject && hit && hit.name !== hitObject.name)) {
             if (hitObject) {
-                hitObject.tint = 0xffffff
+                hitObject.filters = []
+                hitObject.isHit = false
             }
             if (hit) {
-                hit.tint = 0xc7c7c7;
+                hit.filters = [outlineFilter]
+                hit.isHit = true // 标记一下，用于全局清除
             }
             this.setState({
                 hitObject: hit

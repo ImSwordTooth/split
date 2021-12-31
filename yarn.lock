@@ -1663,12 +1663,39 @@
     "@pixi/math" "5.3.11"
     "@pixi/utils" "5.3.11"
 
+"@pixi/filter-adjustment@4.1.3":
+  version "4.1.3"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-adjustment/-/filter-adjustment-4.1.3.tgz#61e34b4dd9766ccf40463f0538201bf68f78df66"
+  integrity sha1-YeNLTdl2bM9ARj8FOCAb9o9432Y=
+
+"@pixi/filter-advanced-bloom@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-advanced-bloom/-/filter-advanced-bloom-4.1.5.tgz#9c8b7d087c896083f3f13541cd40c50add1d6388"
+  integrity sha1-nIt9CHyJYIPz8TVBzUDFCt0dY4g=
+  dependencies:
+    "@pixi/filter-kawase-blur" "4.1.5"
+
 "@pixi/filter-alpha@^5.1.3":
   version "5.3.11"
   resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-alpha/-/filter-alpha-5.3.11.tgz#b4059e8165fdac62d4404e3dab49f3433912c8ee"
   integrity sha1-tAWegWX9rGLUQE49q0nzQzkSyO4=
   dependencies:
     "@pixi/core" "5.3.11"
+
+"@pixi/filter-ascii@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-ascii/-/filter-ascii-4.1.5.tgz#c2dc5ce4fea837d60b46ad6b2b36ad1219fa6275"
+  integrity sha1-wtxc5P6oN9YLRq1rKzatEhn6YnU=
+
+"@pixi/filter-bevel@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-bevel/-/filter-bevel-4.1.5.tgz#142ee7658f72197944b3cbdc5aa54d13d17d4400"
+  integrity sha1-FC7nZY9yGXlEs8vcWqVNE9F9RAA=
+
+"@pixi/filter-bloom@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-bloom/-/filter-bloom-4.1.5.tgz#f37dfebac6ccc45e546329390471f0fe8ea5d097"
+  integrity sha1-833+usbMxF5UYyk5BHHw/o6l0Jc=
 
 "@pixi/filter-blur@^5.1.3":
   version "5.3.11"
@@ -1678,12 +1705,47 @@
     "@pixi/core" "5.3.11"
     "@pixi/settings" "5.3.11"
 
+"@pixi/filter-bulge-pinch@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-bulge-pinch/-/filter-bulge-pinch-4.1.5.tgz#aaeb31df9191ef42d553a615cd37e27af8359eeb"
+  integrity sha1-qusx35GR70LVU6YVzTfievg1nus=
+
+"@pixi/filter-color-map@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-color-map/-/filter-color-map-4.1.5.tgz#ffa685356c666295fe66c0c871196b0ae13a5e29"
+  integrity sha1-/6aFNWxmYpX+ZsDIcRlrCuE6Xik=
+
 "@pixi/filter-color-matrix@^5.1.3":
   version "5.3.11"
   resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-color-matrix/-/filter-color-matrix-5.3.11.tgz#dd905b62d3932498be46b44cc77af92fc92ae0d0"
   integrity sha1-3ZBbYtOTJJi+RrRMx3r5L8kq4NA=
   dependencies:
     "@pixi/core" "5.3.11"
+
+"@pixi/filter-color-overlay@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-color-overlay/-/filter-color-overlay-4.1.5.tgz#db9bc841228c41f469267d09e566006496dfe3f1"
+  integrity sha1-25vIQSKMQfRpJn0J5WYAZJbf4/E=
+
+"@pixi/filter-color-replace@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-color-replace/-/filter-color-replace-4.1.5.tgz#c58cb6b7283781b56bcf1075be8ad6c15795d125"
+  integrity sha1-xYy2tyg3gbVrzxB1vorWwVeV0SU=
+
+"@pixi/filter-convolution@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-convolution/-/filter-convolution-4.1.5.tgz#37607a13f8d3fb94393dee64eebecfde105899e8"
+  integrity sha1-N2B6E/jT+5Q5Pe5k7r7P3hBYmeg=
+
+"@pixi/filter-cross-hatch@4.1.3":
+  version "4.1.3"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-cross-hatch/-/filter-cross-hatch-4.1.3.tgz#d5eb38d7e9f4c532755fe82c2de343275bf86f4b"
+  integrity sha1-1es41+n0xTJ1X+gsLeNDJ1v4b0s=
+
+"@pixi/filter-crt@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-crt/-/filter-crt-4.1.5.tgz#19a98391d00cffa99befabf54b02ca7c47ddaf2c"
+  integrity sha1-GamDkdAM/6mb76v1SwLKfEfdryw=
 
 "@pixi/filter-displacement@^5.1.3":
   version "5.3.11"
@@ -1693,6 +1755,23 @@
     "@pixi/core" "5.3.11"
     "@pixi/math" "5.3.11"
 
+"@pixi/filter-dot@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-dot/-/filter-dot-4.1.5.tgz#0715e7b8e1ec006269f48418f5cdad187cf944ba"
+  integrity sha1-BxXnuOHsAGJp9IQY9c2tGHz5RLo=
+
+"@pixi/filter-drop-shadow@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-drop-shadow/-/filter-drop-shadow-4.1.5.tgz#8eb6320ac45f1b218066ffe8e46a692a2706ba5d"
+  integrity sha1-jrYyCsRfGyGAZv/o5GppKicGul0=
+  dependencies:
+    "@pixi/filter-kawase-blur" "4.1.5"
+
+"@pixi/filter-emboss@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-emboss/-/filter-emboss-4.1.5.tgz#e252bb109e2a9d0c63025e79caa0bf1fe33defbc"
+  integrity sha1-4lK7EJ4qnQxjAl55yqC/H+M977w=
+
 "@pixi/filter-fxaa@^5.1.3":
   version "5.3.11"
   resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-fxaa/-/filter-fxaa-5.3.11.tgz#59f6579348ff1b35467839df40bf5c77383b3835"
@@ -1700,12 +1779,97 @@
   dependencies:
     "@pixi/core" "5.3.11"
 
+"@pixi/filter-glitch@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-glitch/-/filter-glitch-4.1.5.tgz#b657a2a79eedc645b7a77e0afb96dbf7413c5e8b"
+  integrity sha1-tleip57txkW3p34K+5bb90E8Xos=
+
+"@pixi/filter-glow@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-glow/-/filter-glow-4.1.5.tgz#bd92a6eca3320b71e8c3651fea26c56480a7b640"
+  integrity sha1-vZKm7KMyC3How2Uf6ibFZICntkA=
+
+"@pixi/filter-godray@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-godray/-/filter-godray-4.1.5.tgz#00638291f7727810ba1b225af1ccb08cfd0682a9"
+  integrity sha1-AGOCkfdyeBC6GyJa8cywjP0Ggqk=
+
+"@pixi/filter-kawase-blur@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-kawase-blur/-/filter-kawase-blur-4.1.5.tgz#c84fd3f452bfa44aaba4cba0c43a2b6071e0c6b2"
+  integrity sha1-yE/T9FK/pEqrpMugxDorYHHgxrI=
+
+"@pixi/filter-motion-blur@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-motion-blur/-/filter-motion-blur-4.1.5.tgz#b989b06d47bf5c398c89f9616f92feee3b0bea71"
+  integrity sha1-uYmwbUe/XDmMiflhb5L+7jsL6nE=
+
+"@pixi/filter-multi-color-replace@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-multi-color-replace/-/filter-multi-color-replace-4.1.5.tgz#f205296b5275d74f843a018c06688d4d598a06f8"
+  integrity sha1-8gUpa1J110+EOgGMBmiNTVmKBvg=
+
 "@pixi/filter-noise@^5.1.3":
   version "5.3.11"
   resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-noise/-/filter-noise-5.3.11.tgz#a133405792ff93b10a2bec78e7ea2683ce4f3052"
   integrity sha1-oTNAV5L/k7EKK+x45+omg85PMFI=
   dependencies:
     "@pixi/core" "5.3.11"
+
+"@pixi/filter-old-film@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-old-film/-/filter-old-film-4.1.5.tgz#2aae40cb1abb4e7692a70c4c0beab15f6ac895cc"
+  integrity sha1-Kq5Ayxq7TnaSpwxMC+qxX2rIlcw=
+
+"@pixi/filter-outline@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-outline/-/filter-outline-4.1.5.tgz#d44f63fb40e80ea8719a4f72a8f5453c1244b515"
+  integrity sha1-1E9j+0DoDqhxmk9yqPVFPBJEtRU=
+
+"@pixi/filter-pixelate@4.1.3":
+  version "4.1.3"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-pixelate/-/filter-pixelate-4.1.3.tgz#8200ccf4e47803a5b2f86ab3a755d438769b0e37"
+  integrity sha1-ggDM9OR4A6Wy+Gqzp1XUOHabDjc=
+
+"@pixi/filter-radial-blur@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-radial-blur/-/filter-radial-blur-4.1.5.tgz#ac4fbb513e5056bdc9a4f518a02f2d715061f874"
+  integrity sha1-rE+7UT5QVr3JpPUYoC8tcVBh+HQ=
+
+"@pixi/filter-reflection@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-reflection/-/filter-reflection-4.1.5.tgz#a73f18a2b2c336e6b0a1f048343196f155e91e2e"
+  integrity sha1-pz8YorLDNuawofBINDGW8VXpHi4=
+
+"@pixi/filter-rgb-split@4.1.3":
+  version "4.1.3"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-rgb-split/-/filter-rgb-split-4.1.3.tgz#dfe68d36cf344b2644ceee9fd50f1bd970639b12"
+  integrity sha1-3+aNNs80SyZEzu6f1Q8b2XBjmxI=
+
+"@pixi/filter-shockwave@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-shockwave/-/filter-shockwave-4.1.5.tgz#2500f52f0ef77d790bc4890cc6d32c3a88bdf0c5"
+  integrity sha1-JQD1Lw73fXkLxIkMxtMsOoi98MU=
+
+"@pixi/filter-simple-lightmap@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-simple-lightmap/-/filter-simple-lightmap-4.1.5.tgz#6b6c35e4e3f6079091d494aab2394f88b203c31c"
+  integrity sha1-a2w15OP2B5CR1JSqsjlPiLIDwxw=
+
+"@pixi/filter-tilt-shift@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-tilt-shift/-/filter-tilt-shift-4.1.5.tgz#cbdf2c658648ca50f2250ef0efe7eacf04ed8d5d"
+  integrity sha1-y98sZYZIylDyJQ7w7+fqzwTtjV0=
+
+"@pixi/filter-twist@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-twist/-/filter-twist-4.1.5.tgz#1baaa591ad50b85fcacc1a201150470f6a8dd2ca"
+  integrity sha1-G6qlka1QuF/KzBogEVBHD2qN0so=
+
+"@pixi/filter-zoom-blur@4.1.5":
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/@pixi%2ffilter-zoom-blur/-/filter-zoom-blur-4.1.5.tgz#7602636fc6b19c0c0f26cc4db26fb838593e5ae8"
+  integrity sha1-dgJjb8axnAwPJsxNsm+4OFk+Wug=
 
 "@pixi/graphics@5.3.11", "@pixi/graphics@^5.1.3":
   version "5.3.11"
@@ -8813,6 +8977,44 @@ pirates@^4.0.1:
   integrity sha1-ZDqSyviUVm+RsrmG0sZpUKji+4c=
   dependencies:
     node-modules-regexp "^1.0.0"
+
+pixi-filters@^4.1.5:
+  version "4.1.5"
+  resolved "http://npm.ifengcloud.ifeng.com/pixi-filters/-/pixi-filters-4.1.5.tgz#2c34845b212f252285f59c0992db672dd1aa7ebb"
+  integrity sha1-LDSEWyEvJSKF9ZwJkttnLdGqfrs=
+  dependencies:
+    "@pixi/filter-adjustment" "4.1.3"
+    "@pixi/filter-advanced-bloom" "4.1.5"
+    "@pixi/filter-ascii" "4.1.5"
+    "@pixi/filter-bevel" "4.1.5"
+    "@pixi/filter-bloom" "4.1.5"
+    "@pixi/filter-bulge-pinch" "4.1.5"
+    "@pixi/filter-color-map" "4.1.5"
+    "@pixi/filter-color-overlay" "4.1.5"
+    "@pixi/filter-color-replace" "4.1.5"
+    "@pixi/filter-convolution" "4.1.5"
+    "@pixi/filter-cross-hatch" "4.1.3"
+    "@pixi/filter-crt" "4.1.5"
+    "@pixi/filter-dot" "4.1.5"
+    "@pixi/filter-drop-shadow" "4.1.5"
+    "@pixi/filter-emboss" "4.1.5"
+    "@pixi/filter-glitch" "4.1.5"
+    "@pixi/filter-glow" "4.1.5"
+    "@pixi/filter-godray" "4.1.5"
+    "@pixi/filter-kawase-blur" "4.1.5"
+    "@pixi/filter-motion-blur" "4.1.5"
+    "@pixi/filter-multi-color-replace" "4.1.5"
+    "@pixi/filter-old-film" "4.1.5"
+    "@pixi/filter-outline" "4.1.5"
+    "@pixi/filter-pixelate" "4.1.3"
+    "@pixi/filter-radial-blur" "4.1.5"
+    "@pixi/filter-reflection" "4.1.5"
+    "@pixi/filter-rgb-split" "4.1.3"
+    "@pixi/filter-shockwave" "4.1.5"
+    "@pixi/filter-simple-lightmap" "4.1.5"
+    "@pixi/filter-tilt-shift" "4.1.5"
+    "@pixi/filter-twist" "4.1.5"
+    "@pixi/filter-zoom-blur" "4.1.5"
 
 pixi.js@5.1.3:
   version "5.1.3"
