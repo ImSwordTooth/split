@@ -15,7 +15,7 @@ import { copyText, getDataById, hex2PixiColor, startChoose } from '../utils/comm
 import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
-const outlineFilter = new GlowFilter({ distance: 10, outerStrength: 2, color: 0xaaaaaa, quality: .8 })
+const outlineFilter = new GlowFilter({ distance: 8, outerStrength: 3, color: 0xaaaaaa, quality: 1 })
 
 class ToolBar extends PureComponent {
 
@@ -71,7 +71,7 @@ class ToolBar extends PureComponent {
     }
 
     drawNormal = () => {
-        const { dataMap, scale } = this.props
+        const { dataMap } = this.props
         const { randomColorType } = this.state
         const { app } = window
         const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
@@ -90,7 +90,7 @@ class ToolBar extends PureComponent {
         const pixiColor = hex2PixiColor(color)
 
         const handleEnd = (event) => {
-            const { parentId } = this.props
+            const { parentId, scale } = this.props
             if (ing) {
                 const end = {...event.data.global}
 
@@ -338,7 +338,11 @@ class ToolBar extends PureComponent {
                         overlayStyle={{ backgroundColor: '#ffffff' }}
                         overlay={
                             <Menu selectedKeys={[randomColorType]} style={{ maxHeight: '500px', overflow: 'auto' }}>
-                                <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>完全随机</Menu.Item>
+                                <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>
+                                    <div style={{ background: `url('https://x0.ifengimg.com/ucms/2022_02/AEFEF6E59F86D18EBA9E5828E50C183968BD4D00_size1426_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>
+                                        完全随机
+                                    </div>
+                                </Menu.Item>
                                 <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>亮色</Menu.Item>
                                 <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>暗色</Menu.Item>
                             </Menu>

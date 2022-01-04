@@ -101,7 +101,8 @@ class Chip extends PureComponent {
     };
 
     createTrack = async (data) => {
-        const { channel, cname, activeId, dataMap } = this.props
+        const { activeId, dataMap } = this.props
+        const { cname, channel } = dataMap
         const { chipType, chipData } = this.state
 
         if (!channel.id) {
@@ -211,8 +212,8 @@ class Chip extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, dataMap, channel, cname } = state;
-    return { activeId, dataMap, channel, cname }
+    const { activeId, dataMap } = state;
+    return { activeId, dataMap }
 }
 
 export default connect(mapStateToProps)(Chip)
