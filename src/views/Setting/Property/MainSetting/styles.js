@@ -20,6 +20,10 @@ export const StyledMainSetting = styled.div`
     .prop {
       margin-right: 4px;
       cursor: help;
+      
+      &:hover {
+        text-decoration: underline dashed;
+      }
     }
   }
   

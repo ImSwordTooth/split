@@ -202,8 +202,12 @@ class DataTree extends PureComponent {
                                         <img style={{ width: '14px' }} src="https://x0.ifengimg.com/ucms/2021_51/04BF5ED7540F3BC2AE6D3AC19C0D10974FA606B5_size2_w50_h48.png" alt=""/>
                                     }
                                     {
-                                        isShowTreeIcon && data.config && data.config.chip && data.config.chip.chipType &&
-                                        <img src="https://x0.ifengimg.com/ucms/2021_51/CD0B86062ED829ECCAF0B9635F42E3A629DBF2AE_size2_w48_h48.png" alt=""/>
+                                        isShowTreeIcon && data.config && data.config.chip && data.config.chip.length > 0 &&
+                                            <span className="chipIcon">
+                                                <img src="https://x0.ifengimg.com/ucms/2021_51/CD0B86062ED829ECCAF0B9635F42E3A629DBF2AE_size2_w48_h48.png" alt=""/>
+                                                <span>{data.config.chip.length}</span>
+                                            </span>
+
                                     }
                                 </span>
                             </div>

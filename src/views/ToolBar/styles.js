@@ -135,6 +135,7 @@ export const StyledToolbar = styled.div`
     height: 24px;
     line-height: 24px;
     text-align: center;
+    user-select: none;
   }
   
   .paste {

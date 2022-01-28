@@ -1,16 +1,10 @@
 import React, { PureComponent } from 'react'
 import Proptypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Divider, Switch, Tooltip } from 'antd'
-import LabelInput from '../../../../components/LabelInput/index'
-import { getDataById } from '../../../../utils/common'
+import { Switch, Tooltip } from 'antd'
+import LabelInput from '../../../../../components/LabelInput'
+import { getDataById } from '../../../../../utils/common'
 import { StyledChipParams } from './styles'
-
-const TYPE_MAP = {
-    static: '静态碎片',
-    recommend: '推荐位碎片',
-    struct: '结构化碎片'
-}
 
 class ChipParams extends PureComponent {
 
@@ -97,13 +91,11 @@ class ChipParams extends PureComponent {
     }
 
     render() {
-        const { type } = this.props
         const { chipData, dataId } = this.state
         const chipType = Object.keys(chipData)
 
         return (
             <StyledChipParams>
-                <Divider orientation="left" style={{ fontSize: '12px' }} plain>碎片参数{type ? ` - ${TYPE_MAP[type]}` : ''}</Divider>
                 <div className="paramsList">
                     {/*data-id*/}
                     {

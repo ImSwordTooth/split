@@ -2,8 +2,8 @@ import styled from 'styled-components'
 
 export const StyledChipParams = styled.div`
   .paramsList {
-    padding-left: 20px;
-
+    margin-top: 8px;
+    
     .param {
       margin-bottom: 4px;
       font-size: 12px;
@@ -13,6 +13,11 @@ export const StyledChipParams = styled.div`
         font-weight: bold;
         color: rgba(0, 0, 0, 0.8);
         cursor: help;
+        
+        &:hover {
+          text-decoration: underline dashed;
+          
+        }
       }
     }
   }

@@ -339,9 +339,7 @@ class ToolBar extends PureComponent {
                         overlay={
                             <Menu selectedKeys={[randomColorType]} style={{ maxHeight: '500px', overflow: 'auto' }}>
                                 <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>
-                                    <div style={{ WebkitBackgroundClip: 'text', color: 'transparent' }}>
-                                        完全随机
-                                    </div>
+                                    <div style={{ background: `url('https://x0.ifengimg.com/ucms/2022_02/AEFEF6E59F86D18EBA9E5828E50C183968BD4D00_size1426_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>完全随机</div>
                                 </Menu.Item>
                                 <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>亮色</Menu.Item>
                                 <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>暗色</Menu.Item>
