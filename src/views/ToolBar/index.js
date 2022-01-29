@@ -2,14 +2,16 @@ import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
 import { GlowFilter } from '@pixi/filter-glow'
 import { connect } from 'react-redux'
-import { Button, message, Tooltip, Popover, Input, Tag, Dropdown, Menu } from 'antd'
+import { Button, message, Tooltip, Popover, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
 import RandomColor from 'randomcolor'
 import UploadImage from './features/UploadImage'
 import Paste from './features/Paste'
 import Parent from './features/Parent'
 import Resize from './features/Resize'
+import Finish from "./features/Finish/index"
 import Icon from '../components/Icon'
+import LabelInput from '../components/LabelInput'
 import { changeMode, changeDataMap, changeActiveId, changeEditId } from '@action'
 import { copyText, getDataById, hex2PixiColor, startChoose } from '../utils/common'
 import { hitTest } from '../utils/pixiUtils'
@@ -20,7 +22,6 @@ const outlineFilter = new GlowFilter({ distance: 8, outerStrength: 3, color: 0xa
 class ToolBar extends PureComponent {
 
     state = {
-        reNaming: '', // 正在重命名的字段, '' || 'cn' || 'en'
         channelList: [], // 频道列表
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
         nextRectColor: '', // 即将创建的图形的颜色，随机颜色
@@ -254,49 +255,16 @@ class ToolBar extends PureComponent {
         message.success('已复制到控制台和剪切板')
     }
 
-    startReName = (e) => {
-        e.stopPropagation()
-        const { type } = e.currentTarget.dataset
-        this.setState({ reNaming: type })
-        document.addEventListener('click', this.cancelReName)
-    }
-
-    finishReName = (e) => {
+    finishReName = (type, value) => {
         const { dataMap } = this.props
-        const { reNaming } = this.state
         const newDataMap = {...dataMap}
-        if (reNaming === 'en') {
-            newDataMap.name = e.target.value
+        if (type === 'en') {
+            newDataMap.name = value
         }
-        if (reNaming === 'cn') {
-            newDataMap.cname = e.target.value
+        if (type === 'cn') {
+            newDataMap.cname = value
         }
         changeDataMap(newDataMap)
-        this.setState({ reNaming: '' })
-    }
-
-    cancelReName = (e) => {
-        const { dataMap } = this.props
-        const { reNaming } = this.state
-        const newDataMap = {...dataMap}
-
-        if (reNaming === 'en') {
-            const en = document.getElementById('en')
-            if (en.contains(e.target)) {
-                return
-            }
-            newDataMap.name = en.value
-        }
-        if (reNaming === 'cn') {
-            const cn = document.getElementById('cn')
-            if (cn.contains(e.target)) {
-                return
-            }
-            newDataMap.cname = cn.value
-        }
-        changeDataMap(newDataMap)
-        this.setState({ reNaming: '' })
-        document.removeEventListener('click', this.cancelReName)
     }
 
     handleChannelChange = (e) => {
@@ -315,7 +283,7 @@ class ToolBar extends PureComponent {
 
     render() {
         const { mode, dataMap } = this.props
-        const { nextRectColor, reNaming, channelList, randomColorType } = this.state
+        const { nextRectColor, channelList, randomColorType } = this.state
         const { name, cname, channel } = dataMap
         return (
             <StyledToolbar>
@@ -358,17 +326,13 @@ class ToolBar extends PureComponent {
                 {/*中间，为保持视觉居中，需要absolute*/}
                 <div className="centerPart">
                     <div className="fileNameWp">
-                        {
-                            reNaming === 'en'
-                                ? <Input id="en" defaultValue={name} autoFocus style={{ width: '160px' }} onPressEnter={this.finishReName}/>
-                                :  <span className="en" data-type="en" onClick={this.startReName}>{name}</span>
-                        }
+                        <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px' }} onChange={(value) => this.finishReName('en', value)}>
+                            {name}
+                        </LabelInput>
                         <span>-</span>
-                        {
-                            reNaming === 'cn'
-                                ? <Input id="cn" defaultValue={cname} autoFocus style={{ width: '160px', fontSize: '12px' }} onPressEnter={this.finishReName}/>
-                                : <span className="cn" data-type="cn" onClick={this.startReName}>{cname}</span>
-                        }
+                        <LabelInput style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
+                            {cname}
+                        </LabelInput>
                     </div>
                     <div className="channel">
                         <Dropdown
@@ -410,6 +374,7 @@ class ToolBar extends PureComponent {
                     <Resize />
                     <Button type="primary" onClick={this.print} style={{ marginLeft: '20px' }}>数据</Button>
                     <Paste />
+                    <Finish />
                 </div>
             </StyledToolbar>
         )

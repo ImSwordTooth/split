@@ -38,6 +38,13 @@ class LabelInput extends PureComponent {
         }
     }
 
+    handleEnter = () => {
+        const { onChange } = this.props
+        onChange(this.inputRef.current.input.value)
+        this.setState({ isEditing: false })
+        document.removeEventListener('click', this.cancelEdit)
+    }
+
     render() {
         const { children, style, size, inputStyle } = this.props
         const { isEditing } = this.state
@@ -49,6 +56,7 @@ class LabelInput extends PureComponent {
                     size={size}
                     autoFocus
                     defaultValue={children}
+                    onPressEnter={this.handleEnter}
                     style={inputStyle}/>
             :
                 <StyledLabelInput style={style} onClick={this.startEdit}>
