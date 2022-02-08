@@ -50,6 +50,7 @@ class App extends PureComponent{
         app.stage.sortableChildren = true
         appElement.appendChild(app.view);
         window.app = app
+        window.addEventListener('message', this.receiveMessage, false)
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', resize, false)
         window.onbeforeunload = (e) => {
@@ -64,6 +65,14 @@ class App extends PureComponent{
         document.removeEventListener('keydown', this.keyEvent, false)
         document.removeEventListener('wheel', resize, false)
         app.stage.removeAllListeners()
+    }
+
+    receiveMessage = (e) => {
+        console.log(e.origin)
+        if (window.location.origin === e.origin) {
+            return
+        }
+        console.log('成功', e)
     }
 
     keyEvent = (e) => {
