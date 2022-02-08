@@ -81,7 +81,6 @@ class ToolBar extends PureComponent {
         app.stage.removeAllListeners()
         app.stage.on('pointermove', this.findHit)
         let start = {}
-        let ing = false
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
         const color = RandomColor({ luminosity: randomColorType })
@@ -92,138 +91,139 @@ class ToolBar extends PureComponent {
 
         const handleEnd = (event) => {
             const { parentId, scale } = this.props
-            if (ing) {
-                const end = {...event.data.global}
+            const end = {...event.data.global}
 
-                const shape = new PIXI.Graphics()
-                app.stage.removeChild(duringRect)
-                if (Math.abs(end.x - start.x) < 2 && Math.abs(end.y-start.y) < 2) {
-                    return
-                }
-                shape.lineStyle(4, pixiColor, 1)
-                shape.beginFill(pixiColor, 0.2)
-                const width = Math.abs(end.x-start.x) / scale
-                const height = Math.abs(end.y-start.y) / scale
-                shape.drawRect(
-                    0,
-                    0,
-                    width,
-                    height
-                )
-
-                shape.x = (Math.min(start.x, end.x) - app.stage.x) / scale
-                shape.y = (Math.min(start.y, end.y) - app.stage.y) / scale
-                shape.endFill()
-
-                const textStyle = {
-                    fontFamily: 'Arial',
-                    fontSize: '14px',
-                    fontStyle: 'italic',
-                    fontWeight: 'bold',
-                    fill: color,
-                    stroke: '#000000',
-                    strokeThickness: 2,
-                    dropShadow: true,
-                    dropShadowColor: '#000000',
-                    dropShadowAngle: Math.PI / 6,
-                    dropShadowDistance: 2,
-                    wordWrap: true, //是否允许换行
-                    wordWrapWidth: 440 //换行执行宽度
-                }
-
-                ing = false
-                start = {}
-                // 有命中，在命中的容器内创建
-                const { hitObject: hit } = this.state
-
-                if (parentId || hit) {
-                    const newDataMap = { ...dataMap }
-                    let parent
-                    if (parentId) {
-                        parent = getDataById(parentId, newDataMap)
-                    } else {
-                        parent = getDataById(hit.name, newDataMap)
-                    }
-
-                    const newId = parent.id + '_' + parent.willCreateKey + ''
-                    parent.children.push({
-                        id: newId,
-                        name: `组件${newId}`,
-                        x: shape.x,
-                        y: shape.y,
-                        width,
-                        height,
-                        children: [],
-                        color,
-                        willCreateKey: 1
-                    })
-                    parent.willCreateKey++
-                    shape.name = newId
-                    shape.text = `组件${newId}`
-                    app.stage.addChild(shape)
-
-                    changeActiveId(newId)
-                    changeEditId(newId)
-                    changeDataMap(newDataMap)
-                } else {
-                    // 没有命中，创建到总容器内
-                    const newId = dataMap.willCreateKey + ''
-                    changeDataMap({
-                        ...dataMap,
-                        willCreateKey: dataMap.willCreateKey + 1,
-                        children: [
-                            ...dataMap.children,
-                            {
-                                id: newId,
-                                name: `组件${newId}`,
-                                x: shape.x,
-                                y: shape.y,
-                                width,
-                                height,
-                                children: [],
-                                color,
-                                willCreateKey: 1
-                            }
-                        ]
-                    })
-                    shape.name = newId
-                    shape.text = `组件${newId}`
-                    app.stage.addChild(shape)
-                    changeActiveId(newId)
-                    changeEditId(newId)
-                }
-                let basicText = new PIXI.Text(shape.text, textStyle)
-                basicText.name = 'text'
-                basicText.x = 0
-                basicText.y = -24
-                shape.addChild(basicText)
-                this.drawNormal()
+            const shape = new PIXI.Graphics()
+            app.stage.removeChild(duringRect)
+            if (Math.abs(end.x - start.x) < 2 && Math.abs(end.y-start.y) < 2) {
+                app.stage.off('pointerup')
+                app.stage.off('pointerupoutside')
+                return
             }
+            shape.lineStyle(4, pixiColor, 1)
+            shape.beginFill(pixiColor, 0.2)
+            const width = Math.abs(end.x-start.x) / scale
+            const height = Math.abs(end.y-start.y) / scale
+            shape.drawRect(
+                0,
+                0,
+                width,
+                height
+            )
+
+            shape.x = (Math.min(start.x, end.x) - app.stage.x) / scale
+            shape.y = (Math.min(start.y, end.y) - app.stage.y) / scale
+            shape.endFill()
+
+            const textStyle = {
+                fontFamily: 'Arial',
+                fontSize: '14px',
+                fontStyle: 'italic',
+                fontWeight: 'bold',
+                fill: color,
+                stroke: '#000000',
+                strokeThickness: 2,
+                dropShadow: true,
+                dropShadowColor: '#000000',
+                dropShadowAngle: Math.PI / 6,
+                dropShadowDistance: 2,
+                wordWrap: true, //是否允许换行
+                wordWrapWidth: 440 //换行执行宽度
+            }
+
+            start = {}
+            // 有命中，在命中的容器内创建
+            const { hitObject: hit } = this.state
+
+            if (parentId || hit) {
+                const newDataMap = { ...dataMap }
+                let parent
+                if (parentId) {
+                    parent = getDataById(parentId, newDataMap)
+                } else {
+                    parent = getDataById(hit.name, newDataMap)
+                }
+
+                const newId = parent.id + '_' + parent.willCreateKey + ''
+                parent.children.push({
+                    id: newId,
+                    name: `组件${newId}`,
+                    x: shape.x,
+                    y: shape.y,
+                    width,
+                    height,
+                    children: [],
+                    color,
+                    willCreateKey: 1
+                })
+                parent.willCreateKey++
+                shape.name = newId
+                shape.text = `组件${newId}`
+                app.stage.addChild(shape)
+
+                changeActiveId(newId)
+                changeEditId(newId)
+                changeDataMap(newDataMap)
+            } else {
+                // 没有命中，创建到总容器内
+                const newId = dataMap.willCreateKey + ''
+                changeDataMap({
+                    ...dataMap,
+                    willCreateKey: dataMap.willCreateKey + 1,
+                    children: [
+                        ...dataMap.children,
+                        {
+                            id: newId,
+                            name: `组件${newId}`,
+                            x: shape.x,
+                            y: shape.y,
+                            width,
+                            height,
+                            children: [],
+                            color,
+                            willCreateKey: 1
+                        }
+                    ]
+                })
+                shape.name = newId
+                shape.text = `组件${newId}`
+                app.stage.addChild(shape)
+                changeActiveId(newId)
+                changeEditId(newId)
+            }
+            let basicText = new PIXI.Text(shape.text, textStyle)
+            basicText.name = 'text'
+            basicText.x = 0
+            basicText.y = -24
+            shape.addChild(basicText)
+            this.drawNormal()
+            app.stage.off('pointerup')
+            app.stage.off('pointerupoutside')
         }
 
         app.stage.on('pointerdown', (event) => {
+            if (event.data.button !== 0) {
+                return
+            }
             start = {...event.data.global}
             app.stage.off('pointermove', this.findHit)
             duringRect.visible = false
             duringRect.name = 'tmp'
             app.stage.addChild(duringRect)
-            ing = true
 
             app.stage.on('pointermove', (event) => {
                 duringRect.visible = true
-                if (ing) {
-                    const current = {...event.data.global}
-                    duringRect.clear()
-                    duringRect.lineStyle(4, pixiColor, 1)
-                    duringRect.beginFill(pixiColor, 0.2)
-                    duringRect.drawRect(
-                        (start.x - app.stage.x) / app.stage.scale.x,
-                        (start.y - app.stage.y) / app.stage.scale.y,
-                        (current.x-start.x) / app.stage.scale.x,
-                        (current.y-start.y) / app.stage.scale.y
-                    )
-                    duringRect.endFill()
-                }
+                const current = {...event.data.global}
+                duringRect.clear()
+                duringRect.lineStyle(4, pixiColor, 1)
+                duringRect.beginFill(pixiColor, 0.2)
+                duringRect.drawRect(
+                    (start.x - app.stage.x) / app.stage.scale.x,
+                    (start.y - app.stage.y) / app.stage.scale.y,
+                    (current.x-start.x) / app.stage.scale.x,
+                    (current.y-start.y) / app.stage.scale.y
+                )
+                duringRect.endFill()
             })
             app.stage.on('pointerup', handleEnd)
             app.stage.on('pointerupoutside', handleEnd)

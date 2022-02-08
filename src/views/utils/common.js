@@ -102,7 +102,7 @@ export const resize = (e, to) => {
         return
     }
     const { x, y } = app.stage
-    const newScale = to || Number((scale - e.deltaY / 300).toFixed(2))
+    const newScale = to || Number((scale + e.wheelDeltaY / 120 / 100).toFixed(2))
     if (newScale <= 4 && newScale >= 0.1) {
         app.stage.setTransform(x, y, newScale, newScale)
         app.stage.hitArea.x = -app.stage.x / newScale
