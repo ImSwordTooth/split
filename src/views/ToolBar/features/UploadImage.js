@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react'
 import * as PIXI from 'pixi.js'
-import { Tooltip } from 'antd'
+import { message, Tooltip } from 'antd'
+import axios from 'axios'
+import { connect } from 'react-redux'
 import Icon from '../../components/Icon'
+import { changeDataMap } from '@action'
 
 class UploadImage extends PureComponent {
 
@@ -14,7 +17,8 @@ class UploadImage extends PureComponent {
         const [ file ] = e.currentTarget.files
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload=function(ev){
+        
+        reader.onload= (ev) => {
             const texture = PIXI.Texture.from(ev.target.result)
             const image = new PIXI.Sprite(texture);
             image.name = 'bc'
@@ -22,6 +26,24 @@ class UploadImage extends PureComponent {
             // 只能出现一个背景图，所以要删掉上一个
             app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
             app.stage.addChild(image)
+            axios.post("/ucmsApi/resource/upload", {
+                body: {
+                    data: ev.target.result,
+                    needWaterMark: false,
+                    position: '',
+                    waterMarkUrl: ''
+                }
+            }).then(res => {
+                if (res.data.code === 0) {
+                    const { dataMap } = this.props
+                    const newDataMap = {...dataMap}
+                    newDataMap.bc.image = res.data.data.url
+                    changeDataMap(newDataMap)
+                    message.success('上传成功')
+                } else {
+                    message.error('上传失败')
+                }
+            })
         }
     }
     
@@ -37,4 +59,9 @@ class UploadImage extends PureComponent {
     }
 }
 
-export default UploadImage
+function mapStateToProps(state) {
+    const { dataMap } = state;
+    return { dataMap }
+}
+
+export default connect(mapStateToProps)(UploadImage)

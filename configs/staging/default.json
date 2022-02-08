@@ -1,0 +1,15 @@
+{
+  "appname": "area",
+  "namespace": "area",
+  "alias": "area",
+  "debug": true,
+  "port": 3000,
+  "domain": ".ifeng.com",
+  "logs": {
+    "level": "debug"
+  },
+  "cdnCacheTime": 120,
+  "basePath": "/platform/area",
+  "authority": "manager_area",
+  "configToken": "stagingToken"
+}

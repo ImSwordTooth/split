@@ -307,7 +307,7 @@ class ToolBar extends PureComponent {
                         overlay={
                             <Menu selectedKeys={[randomColorType]} style={{ maxHeight: '500px', overflow: 'auto' }}>
                                 <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>
-                                    <div style={{ backgroundImage: `url('https://x0.ifengimg.com/ucms/2022_07/F595B4788AB1EA1C98B1F7146DF9D0A0347918EA_size1477_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>完全随机</div>
+                                    <div style={{ backgroundImage: `url('https://x0.ifengimg.com/ucms/2022_07/16E4BA1EA98E030BBCB4ACC21679A66C83E60C7C_size583_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>完全随机</div>
                                 </Menu.Item>
                                 <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>亮色</Menu.Item>
                                 <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>暗色</Menu.Item>
@@ -326,7 +326,7 @@ class ToolBar extends PureComponent {
                 {/*中间，为保持视觉居中，需要absolute*/}
                 <div className="centerPart">
                     <div className="fileNameWp">
-                        <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px' }} onChange={(value) => this.finishReName('en', value)}>
+                        <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
                             {name}
                         </LabelInput>
                         <span>-</span>

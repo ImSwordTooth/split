@@ -1,0 +1,17 @@
+{
+  "appname": "split",
+  "namespace": "testing_platform",
+  "debug": false,
+  "port": 3000,
+  "apiPrefix": "",
+  "cacheURL": false,
+  "statistics": true,
+  "statisticsJaeger": true,
+  "JaegerDebug": false,
+  "JaegerSamplerType": "probabilistic",
+  "JaegerSamplerParam": 0.1,
+  "logs": {
+    "level": "debug"
+  },
+  "blacklist": []
+}

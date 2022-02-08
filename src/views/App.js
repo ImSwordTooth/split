@@ -68,10 +68,11 @@ class App extends PureComponent{
     }
 
     receiveMessage = (e) => {
-        console.log(e.origin)
         if (window.location.origin === e.origin) {
             return
         }
+        // 已收到消息，发送反馈
+        window.opener.postMessage({ type: 'received' }, '*')
         console.log('成功', e)
     }
 
