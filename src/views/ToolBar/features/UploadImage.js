@@ -26,7 +26,7 @@ class UploadImage extends PureComponent {
             // 只能出现一个背景图，所以要删掉上一个
             app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
             app.stage.addChild(image)
-            axios.post("/ucmsApi/resource/upload", {
+            axios.post(`https://test0.ucms.ifeng.com/api/resource/upload`, {
                 body: {
                     data: ev.target.result,
                     needWaterMark: false,

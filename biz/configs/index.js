@@ -18,7 +18,6 @@ glob.sync(pattern).forEach(file => {
     }
 });
 
-configs.common = require(path.join(__dirname, './common.json'));
 configs.hostname = os.hostname();
 // console.info(JSON.stringify(configs));
 module.exports = configs;

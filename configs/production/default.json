@@ -9,7 +9,7 @@
     "level": "debug"
   },
   "cdnCacheTime": 120,
-  "basePath": "/platform/area",
+  "basePath": "/utils/split",
   "authority": "manager_area",
   "configToken": "prodToken"
 }

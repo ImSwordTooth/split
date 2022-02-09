@@ -8,7 +8,7 @@ module.exports = {
           return webpackConfig
       },
       alias: {
-          '@action': path.resolve(__dirname, 'src/store/action.js'),
+          '@action': path.resolve(__dirname, 'src/store/action.js')
       }
     },
     plugins: [
@@ -30,11 +30,6 @@ module.exports = {
                 "target": "http://172.30.20.15:3002/api/",
                 "changeOrigin": true,
                 "pathRewrite": { "/splitApi": "/" }
-            },
-            "/ucmsApi": {
-                "target": "https://test0.ucms.ifeng.com/api/",
-                "changeOrigin": true,
-                "pathRewrite": { "/ucmsApi": "/" }
             }
         }
     }
