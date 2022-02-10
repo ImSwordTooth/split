@@ -25,7 +25,11 @@ const ENV_CONFIG_MAP = {
     },
     custom: {
         color: '#ffc65c',
-        desc: '来自个性化页面'
+        desc: '来自个性化页面，项目修改'
+    },
+    custom_new: {
+        color: '#3fd136',
+        desc: '来自个性化页面，项目初始化'
     }
 }
 
@@ -354,11 +358,11 @@ class ToolBar extends PureComponent {
                         }>
                             <div className="env" style={{ color: ENV_CONFIG_MAP[env].color }}>{env}</div>
                         </Tooltip>
-                        <LabelInput readOnly={env === 'custom'} style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
+                        <LabelInput readOnly={env.indexOf('custom') === 0} style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
                             {name}
                         </LabelInput>
                         <span>-</span>
-                        <LabelInput readOnly={env === 'custom'} style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
+                        <LabelInput readOnly={env.indexOf('custom') === 0} style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
                             {cname}
                         </LabelInput>
                     </div>

@@ -87,13 +87,13 @@ class MainSetting extends PureComponent {
                             <Tooltip placement="left" title="项目的英文名称">
                                 <span className="prop">项目名称:</span>
                             </Tooltip>
-                            <LabelInput readOnly={env === 'custom'} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('en', value)}>{name}</LabelInput>
+                            <LabelInput readOnly={env.indexOf('custom') === 0} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('en', value)}>{name}</LabelInput>
                         </div>
                         <div className="settingItem">
                             <Tooltip placement="left" title={`项目的${env === 'default' ? '中文名称' : '路径'}`}>
                                 <span className="prop">{env === 'default' ? '项目中文名称' : '项目路径'}:</span>
                             </Tooltip>
-                            <LabelInput readOnly={env === 'custom'} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
+                            <LabelInput readOnly={env.indexOf('custom') === 0} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
                         </div>
                         <div className="settingItem">
                             <Tooltip

@@ -60,7 +60,9 @@ class Finish extends PureComponent {
                                 }
                                 style={{ willChange: 'transform' }}
                                 key={0}>
-                                0
+                                <div>
+                                    数据
+                                </div>
                             </TabPane>
                             <TabPane
                                 tab={
@@ -69,7 +71,7 @@ class Finish extends PureComponent {
                                         <div className="subTitle">创建一个项目</div>
                                     </div>
                                 }
-                                disabled={env === 'custom'}
+                                disabled={env.indexOf('custom') === 0}
                                 style={{ willChange: 'transform' }}
                                 key={1}>
                                 1

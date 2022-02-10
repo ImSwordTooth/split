@@ -56,7 +56,7 @@ class App extends PureComponent{
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', resize, false)
         window.onbeforeunload = (e) => {
-            if (this.props.env === 'custom' || this.props.dataMap.children.length > 0) {
+            if (this.props.env.indexOf('custom') === 0 || this.props.dataMap.children.length > 0) {
                 e.returnValue = false
             }
         }
@@ -78,9 +78,12 @@ class App extends PureComponent{
         const { type, isSplitEmpty, data } = e.data
         if (type === 'custom') {
             window.opener.postMessage({ type: 'received' }, '*')
-            changeEnv('custom')
+
             if (!isSplitEmpty) {
                 transferPaste(data.splitConfig)
+                changeEnv('custom')
+            } else {
+                changeEnv('custom_new')
             }
             const newDataMap = {...dataMap}
             newDataMap.name = data.trunkName
