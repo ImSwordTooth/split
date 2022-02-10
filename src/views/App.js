@@ -6,8 +6,8 @@ import { message, notification } from 'antd'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
-import { changeParentId, deleteData, changeDataMap } from '@action'
-import { getDataById, resize, startChoose } from './utils/common'
+import { changeEnv, changeParentId, deleteData, changeDataMap } from '@action'
+import { getDataById, resize, startChoose, transferPaste } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
 
@@ -42,11 +42,13 @@ class App extends PureComponent{
         app.renderer.view.style.zIndex = '3';
 
         // 添加图片
-        const texture = PIXI.Texture.from(dataMap.bc.image)
-        const image = new PIXI.Sprite(texture);
-        image.name = 'bc'
-        image.zIndex = -1
-        app.stage.addChild(image)
+        if (dataMap.bc.image) {
+            const texture = PIXI.Texture.from(dataMap.bc.image)
+            const image = new PIXI.Sprite(texture);
+            image.name = 'bc'
+            image.zIndex = -1
+            app.stage.addChild(image)
+        }
         app.stage.sortableChildren = true
         appElement.appendChild(app.view);
         window.app = app
@@ -54,7 +56,7 @@ class App extends PureComponent{
         document.addEventListener('keydown', this.keyEvent, false)
         document.addEventListener('wheel', resize, false)
         window.onbeforeunload = (e) => {
-            if (this.props.dataMap.children.length > 0) {
+            if (this.props.env === 'custom' || this.props.dataMap.children.length > 0) {
                 e.returnValue = false
             }
         }
@@ -68,12 +70,24 @@ class App extends PureComponent{
     }
 
     receiveMessage = (e) => {
+        const { dataMap } = this.props
         if (window.location.origin === e.origin) {
             return
         }
         // 已收到消息，发送反馈
-        window.opener.postMessage({ type: 'received' }, '*')
-        console.log('成功', e)
+        const { type, isSplitEmpty, data } = e.data
+        if (type === 'custom') {
+            window.opener.postMessage({ type: 'received' }, '*')
+            changeEnv('custom')
+            if (!isSplitEmpty) {
+                transferPaste(data.splitConfig)
+            }
+            const newDataMap = {...dataMap}
+            newDataMap.name = data.trunkName
+            newDataMap.cname = data.path
+            changeDataMap(newDataMap)
+            console.log('成功', e)
+        }
     }
 
     keyEvent = (e) => {
@@ -221,8 +235,8 @@ class App extends PureComponent{
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, activeId, parentId, dataMap } = state;
-    return { mode, scale, activeId, parentId, dataMap }
+    const { env, mode, scale, activeId, parentId, dataMap } = state;
+    return { env, mode, scale, activeId, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(App);

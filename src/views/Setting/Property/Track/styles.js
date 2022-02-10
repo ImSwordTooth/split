@@ -76,13 +76,11 @@ export const StyledTrack = styled.div`
 
     .error {
       font-size: 12px;
-      color: #ff6e6e;
       cursor: pointer;
     }
 
     .success {
       font-size: 12px;
-      color: #05ac0c;
       cursor: pointer;
     }
   }

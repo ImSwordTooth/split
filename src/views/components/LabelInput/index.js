@@ -9,7 +9,12 @@ class LabelInput extends PureComponent {
         style: PropTypes.object, // 文本的样式
         inputStyle: PropTypes.object, // 文本框的样式
         size: PropTypes.oneOf(['small', 'normal', 'large']), // antd的文本框的size
-        onChange: PropTypes.func // 更新函数
+        onChange: PropTypes.func, // 更新函数
+        readOnly: PropTypes.bool // 为 true 时只能查看，不能编辑
+    }
+
+    static defaultProps = {
+        readOnly: false
     }
 
     state = {
@@ -19,6 +24,10 @@ class LabelInput extends PureComponent {
     inputRef = React.createRef()
 
     startEdit = () => {
+        const { readOnly } = this.props
+        if (readOnly) {
+            return
+        }
         this.setState({
             isEditing: true
         })
@@ -46,7 +55,7 @@ class LabelInput extends PureComponent {
     }
 
     render() {
-        const { children, style, size, inputStyle } = this.props
+        const { children, style, size, inputStyle, readOnly } = this.props
         const { isEditing } = this.state
 
         return isEditing
@@ -61,7 +70,9 @@ class LabelInput extends PureComponent {
             :
                 <StyledLabelInput style={style} onClick={this.startEdit}>
                     {children}
-                    <img src="https://x0.ifengimg.com/ucms/2021_51/CBFEA224AAA021F13FB679CC0AA31703DAF88B56_size1_w48_h48.png" alt=""/>
+                    {
+                        !readOnly && <img src="https://x0.ifengimg.com/ucms/2021_51/CBFEA224AAA021F13FB679CC0AA31703DAF88B56_size1_w48_h48.png" alt=""/>
+                    }
                 </StyledLabelInput>
     }
 }

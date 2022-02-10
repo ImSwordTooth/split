@@ -2,6 +2,8 @@ import crypto from 'crypto'
 import store from '../../store'
 import { changeActiveId, changeDataMap, changeMode, changeScale, changeEditId } from '@action'
 import { getAllChildren } from './pixiUtils'
+import {message} from "antd";
+import * as PIXI from "pixi.js";
 
 /**
  * 通过id从树中获取节点
@@ -146,5 +148,93 @@ export const md5 = str => {
 
 export const getPublicPath = () => {
     return process.env.NODE_ENV === 'production' ? '/utils/split' : ''
+}
+
+/**
+ * 把数据转化为内容，一般是粘贴或者跳转
+ *
+ * @param {String|Object} data 数据，如果是字符串类型，需要先转成对象
+ *
+ * */
+export const transferPaste = (data) => {
+
+    const transferPaste_pixi = (obj) => {
+        if (obj.children.length > 0) {
+            for (let c of obj.children) {
+                const textStyle = {
+                    fontFamily: 'Arial',
+                    fontSize: '14px',
+                    fontStyle: 'italic',
+                    fontWeight: 'bold',
+                    fill: c.color,
+                    stroke: '#000000',
+                    strokeThickness: 2,
+                    dropShadow: true,
+                    dropShadowColor: '#000000',
+                    dropShadowAngle: Math.PI / 6,
+                    dropShadowDistance: 2,
+                    wordWrap: true, //是否允许换行
+                    wordWrapWidth: 440 //换行执行宽度
+                }
+                const graphics = new PIXI.Graphics()
+                const color = hex2PixiColor(c.color)
+                graphics.name = c.id
+                graphics.lineStyle(4, color, 1)
+                graphics.beginFill(color, 0.2)
+                graphics.x = c.x
+                graphics.y = c.y
+                graphics.text = c.name
+                graphics.drawRect(0, 0, c.width, c.height)
+                graphics.endFill()
+                let basicText = new PIXI.Text(graphics.text, textStyle)
+                basicText.name = 'text'
+                basicText.x = 0
+                basicText.y = -24
+                graphics.addChild(basicText)
+                window.app.stage.addChild(graphics)
+                transferPaste_pixi(c)
+            }
+        }
+    }
+
+    const { app } = window
+    let res = {}
+    if (typeof data === 'string') {
+        try{
+            // eslint-disable-next-line no-new-func
+            res = new Function(`return ${data}`)()
+        } catch (e) {
+            try {
+                res = JSON.parse(data)
+            } catch (e) {
+                message.error(`转换失败：${e}`)
+                return
+            }
+        }
+    } else {
+        res = data
+    }
+
+    try {
+        changeActiveId('')
+        changeDataMap(res)
+        for (let i of window.app.stage.children.filter(a => a.name !== 'bc' && a.name !== 'point')) {
+            window.app.stage.removeChild(i)
+        }
+        if (res.bc.image) {
+            const texture = PIXI.Texture.from(res.bc.image)
+            const image = new PIXI.Sprite(texture);
+            image.name = 'bc'
+            image.zIndex = -1
+            image.setTransform(0, 0, res.bc.scale, res.bc.scale)
+            window.app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
+            app.stage.addChild(image)
+        }
+        transferPaste_pixi(res)
+        startChoose()
+        message.success('粘贴成功！')
+    } catch (e) {
+        message.error(`转换失败: ${e}`)
+    }
 }
 

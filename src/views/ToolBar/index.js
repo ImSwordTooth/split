@@ -18,6 +18,16 @@ import { hitTest } from '../utils/pixiUtils'
 import { StyledToolbar } from './styles'
 
 const outlineFilter = new GlowFilter({ distance: 8, outerStrength: 3, color: 0xaaaaaa, quality: 1 })
+const ENV_CONFIG_MAP = {
+    default: {
+        color: '#b8b8b8',
+        desc: '纯净独立的默认开发环境'
+    },
+    custom: {
+        color: '#ffc65c',
+        desc: '来自个性化页面'
+    }
+}
 
 class ToolBar extends PureComponent {
 
@@ -282,7 +292,7 @@ class ToolBar extends PureComponent {
     }
 
     render() {
-        const { mode, dataMap } = this.props
+        const { env, mode, dataMap } = this.props
         const { nextRectColor, channelList, randomColorType } = this.state
         const { name, cname, channel } = dataMap
         return (
@@ -326,11 +336,29 @@ class ToolBar extends PureComponent {
                 {/*中间，为保持视觉居中，需要absolute*/}
                 <div className="centerPart">
                     <div className="fileNameWp">
-                        <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
+                        <Tooltip title={
+                            <div>
+                                <span style={{ fontWeight: 'bold' }} >环境</span>
+                                <br/>
+                                {
+                                    Object.entries(ENV_CONFIG_MAP).map(([key, value], index) => {
+                                        return (
+                                            <div key={index}>
+                                                <span style={{ color: value.color, marginRight: '4px', fontStyle: 'italic', textShadow: '1px 1px 3px rgba(189, 189, 189, 0.48)' }}>{key}:</span>
+                                                <span>{value.desc}</span>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        }>
+                            <div className="env" style={{ color: ENV_CONFIG_MAP[env].color }}>{env}</div>
+                        </Tooltip>
+                        <LabelInput readOnly={env === 'custom'} style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
                             {name}
                         </LabelInput>
                         <span>-</span>
-                        <LabelInput style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
+                        <LabelInput readOnly={env === 'custom'} style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
                             {cname}
                         </LabelInput>
                     </div>
@@ -382,8 +410,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { mode, scale, parentId, dataMap } = state;
-    return { mode, scale, parentId, dataMap }
+    const { env, mode, scale, parentId, dataMap } = state;
+    return { env, mode, scale, parentId, dataMap }
 }
 
 export default connect(mapStateToProps)(ToolBar)

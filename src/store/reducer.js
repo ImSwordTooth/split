@@ -3,6 +3,7 @@ import { getDataById } from '../views/utils/common'
 
 function reducer (state = defaultState, action) {
     switch (action.type) {
+        case 'change_env': return { ...state, env: action.env }
         case 'change_mode': return { ...state, mode: action.mode }
         case 'change_scale': return { ...state, scale: action.scale }
         case 'change_dataMap': return { ...state, dataMap: action.dataMap }

@@ -3,8 +3,9 @@ import * as PIXI from 'pixi.js'
 import { message, Tooltip } from 'antd'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import Icon from '../../components/Icon'
+import Icon from '../../../components/Icon'
 import { changeDataMap } from '@action'
+import { StyledUploadImage } from './styles'
 
 class UploadImage extends PureComponent {
 
@@ -17,7 +18,7 @@ class UploadImage extends PureComponent {
         const [ file ] = e.currentTarget.files
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        
+
         reader.onload= (ev) => {
             const texture = PIXI.Texture.from(ev.target.result)
             const image = new PIXI.Sprite(texture);
@@ -46,15 +47,16 @@ class UploadImage extends PureComponent {
             })
         }
     }
-    
+
     render() {
+        const { dataMap: { bc: { image } } } = this.props
         return (
-            <>
+            <StyledUploadImage>
                 <Tooltip title="上传新的背景图">
-                    <button className="btn" onClick={this.upload}><Icon icon="addImage"/></button>
+                    <button className={`btn ${!image ? 'empty' : ''}`} onClick={this.upload}><Icon icon="addImage"/></button>
                 </Tooltip>
                 <input type="file" accept="image/*" id="uploadImage" hidden onChange={this.finishUpload}/>
-            </>
+            </StyledUploadImage>
         )
     }
 }

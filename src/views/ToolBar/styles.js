@@ -24,6 +24,13 @@ export const StyledToolbar = styled.div`
       align-items: center;
       cursor: pointer;
 
+      .env {
+        font-size: 12px;
+        margin-right: 10px;
+        font-style: italic;
+        text-shadow: 1px 1px 3px rgba(189, 189, 189, 0.48);
+      }
+
       .en, .cn {
         cursor: pointer;
 
@@ -137,21 +144,21 @@ export const StyledToolbar = styled.div`
     text-align: center;
     user-select: none;
   }
-  
+
   .paste {
     margin-left: 4px;
-    
+
     &.active {
       background-color: green;
       border-color: green;
     }
-    
+
     img {
       width: 24px;
       height: 24px;
       margin-right: 4px;
     }
-    
+
     &:hover {
       img {
         animation: shake linear .7s;

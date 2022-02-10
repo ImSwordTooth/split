@@ -1,5 +1,6 @@
 import store from './index'
 
+export const changeEnv = env => store.dispatch({ type:'change_env', env })
 export const changeMode = mode => store.dispatch({ type:'change_mode', mode })
 export const changeScale = scale => store.dispatch({ type:'change_scale', scale })
 export const changeActiveId = activeId => store.dispatch({ type:'change_activeId', activeId })

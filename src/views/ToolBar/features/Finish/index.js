@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+import { connect } from 'react-redux'
 import { Button, Modal, Tabs } from 'antd'
 import Icon from '../../../components/Icon'
 import { StyledFinish, StyledFinishModal } from './styles'
@@ -22,6 +23,7 @@ class Finish extends PureComponent {
     falseLeave = () => this.setState({ isLeave: false })
 
     render() {
+        const { env } = this.props
         const { isShowModal, isShowBC, isLeave } = this.state
 
         return (
@@ -52,12 +54,24 @@ class Finish extends PureComponent {
                             <TabPane
                                 tab={
                                     <div className="tabTitle">
-                                        <span>个性化React</span>
-                                        <div className="subTitle">创建一个项目</div>
+                                        <span>保存到原项目</span>
+                                        <div className="subTitle">保存。。。</div>
                                     </div>
                                 }
                                 style={{ willChange: 'transform' }}
                                 key={0}>
+                                0
+                            </TabPane>
+                            <TabPane
+                                tab={
+                                    <div className="tabTitle">
+                                        <span>个性化React</span>
+                                        <div className="subTitle">创建一个项目</div>
+                                    </div>
+                                }
+                                disabled={env === 'custom'}
+                                style={{ willChange: 'transform' }}
+                                key={1}>
                                 1
                             </TabPane>
                             <TabPane
@@ -68,7 +82,7 @@ class Finish extends PureComponent {
                                     </div>
                                 }
                                 style={{ willChange: 'transform' }}
-                                key={1}>
+                                key={2}>
                                 2
                             </TabPane>
                         </Tabs>
@@ -80,4 +94,9 @@ class Finish extends PureComponent {
     }
 }
 
-export default Finish
+function mapStateToProps(state) {
+    const { env } = state;
+    return { env }
+}
+
+export default connect(mapStateToProps)(Finish)

@@ -74,9 +74,9 @@ class MainSetting extends PureComponent {
     }
 
     render() {
-        const { trackProjectId, dataMap } = this.props
+        const { env, trackProjectId, dataMap } = this.props
         const { channelList, bcScale } = this.state
-        const { name, cname, channel } = dataMap
+        const { name, cname, channel, bc } = dataMap
         return (
             <StyledMainSetting>
                 <h2 className="settingTitle"><Icon icon="setting"/>项目设置</h2>
@@ -87,13 +87,13 @@ class MainSetting extends PureComponent {
                             <Tooltip placement="left" title="项目的英文名称">
                                 <span className="prop">项目名称:</span>
                             </Tooltip>
-                            <LabelInput inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('en', value)}>{name}</LabelInput>
+                            <LabelInput readOnly={env === 'custom'} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('en', value)}>{name}</LabelInput>
                         </div>
                         <div className="settingItem">
-                            <Tooltip placement="left" title="项目的中文名称">
-                                <span className="prop">项目中文名称:</span>
+                            <Tooltip placement="left" title={`项目的${env === 'default' ? '中文名称' : '路径'}`}>
+                                <span className="prop">{env === 'default' ? '项目中文名称' : '项目路径'}:</span>
                             </Tooltip>
-                            <LabelInput inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
+                            <LabelInput readOnly={env === 'custom'} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
                         </div>
                         <div className="settingItem">
                             <Tooltip
@@ -147,42 +147,45 @@ class MainSetting extends PureComponent {
                     </div>
                 </div>
 
-                <div>
-                    <h3 style={{ marginTop: '16px' }}>背景图管理</h3>
+                {
+                    bc.image &&
                     <div>
-                        <div className="settingItem" style={{ alignItems: 'flex-start' }}>
-                            <Tooltip
-                                placement="left"
-                                title={
-                                    <div>
-                                        <span>修改背景图的缩放比</span>
-                                        <br/>
-                                        <span style={{ fontWeight: 'lighter' }}>只作用于背景图，不会修改节点图形的大小。</span>
-                                    </div>
-                                }>
-                                <span className="prop">背景图大小:</span>
-                            </Tooltip>
-                            <div className="flex" style={{ marginTop: '-6px' }}>
-                                <Slider
-                                    value={bcScale}
-                                    tipFormatter={v => v + '%'}
-                                    min={1}
-                                    marks={{ 25: '25%', 50: '50%', 75: '75%', 100: '100%' }}
-                                    style={{ width: '160px' }}
-                                    onChange={this.handleBcScaleChange}/>
-                                <span style={{ margin: '-16px 0 0 16px', fontWeight: 'bold' }}>{bcScale}%</span>
+                        <h3 style={{ marginTop: '16px' }}>背景图管理</h3>
+                        <div>
+                            <div className="settingItem" style={{ alignItems: 'flex-start' }}>
+                                <Tooltip
+                                    placement="left"
+                                    title={
+                                        <div>
+                                            <span>修改背景图的缩放比</span>
+                                            <br/>
+                                            <span style={{ fontWeight: 'lighter' }}>只作用于背景图，不会修改节点图形的大小。</span>
+                                        </div>
+                                    }>
+                                    <span className="prop">背景图大小:</span>
+                                </Tooltip>
+                                <div className="flex" style={{ marginTop: '-6px' }}>
+                                    <Slider
+                                        value={bcScale}
+                                        tipFormatter={v => v + '%'}
+                                        min={1}
+                                        marks={{ 25: '25%', 50: '50%', 75: '75%', 100: '100%' }}
+                                        style={{ width: '160px' }}
+                                        onChange={this.handleBcScaleChange}/>
+                                    <span style={{ margin: '-16px 0 0 16px', fontWeight: 'bold' }}>{bcScale}%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             </StyledMainSetting>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { trackProjectId, dataMap } = state;
-    return { trackProjectId, dataMap }
+    const { env, trackProjectId, dataMap } = state;
+    return { env, trackProjectId, dataMap }
 }
 
 export default connect(mapStateToProps)(MainSetting)
