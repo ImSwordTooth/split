@@ -1,30 +1,57 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
-import { Button, Modal, Tabs } from 'antd'
+import {Button, Modal, Result, Tabs} from 'antd'
 import Icon from '../../../components/Icon'
+import FinishBySave from './FinishBySave'
+import { getChipArrayFromDataMap } from '../../../utils/common'
 import { StyledFinish, StyledFinishModal } from './styles'
 
 const { TabPane } = Tabs
+
+const OK_TEXT = [
+    '保存',
+    '创建',
+    '下载'
+]
 
 class Finish extends PureComponent {
 
     state = {
         isShowModal: false,
         isShowBC: false,
-        isLeave: false // 是否离开 button 时 border 的动画
+        isLeave: false, // 是否离开 button 时 border 的动画
+        tabIndex: '0', // Tabs 的 index
+        isShowResult: false // 是否展示生成结果的 modal
     }
 
     eye = React.createRef()
 
     toggleIsShowModal = () => this.setState({ isShowModal: !this.state.isShowModal })
     toggleIsShowBC = () => this.setState({ isShowBC: !this.state.isShowBC })
+    toggleIsShowResult = () => this.setState({ isShowResult: !this.state.isShowResult })
 
     trueLeave = () => this.setState({ isLeave: true })
     falseLeave = () => this.setState({ isLeave: false })
 
+    changeTabIndex = (index) => this.setState({ tabIndex: index })
+
+    finish = () => {
+        const { dataMap } = this.props
+        console.log(dataMap)
+        window.opener.postMessage({
+            type: 'finish',
+            data: {
+                dataMap,
+                chipData: getChipArrayFromDataMap()
+            }
+        }, '*')
+        // this.toggleIsShowModal()
+        // this.toggleIsShowResult()
+    }
+
     render() {
         const { env } = this.props
-        const { isShowModal, isShowBC, isLeave } = this.state
+        const { isShowModal, isShowBC, isLeave, tabIndex, isShowResult } = this.state
 
         return (
             <StyledFinish>
@@ -41,16 +68,18 @@ class Finish extends PureComponent {
                             <span>生成为...</span>
                             <Button type="link" ref={this.eye} style={{ position: 'absolute', top: 0, right: '40px', padding: 0, height: '22px', display: 'flex' }} onMouseEnter={this.toggleIsShowBC} onMouseLeave={this.toggleIsShowBC}>
                                 <Icon icon="eye" style={{ height: '22px', marginRight: '4px' }}/>
-                                瞄一眼
                             </Button>
                         </div>
                     }
-                    style={{ opacity: isShowBC ? 0.1 : 1, transition: 'opacity .3s' }}
+                    className={isShowBC ? 'opacity' : ''}
                     visible={isShowModal}
                     width={1000}
+                    okText={OK_TEXT[tabIndex]}
+                    cancelText="取消"
+                    onOk={this.finish}
                     onCancel={this.toggleIsShowModal}>
                     <StyledFinishModal>
-                        <Tabs tabPosition="left" defaultActiveKey="0" size="small" style={{ willChange: 'transform' }}>
+                        <Tabs tabPosition="left" activeKey={tabIndex} size="small" onChange={this.changeTabIndex}>
                             <TabPane
                                 tab={
                                     <div className="tabTitle">
@@ -58,11 +87,8 @@ class Finish extends PureComponent {
                                         <div className="subTitle">保存。。。</div>
                                     </div>
                                 }
-                                style={{ willChange: 'transform' }}
                                 key={0}>
-                                <div>
-                                    数据
-                                </div>
+                                <FinishBySave/>
                             </TabPane>
                             <TabPane
                                 tab={
@@ -72,7 +98,6 @@ class Finish extends PureComponent {
                                     </div>
                                 }
                                 disabled={env.indexOf('custom') === 0}
-                                style={{ willChange: 'transform' }}
                                 key={1}>
                                 1
                             </TabPane>
@@ -83,13 +108,26 @@ class Finish extends PureComponent {
                                         <div className="subTitle">下载为zip</div>
                                     </div>
                                 }
-                                style={{ willChange: 'transform' }}
                                 key={2}>
                                 2
                             </TabPane>
                         </Tabs>
                     </StyledFinishModal>
-
+                </Modal>
+                <Modal
+                    visible={isShowResult}
+                    width={500}
+                    closable={false}
+                    footer={null}>
+                    <Result
+                        status="success"
+                        title="成功"
+                        subTitle="123"
+                        onCancel={this.toggleIsShowResult}
+                        extra={[
+                            <Button>好的</Button>
+                        ]}
+                    />
                 </Modal>
             </StyledFinish>
         )
@@ -97,8 +135,8 @@ class Finish extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { env } = state;
-    return { env }
+    const { env, dataMap } = state;
+    return { env, dataMap }
 }
 
 export default connect(mapStateToProps)(Finish)

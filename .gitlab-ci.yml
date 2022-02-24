@@ -13,7 +13,7 @@ pages:
   stage: deploy
   script:
     - yarn
-    - npm run build
+    - CI=false npm run build
     - cp -r ./build/* public
   artifacts:
     paths:

@@ -30,7 +30,7 @@ export const StyledPreComponent = styled.div`
       height: 100%;
       width: 0;
       background-color: #1890ff;
-      transition: width ease-in .2s;
+      transition: width ease-in .1s;
     }
 
     &.active {

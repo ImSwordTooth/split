@@ -14,10 +14,6 @@ export const StyledChipParams = styled.div`
     &:hover {
       background-color: #e9e9e9;
     }
-    
-    &:nth-last-of-type(1) {
-      margin-bottom: 16px;
-    }
 
     .ant-collapse-arrow {
       font-size: 10px!important;

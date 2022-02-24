@@ -157,7 +157,7 @@ class Chip extends PureComponent {
         const { localChipList, newChip } = this.state
         return (
             <StyledChipParams>
-                <Collapse ghost style={{ fontSize:'12px' }}>
+                <Collapse ghost style={{ fontSize:'12px', marginBottom: '16px' }}>
                     {
                         this.state.isOK && localChipList.map((chip, index) => {
                             return (

@@ -131,16 +131,17 @@ class ToolBar extends PureComponent {
 
             const textStyle = {
                 fontFamily: 'Arial',
-                fontSize: '14px',
-                fontStyle: 'italic',
+                fontSize: '13px',
+                // fontStyle: 'italic',
                 fontWeight: 'bold',
                 fill: color,
-                stroke: '#000000',
+                stroke: 'rgba(0, 0, 0, 0.7)',
                 strokeThickness: 2,
                 dropShadow: true,
-                dropShadowColor: '#000000',
+                dropShadowColor: '#cccccc',
                 dropShadowAngle: Math.PI / 6,
                 dropShadowDistance: 2,
+                dropShadowBlur: 4,
                 wordWrap: true, //是否允许换行
                 wordWrapWidth: 440 //换行执行宽度
             }
@@ -209,6 +210,7 @@ class ToolBar extends PureComponent {
             basicText.name = 'text'
             basicText.x = 0
             basicText.y = -24
+            basicText.resolution = 2
             shape.addChild(basicText)
             this.drawNormal()
             app.stage.off('pointerup')

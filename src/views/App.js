@@ -7,16 +7,20 @@ import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
 import { changeEnv, changeParentId, deleteData, changeDataMap } from '@action'
-import { getDataById, resize, startChoose, transferPaste } from './utils/common'
+import {getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste} from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
+import Conflict from "./Other/Conflict";
 
 let deleteTimer = null
 
 class App extends PureComponent{
     state = {
         isMoveMode: false, // 是否为移动模式，移动模式代表可以拖拽画布
-        isDeleting: false // 删除节点的timer
+        isDeleting: false, // 删除节点的timer
+        isConflictReady: false, // 数据准备完毕之后，再开启解冲突
+        splitChip: [], // 个性化来的，config_split.js 里带的碎片信息，需要扁平化
+        allDataChip: [] // 个性化来的，allData 里的碎片信息，需要格式化为和 splitChip 相同的结构
     }
 
     componentDidMount() {
@@ -30,7 +34,7 @@ class App extends PureComponent{
             height: appHeight,
             antialias: true, // 抗锯齿
             transparent: true, // 背景透明
-            resolution: 1, // 解析度
+            resolution: 1, // 分辨率，使用不同分辨率和像素密度的显示更容易
         })
         app.stage.interactive = true // 舞台可点击
         app.stage.hitArea = new PIXI.Rectangle(0, 0, appWidth, appHeight) // 点击区域为跟着屏幕大小的矩形
@@ -70,25 +74,26 @@ class App extends PureComponent{
     }
 
     receiveMessage = (e) => {
-        const { dataMap } = this.props
         if (window.location.origin === e.origin) {
             return
         }
-        // 已收到消息，发送反馈
         const { type, isSplitEmpty, data } = e.data
         if (type === 'custom') {
+            // 已收到消息，发送反馈
             window.opener.postMessage({ type: 'received' }, '*')
-
             if (!isSplitEmpty) {
                 transferPaste(data.splitConfig)
                 changeEnv('custom')
             } else {
                 changeEnv('custom_new')
             }
-            const newDataMap = {...dataMap}
-            newDataMap.name = data.trunkName
-            newDataMap.cname = data.path
-            changeDataMap(newDataMap)
+            this.compareChip(data.splitConfig, data.allData)
+            setTimeout(() => {
+                const newDataMap = {...this.props.dataMap}
+                newDataMap.name = data.trunkName
+                newDataMap.cname = data.path
+                changeDataMap(newDataMap)
+            })
             console.log('成功', e)
         }
     }
@@ -220,7 +225,36 @@ class App extends PureComponent{
         document.removeEventListener('keyup', this.cancelMove)
     }
 
+    compareChip = (splitConfig, allData) => {
+        const splitChip = getChipArrayFromDataMap(splitConfig)
+        let allDataChip = []
+        const AvailableChipType = ['getStaticFragment', 'getRecommendFragment', 'getStructureFragment']
+        const ChipTypeMap = {
+            getStaticFragment: 'static',
+            getRecommendFragment: 'recommend',
+            getStructureFragment: 'struct'
+        }
+        allData.transferV3.forEach(data => {
+            if (AvailableChipType.includes(data[2])) {
+                allDataChip.push({
+                    chipId: data[3],
+                    chipType: ChipTypeMap[data[2]],
+                    chipData: {
+                        name: data[0].split(':')[0],
+                        title: data[0].split(':')[1] || data[0].split(':')[0]
+                    }
+                })
+            }
+        })
+        this.setState({
+            splitChip,
+            allDataChip,
+            isConflictReady: true
+        })
+    }
+
     render() {
+        const { isConflictReady, splitChip, allDataChip } = this.state
         return (
             <StyledApp>
                 <ToolBar />
@@ -229,6 +263,10 @@ class App extends PureComponent{
                         <Point />
                     </div>
                     <div className="data">
+                        {
+                            isConflictReady &&
+                            <Conflict splitChip={splitChip} allDataChip={allDataChip} />
+                        }
                         <Setting />
                     </div>
                 </div>

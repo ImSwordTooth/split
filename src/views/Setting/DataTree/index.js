@@ -242,7 +242,7 @@ class DataTree extends PureComponent {
                     </Tooltip>
                 </div>
                 <Tree showIcon
-                      draggable
+                      draggable={{ icon: false }}
                       allowDrop={() => true}
                       selectedKeys={[activeId]}
                       expandedKeys={expandedKeys}

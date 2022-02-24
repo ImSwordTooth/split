@@ -238,3 +238,35 @@ export const transferPaste = (data) => {
     }
 }
 
+/**
+ * 从 dataMap 中取出碎片信息，并返回一个数组
+ * 一般用于数据的导出，或者和个性化里的 allData 比较
+ *
+ * @param {Object} dataMap 可选，如果没有提供一个数据源，就使用默认的 store 里的
+ * */
+export const getChipArrayFromDataMap = (dataMap) => {
+    let res = []
+    dataMap = dataMap || store.getState().dataMap
+
+    const getChip = (obj) => {
+        if (obj.config && obj.config.chip && obj.config.chip.length > 0) {
+            res.push(...obj.config.chip)
+        }
+        if (obj.children && obj.children.length > 0) {
+            for (let i in obj.children) {
+                getChip(obj.children[i])
+            }
+        }
+    }
+
+    getChip(dataMap)
+    return res
+}
+
+/**
+ * TODO
+ * */
+export const GetTrackFromDataMap = () => {
+
+}
+
