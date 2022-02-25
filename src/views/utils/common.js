@@ -9,11 +9,11 @@ import * as PIXI from "pixi.js";
  * 通过id从树中获取节点
  *
  * @param {String} id 节点id
- * @param {Object} obj 搜寻的范围
+ * @param {Object} obj 搜寻的范围，默认值为 dataMap
  *
  * @return {Object} 节点
  * */
-export const getDataById = (id, obj) => {
+export const getDataById = (id, obj = store.getState().dataMap) => {
     if (obj.id === id){
         return obj;
     } else {
@@ -163,16 +163,16 @@ export const transferPaste = (data) => {
             for (let c of obj.children) {
                 const textStyle = {
                     fontFamily: 'Arial',
-                    fontSize: '14px',
-                    fontStyle: 'italic',
+                    fontSize: '13px',
                     fontWeight: 'bold',
                     fill: c.color,
-                    stroke: '#000000',
-                    strokeThickness: 2,
+                    stroke: 'rgba(0, 0, 0, 0.7)',
+                    strokeThickness: 4,
                     dropShadow: true,
-                    dropShadowColor: '#000000',
+                    dropShadowColor: '#cccccc',
                     dropShadowAngle: Math.PI / 6,
                     dropShadowDistance: 2,
+                    dropShadowBlur: 4,
                     wordWrap: true, //是否允许换行
                     wordWrapWidth: 440 //换行执行宽度
                 }
@@ -250,7 +250,9 @@ export const getChipArrayFromDataMap = (dataMap) => {
 
     const getChip = (obj) => {
         if (obj.config && obj.config.chip && obj.config.chip.length > 0) {
-            res.push(...obj.config.chip)
+            obj.config.chip.forEach(c => {
+                res.push({...c, id: obj.id})
+            })
         }
         if (obj.children && obj.children.length > 0) {
             for (let i in obj.children) {

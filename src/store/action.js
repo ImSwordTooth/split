@@ -8,6 +8,7 @@ export const changeEditId = editId => store.dispatch({ type: 'change_editId', ed
 export const changeParentId = parentId => store.dispatch({ type: 'change_parentId', parentId })
 export const changeSettingWidth = settingWidth => store.dispatch({ type: 'change_settingWidth', settingWidth })
 export const changeTrackProjectId = trackProjectId => store.dispatch({ type: 'change_trackProjectId', trackProjectId })
+export const changeIsFreeze = isFreeze => store.dispatch({ type: 'change_isFreeze', isFreeze })
 
 export const changeDataMap = dataMap => store.dispatch({ type:'change_dataMap', dataMap })
 export const deleteData = id => store.dispatch({ type: 'delete_data', id })

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Button, message, Tooltip, Popover, Tag, Dropdown, Menu } from 'antd'
 import axios from 'axios'
 import RandomColor from 'randomcolor'
+import Color from 'color'
 import UploadImage from './features/UploadImage'
 import Paste from './features/Paste'
 import Parent from './features/Parent'
@@ -132,11 +133,10 @@ class ToolBar extends PureComponent {
             const textStyle = {
                 fontFamily: 'Arial',
                 fontSize: '13px',
-                // fontStyle: 'italic',
                 fontWeight: 'bold',
                 fill: color,
-                stroke: 'rgba(0, 0, 0, 0.7)',
-                strokeThickness: 2,
+                stroke: Color(color).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+                strokeThickness: 4,
                 dropShadow: true,
                 dropShadowColor: '#cccccc',
                 dropShadowAngle: Math.PI / 6,

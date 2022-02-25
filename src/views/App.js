@@ -7,7 +7,7 @@ import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Point from './components/Point'
 import { changeEnv, changeParentId, deleteData, changeDataMap } from '@action'
-import {getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste} from './utils/common'
+import { getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
 import Conflict from "./Other/Conflict";
@@ -255,6 +255,7 @@ class App extends PureComponent{
 
     render() {
         const { isConflictReady, splitChip, allDataChip } = this.state
+        const { isFreeze } = this.props
         return (
             <StyledApp>
                 <ToolBar />
@@ -263,12 +264,17 @@ class App extends PureComponent{
                         <Point />
                     </div>
                     <div className="data">
-                        {
-                            isConflictReady &&
-                            <Conflict splitChip={splitChip} allDataChip={allDataChip} />
-                        }
+
                         <Setting />
                     </div>
+                    {
+                        isConflictReady &&
+                        <Conflict splitChip={splitChip} allDataChip={allDataChip} />
+                    }
+                    {
+                        isFreeze &&
+                        <div className="freeze" />
+                    }
                 </div>
             </StyledApp>
         )
@@ -276,8 +282,8 @@ class App extends PureComponent{
 }
 
 function mapStateToProps(state) {
-    const { env, mode, scale, activeId, parentId, dataMap } = state;
-    return { env, mode, scale, activeId, parentId, dataMap }
+    const { env, mode, scale, activeId, parentId, dataMap, isFreeze } = state;
+    return { env, mode, scale, activeId, parentId, dataMap, isFreeze }
 }
 
 export default connect(mapStateToProps)(App);

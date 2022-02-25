@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
-import {Button, Modal, Result, Tabs} from 'antd'
+import { Button, Modal, Result, Tabs } from 'antd'
 import Icon from '../../../components/Icon'
 import FinishBySave from './FinishBySave'
 import { getChipArrayFromDataMap } from '../../../utils/common'

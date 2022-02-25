@@ -3,11 +3,12 @@ import styled from 'styled-components'
 export const StyledConflict = styled.div`
   width: 450px;
   position: absolute;
-  left: -452px;
-  top: 0;
+  right: 604px;
+  top: 1px;
   background-color: #ffffff;
   box-shadow: 2px 2px 7px 4px rgba(229, 229, 229, 0.57);
   border-radius: 4px;
+  z-index: 7;
 
   .title {
     font-size: 14px;
@@ -64,6 +65,14 @@ export const StyledConflict = styled.div`
     justify-content: space-between;
     transition: all .3s;
     position: relative;
+    
+    .saveTip {
+      position: absolute;
+      top: 0;
+      right: 75px;
+      color: rgba(0, 128, 0, 0.3);
+      font-style: italic;
+    }
 
     &::before {
       content: '';
