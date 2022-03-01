@@ -5,12 +5,12 @@ import axios from 'axios'
 import { message, notification } from 'antd'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
+import Conflict from './Other/Conflict'
 import Point from './components/Point'
 import { changeEnv, changeParentId, deleteData, changeDataMap } from '@action'
 import { getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
-import Conflict from "./Other/Conflict";
 
 let deleteTimer = null
 
@@ -78,23 +78,27 @@ class App extends PureComponent{
             return
         }
         const { type, isSplitEmpty, data } = e.data
-        if (type === 'custom') {
-            // 已收到消息，发送反馈
-            window.opener.postMessage({ type: 'received' }, '*')
-            if (!isSplitEmpty) {
-                transferPaste(data.splitConfig)
-                changeEnv('custom')
-            } else {
-                changeEnv('custom_new')
+        switch (type) {
+            case 'custom': {
+                // 已收到消息，发送反馈
+                window.opener.postMessage({ type: 'received' }, '*')
+                if (!isSplitEmpty) {
+                    transferPaste(data.splitConfig)
+                    changeEnv('custom')
+                    this.compareChip(data.splitConfig, data.allData)
+                } else {
+                    changeEnv('custom_new')
+                }
+                setTimeout(() => {
+                    const newDataMap = {...this.props.dataMap}
+                    newDataMap.name = data.trunkName
+                    newDataMap.cname = data.path
+                    changeDataMap(newDataMap)
+                })
+                console.log('成功', e)
+                break;
             }
-            this.compareChip(data.splitConfig, data.allData)
-            setTimeout(() => {
-                const newDataMap = {...this.props.dataMap}
-                newDataMap.name = data.trunkName
-                newDataMap.cname = data.path
-                changeDataMap(newDataMap)
-            })
-            console.log('成功', e)
+            default: break;
         }
     }
 
@@ -264,7 +268,6 @@ class App extends PureComponent{
                         <Point />
                     </div>
                     <div className="data">
-
                         <Setting />
                     </div>
                     {

@@ -4,6 +4,7 @@ import { Dropdown, Menu, message, Slider, Tag, Tooltip } from 'antd'
 import axios from 'axios'
 import LabelInput from '../../../components/LabelInput'
 import Icon from '../../../components/Icon'
+import Copy from '../../../components/Copy'
 import { changeDataMap } from '@action'
 import { StyledMainSetting } from './styles'
 
@@ -140,7 +141,7 @@ class MainSetting extends PureComponent {
                             </Tooltip>
                             {
                                 trackProjectId
-                                    ? <span style={{ fontFamily: 'monospace' }}>{trackProjectId}</span>
+                                    ? <span style={{ fontFamily: 'monospace', fontStyle: 'italic' }}><Copy>{trackProjectId}</Copy></span>
                                     : <span style={{ color: '#8b8b8b' }}>首次创建埋点时自动创建</span>
                             }
                         </div>

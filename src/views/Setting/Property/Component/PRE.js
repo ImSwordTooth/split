@@ -7,7 +7,7 @@ export const preComponentList = {
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-offline--offline'
         },
         {
-            name: 'Comment',
+            name: 'comment',
             desc: '评论',
             img: 'https://x0.ifengimg.com/ucms/2021_51/A87578C27CF47CADCB110980ADE7670CFF2B19C9_size33_w359_h667.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-mobile-comment--comment',
@@ -41,14 +41,16 @@ export const preComponentList = {
             desc: '视频播放器',
             img: 'https://x0.ifengimg.com/ucms/2021_51/C64A57A0FD1D79DCEC5B7883451A3BB787589FF7_size30_w930_h527.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-pc-video--player',
-            icon: 'video'
+            icon: 'video',
+            dependencies: ['@ifeng/three_terminal']
         },
         {
-            name: 'Comment',
+            name: 'comment',
             desc: '评论',
             img: 'https://x0.ifengimg.com/ucms/2021_52/418861D2DC0518C43ED3EB8CE7A2921BE6D6F5F4_size39_w764_h409.png',
             moreUrl: 'https://sys-manager.shank.ifeng.com/doc/web-ui/?path=/story/component-pc-comment--comment',
-            icon: 'comment'
+            icon: 'comment',
+            dependencies: ['@ifeng/three_terminal']
         }
     ]
 }

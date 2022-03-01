@@ -4,9 +4,9 @@ export const StyledProperty = styled.div`
   position: absolute;
   right: 0;
   height: 100%;
-
   background-color: #ffffff;
   padding: 4px 0 0;
+  z-index: 3;
   
   .propertyWp {
     position: relative;

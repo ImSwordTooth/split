@@ -14,7 +14,7 @@ class Component extends PureComponent {
 
     state = {
         propsList: [], // props 列表，【key】：props 的名称；【type】：仅用于普通props，值是PropTypes里的简单值；【customType】：仅用于自定义props，一个字符串
-        preComponent: {}, // 预设组件列表，pc: [], mobile: []
+        preComponent: [], // 预设组件列表
         editingKey: null, // 正在编辑的key，包含 index 和 value
         editingValue: null, // 正在编辑的value，包含 index 和 value
     }
@@ -39,7 +39,7 @@ class Component extends PureComponent {
                 :
                 {
                     props: [],
-                    preComponent: { pc: [], mobile: [] }
+                    preComponent: []
                 }
 
         this.setState({
@@ -206,13 +206,14 @@ class Component extends PureComponent {
     }
 
     handlePreComponentChange = (type, name, isDelete) => {
+        console.log(type, name, isDelete)
         const { preComponent } = this.state
-        const newPre = { ...preComponent }
+        const newPre = [ ...preComponent]
         if (isDelete) {
-            const index = newPre[type].findIndex(a => a === name)
-            newPre[type].splice(index, 1)
+            const index = newPre.findIndex(a => a.type === type && a.name === name)
+            newPre.splice(index, 1)
         } else {
-            newPre[type].push(name)
+            newPre.push({ name, type })
         }
         this.updatePropsToDataMap(undefined, newPre)
     }
@@ -286,8 +287,8 @@ class Component extends PureComponent {
                                         <Icon icon="pc" style={{ fontSize: '14px', marginRight: '4px' }}/>PC端
                                     </span>
                                     {
-                                        preComponent.pc && preComponent.pc.length > 0 &&
-                                        <span>已选择<strong>{preComponent.pc.length}</strong>个</span>
+                                        preComponent.filter(p => p.type === 'pc').length > 0 &&
+                                        <span>已选择<strong>{preComponent.filter(p => p.type === 'pc').length}</strong>个</span>
                                     }
                                 </div>
                             }>
@@ -295,7 +296,7 @@ class Component extends PureComponent {
                                 {
                                     preComponentList.pc.map((c, index) => {
                                         return <PreComponent
-                                                    isActive={preComponent && preComponent.pc && preComponent.pc.includes(c.name)}
+                                                    isActive={preComponent && Boolean(preComponent.filter(p => p.type === 'pc').find(a => a.name === c.name))}
                                                     type="pc"
                                                     key={index}
                                                     name={c.name}
@@ -315,8 +316,8 @@ class Component extends PureComponent {
                                         <Icon icon="mobile" style={{ fontSize: '14px', marginRight: '4px' }}/>移动端
                                     </span>
                                     {
-                                        preComponent.mobile && preComponent.mobile.length > 0 &&
-                                        <span>已选择<strong>{preComponent.mobile.length}</strong>个</span>
+                                        preComponent.filter(p => p.type === 'mobile').length > 0 &&
+                                        <span>已选择<strong>{preComponent.filter(p => p.type === 'mobile').length}</strong>个</span>
                                     }
                                 </div>
                             }>
@@ -324,7 +325,7 @@ class Component extends PureComponent {
                                 {
                                     preComponentList.mobile.map((c, index) => {
                                         return <PreComponent
-                                                    isActive={preComponent && preComponent.mobile && preComponent.mobile.includes(c.name)}
+                                                    isActive={preComponent && Boolean(preComponent.filter(p => p.type === 'mobile').find(a => a.name === c.name))}
                                                     type="mobile"
                                                     key={index}
                                                     name={c.name}

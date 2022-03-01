@@ -1,9 +1,10 @@
 import crypto from 'crypto'
+import { message } from 'antd'
+import * as PIXI from 'pixi.js'
+import Color from 'color'
 import store from '../../store'
 import { changeActiveId, changeDataMap, changeMode, changeScale, changeEditId } from '@action'
 import { getAllChildren } from './pixiUtils'
-import {message} from "antd";
-import * as PIXI from "pixi.js";
 
 /**
  * 通过id从树中获取节点
@@ -30,7 +31,6 @@ export const getDataById = (id, obj = store.getState().dataMap) => {
         }
     }
 }
-
 
 /**
  * 切换到选择模式，有不少地方需要用到
@@ -83,7 +83,6 @@ export const startChoose = () => {
                                 }
                             }
                         }
-
                         changeDataMap(newDataMap)
                         startX = endX
                         startY = endY
@@ -157,6 +156,7 @@ export const getPublicPath = () => {
  *
  * */
 export const transferPaste = (data) => {
+    const { extraSetting } = store.getState()
 
     const transferPaste_pixi = (obj) => {
         if (obj.children.length > 0) {
@@ -166,7 +166,7 @@ export const transferPaste = (data) => {
                     fontSize: '13px',
                     fontWeight: 'bold',
                     fill: c.color,
-                    stroke: 'rgba(0, 0, 0, 0.7)',
+                    stroke: Color(c.color).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
                     strokeThickness: 4,
                     dropShadow: true,
                     dropShadowColor: '#cccccc',
@@ -190,6 +190,8 @@ export const transferPaste = (data) => {
                 basicText.name = 'text'
                 basicText.x = 0
                 basicText.y = -24
+                basicText.resolution = 2
+                basicText.visible = extraSetting.isShowText
                 graphics.addChild(basicText)
                 window.app.stage.addChild(graphics)
                 transferPaste_pixi(c)
@@ -244,9 +246,8 @@ export const transferPaste = (data) => {
  *
  * @param {Object} dataMap 可选，如果没有提供一个数据源，就使用默认的 store 里的
  * */
-export const getChipArrayFromDataMap = (dataMap) => {
+export const getChipArrayFromDataMap = (dataMap = store.getState().dataMap) => {
     let res = []
-    dataMap = dataMap || store.getState().dataMap
 
     const getChip = (obj) => {
         if (obj.config && obj.config.chip && obj.config.chip.length > 0) {
@@ -262,6 +263,29 @@ export const getChipArrayFromDataMap = (dataMap) => {
     }
 
     getChip(dataMap)
+    return res
+}
+
+/**
+ * 从 dataMap 中取出预设组件，并返回一个数组
+ * 一般用于数据的导出
+ *
+ * @param {Object} dataMap 可选，如果没有提供一个数据源，就使用默认的 store 里的
+ * */
+export const getPreComponentArrayFromDataMap = (dataMap = store.getState().dataMap) => {
+    let res = []
+
+    const getPreComponent = (obj) => {
+        if (obj.config && obj.config.component && obj.config.component.preComponent) {
+            res.push(...obj.config.component.preComponent)
+        }
+        if (obj.children && obj.children.length > 0) {
+            for (let i in obj.children) {
+                getPreComponent(obj.children[i])
+            }
+        }
+    }
+    getPreComponent(dataMap)
     return res
 }
 

@@ -15,6 +15,10 @@ export const StyledDataTree = styled.div`
     display: flex;
     align-items: center;
     padding: 0 4px;
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 1;
 
     .btn {
       position: relative;

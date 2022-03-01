@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
-import { Button, Modal, Result, Tabs } from 'antd'
+import { Button, message, Modal, Result, Tabs } from 'antd'
 import Icon from '../../../components/Icon'
 import FinishBySave from './FinishBySave'
 import { getChipArrayFromDataMap } from '../../../utils/common'
@@ -21,7 +21,12 @@ class Finish extends PureComponent {
         isShowBC: false,
         isLeave: false, // 是否离开 button 时 border 的动画
         tabIndex: '0', // Tabs 的 index
-        isShowResult: false // 是否展示生成结果的 modal
+        finishLoading: false, // 完成的loading
+        isShowResult: false, // 是否展示生成结果的 modal
+        extraSetting: {
+            isCreateDependenciesText: true, // 是否生成依赖的txt文件
+            isCreateLayout: false // 是否创建通栏
+        }
     }
 
     eye = React.createRef()
@@ -35,23 +40,50 @@ class Finish extends PureComponent {
 
     changeTabIndex = (index) => this.setState({ tabIndex: index })
 
+    changeExtraSetting = (prop, value) => {
+        const { extraSetting } = this.state
+
+        this.setState({
+            extraSetting: {
+                ...extraSetting,
+                [prop]: value
+            }
+        })
+    }
+
     finish = () => {
         const { dataMap } = this.props
-        console.log(dataMap)
+        const { extraSetting } = this.state
+        this.setState({
+            finishLoading: true
+        })
         window.opener.postMessage({
             type: 'finish',
             data: {
                 dataMap,
-                chipData: getChipArrayFromDataMap()
+                chipData: getChipArrayFromDataMap(),
+                extraSetting
             }
         }, '*')
-        // this.toggleIsShowModal()
-        // this.toggleIsShowResult()
+        window.addEventListener('message', this.watchSuccess, false)
+    }
+
+    watchSuccess = (e) => {
+        const { type } = e.data
+        const { tabIndex } = this.state
+        if (type === 'update_success') {
+            this.setState({
+                finishLoading: false,
+                isShowModal: false
+            })
+            message.success(`${OK_TEXT[tabIndex]}成功`)
+            window.removeEventListener('message', this.watchSuccess, false)
+        }
     }
 
     render() {
         const { env } = this.props
-        const { isShowModal, isShowBC, isLeave, tabIndex, isShowResult } = this.state
+        const { isShowModal, isShowBC, isLeave, tabIndex, isShowResult, extraSetting, finishLoading } = this.state
 
         return (
             <StyledFinish>
@@ -73,9 +105,11 @@ class Finish extends PureComponent {
                     }
                     className={isShowBC ? 'opacity' : ''}
                     visible={isShowModal}
+                    destroyOnClose
                     width={1000}
                     okText={OK_TEXT[tabIndex]}
                     cancelText="取消"
+                    confirmLoading={finishLoading}
                     onOk={this.finish}
                     onCancel={this.toggleIsShowModal}>
                     <StyledFinishModal>
@@ -88,7 +122,7 @@ class Finish extends PureComponent {
                                     </div>
                                 }
                                 key={0}>
-                                <FinishBySave/>
+                                <FinishBySave setting={extraSetting} onChangeSetting={this.changeExtraSetting} />
                             </TabPane>
                             <TabPane
                                 tab={

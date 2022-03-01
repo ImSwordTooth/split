@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Tree, Input, message, Tooltip } from 'antd'
 import Icon from '../../components/Icon'
-import { changeActiveId, changeDataMap, changeEditId, dragData } from '@action'
+import { changeActiveId, changeDataMap, changeEditId, dragData, changeExtraSetting } from '@action'
 import { getDataById, startChoose } from '../../utils/common'
 import { preComponentList } from '../Property/Component/PRE'
 import { StyledDataTree } from './styles'
@@ -14,8 +14,7 @@ class DataTree extends PureComponent {
         localEditId: '',
         isVisible: false,
         isShowTreeIcon: true,
-        isAutoFocus: true,
-        isShowText: true
+        isAutoFocus: true
     }
     
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -145,18 +144,24 @@ class DataTree extends PureComponent {
         if (setting === 'isAutoFocus') {
             changeEditId('')
         }
-        if (setting === 'isShowText') {
-            const graphics = window.app.stage.children.filter(a => a.name !== 'bc' && a.name !=='point')
-            let text = []
-            for (let i of graphics) {
-                text.push(i.children.find(a => a.name === 'text'))
-            }
-            for (let j of text) {
-                j.visible = !this.state.isShowText
-            }
-        }
         this.setState({
             [setting]: !this.state[setting]
+        })
+    }
+
+    changeIsShowText = () => {
+        const { extraSetting, extraSetting: { isShowText } } = this.props
+        const graphics = window.app.stage.children.filter(a => a.name !== 'bc' && a.name !=='point')
+        let text = []
+        for (let i of graphics) {
+            text.push(i.children.find(a => a.name === 'text'))
+        }
+        for (let j of text) {
+            j.visible = !isShowText
+        }
+        changeExtraSetting({
+            ...extraSetting,
+            isShowText: !isShowText
         })
     }
 
@@ -168,15 +173,17 @@ class DataTree extends PureComponent {
                 list.map(data => {
                     let iconName = 'div'
                     if (data.config && data.config.component) {
-                        const { pc, mobile } = data.config.component.preComponent
+                        const { preComponent } = data.config.component
+                        const pc = preComponent.filter(p => p.type === 'pc')
+                        const mobile = preComponent.filter(p => p.type === 'mobile')
                         if (pc.length + mobile.length > 1) {
                             iconName = 'div'
                         } else {
                             if (mobile.length > 0) {
-                                iconName = preComponentList.mobile.find(a => a.name === mobile[0]).icon
+                                iconName = preComponentList.mobile.find(a => a.name === mobile[0].name).icon
                             }
                             if (pc.length > 0) {
-                                iconName = preComponentList.pc.find(a => a.name === pc[0]).icon
+                                iconName = preComponentList.pc.find(a => a.name === pc[0].name).icon
                             }
                         }
                     }
@@ -219,8 +226,9 @@ class DataTree extends PureComponent {
     }
 
     render() {
-        const { dataMap, activeId } = this.props
-        const { expandedKeys, isShowTreeIcon, isAutoFocus, isShowText } = this.state
+        const { dataMap, activeId, extraSetting } = this.props
+        const { expandedKeys, isShowTreeIcon, isAutoFocus } = this.state
+        const { isShowText } = extraSetting
         const { cname } = dataMap
         return (
             <StyledDataTree>
@@ -236,7 +244,7 @@ class DataTree extends PureComponent {
                         </button>
                     </Tooltip>
                     <Tooltip title="是否在画布中显示文本">
-                        <button data-setting="isShowText" onClick={this.toggleSetting} className={`btn ${isShowText ? 'active': ''}`}>
+                        <button onClick={this.changeIsShowText} className={`btn ${isShowText ? 'active': ''}`}>
                             <Icon icon="text" color="rgb(116 116 116)"/>
                         </button>
                     </Tooltip>
@@ -268,8 +276,8 @@ class DataTree extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, editId, parentId, dataMap } = state;
-    return { activeId, editId, parentId, dataMap }
+    const { activeId, editId, parentId, dataMap, extraSetting } = state;
+    return { activeId, editId, parentId, dataMap, extraSetting }
 }
 
 export default connect(mapStateToProps)(DataTree)

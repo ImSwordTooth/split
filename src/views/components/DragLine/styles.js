@@ -6,7 +6,7 @@ export const StyledDragLine = styled.div`
   top: 0;
   width: 1px;
   height: 100%;
-  z-index: ${props => props.isTop ? 3 : 2 };
+  z-index: ${props => props.isTop ? 5 : 4 };
   background-color: #e5e5e5;
   cursor: pointer;
   transition: all .3s;

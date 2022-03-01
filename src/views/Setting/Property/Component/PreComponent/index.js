@@ -33,9 +33,9 @@ class PreComponent extends PureComponent {
                     placement="left"
                     align={{ offset: [0, 0] }}
                     autoAdjustOverflow
-                    getPopupContainer={trigger => trigger.parentElement}
+                    overlayClassName="noPaddingPopover"
                     content={
-                        <img className={type} data-url={moreUrl} alt={name} src={img} onClick={this.jumpToMore}/>
+                        <img style={{ objectFit: 'cover', imageRendering: '-webkit-optimize-contrast', cursor: 'zoom-in', width: `${type === 'pc' ? 384 : 187}px`, height: `${type === 'pc' ? 216 : 333}px` }} className={type} data-url={moreUrl} alt={name} src={img} onClick={this.jumpToMore}/>
                     }>
                     <div className={`preWp ${isActive ? 'active' : ''}`} onClick={this.handleClick}>
                         <span className="name">{name}</span>

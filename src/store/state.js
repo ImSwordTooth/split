@@ -19,5 +19,8 @@ export const defaultState = {
     editId: '', // 修改名称的图形的id
     parentId: '', // 强制的父容器的id
     settingWidth: 600, // 设置面板宽度
-    isFreeze: false // 是否冻结操作
+    isFreeze: false, // 是否冻结操作
+    extraSetting: { // 全局的设置，一些不想保存到树里面的设置可以放到这里面
+        isShowText: true, // 是否在画布里展示文本
+    },
 };

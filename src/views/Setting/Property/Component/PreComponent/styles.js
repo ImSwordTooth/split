@@ -47,23 +47,4 @@ export const StyledPreComponent = styled.div`
       font-weight: lighter;
     }
   }
-
-  .ant-popover-inner-content {
-    padding: 2px;
-
-    img {
-      object-fit: contain;
-      cursor: zoom-in;
-
-      &.pc {
-        width: 384px;
-        height: 216px;
-      }
-
-      &.mobile {
-        width: 187px;
-        height: 333px;
-      }
-    }
-  }
 `

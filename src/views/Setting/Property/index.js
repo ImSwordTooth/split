@@ -17,7 +17,10 @@ const { TabPane } = Tabs
 class Setting extends PureComponent {
     state = {
         widthPercent: 0.6,
+        activeKey: 1
     }
+
+    handleActiveKeyChange = (index) => this.setState({ activeKey: index })
 
     handleWidthChange = (width) => {
         const { settingWidth } = this.props
@@ -46,15 +49,17 @@ class Setting extends PureComponent {
                 if (data) {
                     let iconName = ''
                     if (data.config && data.config.component) {
-                        const { pc, mobile } = data.config.component.preComponent
+                        const { preComponent } = data.config.component
+                        const pc = preComponent.filter(p => p.type === 'pc')
+                        const mobile = preComponent.filter(p => p.type === 'mobile')
                         if (pc.length + mobile.length > 1) {
                             iconName = 'div'
                         } else {
                             if (mobile.length > 0) {
-                                iconName = preComponentList.mobile.find(a => a.name === mobile[0]).icon
+                                iconName = preComponentList.mobile.find(a => a.name === mobile[0].name).icon
                             }
                             if (pc.length > 0) {
-                                iconName = preComponentList.pc.find(a => a.name === pc[0]).icon
+                                iconName = preComponentList.pc.find(a => a.name === pc[0].name).icon
                             }
                         }
                     }
@@ -88,6 +93,7 @@ class Setting extends PureComponent {
     }
 
     render() {
+        const { activeKey } = this.state
         const { settingWidth, activeId, dataMap } = this.props
         const finalWidth = this.getWidth()
         const data = getDataById(activeId, dataMap)
@@ -100,21 +106,21 @@ class Setting extends PureComponent {
                         {
                             (activeId && activeId !== '0')
                                 ?
-                                    <Tabs size="small" defaultActiveKey="1" style={{ height: '100%' }}>
+                                    <Tabs size="small" defaultActiveKey={activeKey} style={{ height: '100%' }} onChange={this.handleActiveKeyChange}>
                                         <TabPane
                                             tab={<div className="tabDiv">组件</div>}
                                             key="1">
-                                            <Component/>
+                                            <Component key={activeId}/>
                                         </TabPane>
                                         <TabPane
                                             tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
                                             key="2">
-                                            <Track />
+                                            <Track key={activeId}/>
                                         </TabPane>
                                         <TabPane
                                             tab={<div className="tabDiv">碎片</div>}
                                             key="3">
-                                            <Chip/>
+                                            <Chip key={activeId}/>
                                         </TabPane>
                                     </Tabs>
                                 : <MainSetting/>

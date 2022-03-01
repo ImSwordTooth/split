@@ -12,6 +12,7 @@ function reducer (state = defaultState, action) {
         case 'change_settingWidth': return { ...state, settingWidth: action.settingWidth }
         case 'change_trackProjectId': return { ...state, trackProjectId: action.trackProjectId }
         case 'change_isFreeze': return { ...state, isFreeze: action.isFreeze }
+        case 'change_extraSetting': return { ...state, extraSetting: action.extraSetting }
 
         case 'change_activeId': {
             const { app } = window

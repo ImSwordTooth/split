@@ -105,7 +105,7 @@ class ToolBar extends PureComponent {
         const pixiColor = hex2PixiColor(color)
 
         const handleEnd = (event) => {
-            const { parentId, scale } = this.props
+            const { parentId, scale, extraSetting } = this.props
             const end = {...event.data.global}
 
             const shape = new PIXI.Graphics()
@@ -211,6 +211,7 @@ class ToolBar extends PureComponent {
             basicText.x = 0
             basicText.y = -24
             basicText.resolution = 2
+            basicText.visible = extraSetting.isShowText
             shape.addChild(basicText)
             this.drawNormal()
             app.stage.off('pointerup')
@@ -416,8 +417,8 @@ class ToolBar extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { env, mode, scale, parentId, dataMap } = state;
-    return { env, mode, scale, parentId, dataMap }
+    const { env, mode, scale, parentId, dataMap, extraSetting } = state;
+    return { env, mode, scale, parentId, dataMap, extraSetting }
 }
 
 export default connect(mapStateToProps)(ToolBar)
