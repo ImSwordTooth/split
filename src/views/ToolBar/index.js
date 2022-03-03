@@ -40,7 +40,7 @@ class ToolBar extends PureComponent {
         channelList: [], // 频道列表
         hitObject: null, // 创建模式，鼠标hover的图形，放在这里是起到缓存的作用
         nextRectColor: '', // 即将创建的图形的颜色，随机颜色
-        randomColorType: '' // 随机颜色的范围，'' || 'light' || 'dark'
+        randomColorType: 'hue' // 随机颜色的范围，'' || 'light' || 'dark' || 'hue'
     }
 
     componentDidMount() {
@@ -88,7 +88,7 @@ class ToolBar extends PureComponent {
 
     drawNormal = () => {
         const { dataMap } = this.props
-        const { randomColorType } = this.state
+        const { randomColorType, nextRectColor } = this.state
         const { app } = window
         const blocks = app.stage.children.filter(c => c.name !== 'bc' && c.name !== 'point')
         changeMode('rect')
@@ -98,58 +98,48 @@ class ToolBar extends PureComponent {
         let start = {}
         let duringRect = new PIXI.Graphics()
         app.stage.cursor = 'crosshair'
-        const color = RandomColor({ luminosity: randomColorType })
-        this.setState({
-            nextRectColor: color
-        })
-        const pixiColor = hex2PixiColor(color)
+
+        let color, pixiColor
+        if (randomColorType !== 'hue') {
+            color = RandomColor({ luminosity: randomColorType })
+            pixiColor = hex2PixiColor(color)
+            this.setState({
+                nextRectColor: color
+            })
+        } else {
+            color = RandomColor({ luminosity: nextRectColor })
+            pixiColor = hex2PixiColor(color)
+        }
 
         const handleEnd = (event) => {
             const { parentId, scale, extraSetting } = this.props
+            const { hitObject: hit } = this.state
             const end = {...event.data.global}
 
             const shape = new PIXI.Graphics()
             app.stage.removeChild(duringRect)
+            // 如果只移动了很小的距离，就不创建
             if (Math.abs(end.x - start.x) < 2 && Math.abs(end.y-start.y) < 2) {
                 app.stage.off('pointerup')
                 app.stage.off('pointerupoutside')
                 return
             }
-            shape.lineStyle(4, pixiColor, 1)
-            shape.beginFill(pixiColor, 0.2)
+
             const width = Math.abs(end.x-start.x) / scale
             const height = Math.abs(end.y-start.y) / scale
+            shape.lineStyle(4, pixiColor, 1)
+            shape.beginFill(pixiColor, 0.2)
             shape.drawRect(
                 0,
                 0,
                 width,
                 height
             )
-
             shape.x = (Math.min(start.x, end.x) - app.stage.x) / scale
             shape.y = (Math.min(start.y, end.y) - app.stage.y) / scale
             shape.endFill()
 
-            const textStyle = {
-                fontFamily: 'Arial',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                fill: color,
-                stroke: Color(color).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-                strokeThickness: 4,
-                dropShadow: true,
-                dropShadowColor: '#cccccc',
-                dropShadowAngle: Math.PI / 6,
-                dropShadowDistance: 2,
-                dropShadowBlur: 4,
-                wordWrap: true, //是否允许换行
-                wordWrapWidth: 440 //换行执行宽度
-            }
-
-            start = {}
             // 有命中，在命中的容器内创建
-            const { hitObject: hit } = this.state
-
             if (parentId || hit) {
                 const newDataMap = { ...dataMap }
                 let parent
@@ -206,6 +196,22 @@ class ToolBar extends PureComponent {
                 changeActiveId(newId)
                 changeEditId(newId)
             }
+            start = {}
+            const textStyle = {
+                fontFamily: 'Arial',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                fill: color,
+                stroke: Color(color).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+                strokeThickness: 4,
+                dropShadow: true,
+                dropShadowColor: '#cccccc',
+                dropShadowAngle: Math.PI / 6,
+                dropShadowDistance: 2,
+                dropShadowBlur: 4,
+                wordWrap: true, //是否允许换行
+                wordWrapWidth: 440 //换行执行宽度
+            }
             let basicText = new PIXI.Text(shape.text, textStyle)
             basicText.name = 'text'
             basicText.x = 0
@@ -219,6 +225,18 @@ class ToolBar extends PureComponent {
         }
 
         app.stage.on('pointerdown', (event) => {
+            const { parentId, dataMap } = this.props
+            const { hitObject: hit } = this.state
+
+            if (randomColorType === 'hue' && (parentId || hit)) {
+                let parent = getDataById(parentId || hit.name, dataMap)
+                color = RandomColor({hue: parent ? parent.color : ''})
+            }
+            pixiColor = hex2PixiColor(color)
+            this.setState({
+                nextRectColor: color
+            })
+
             if (event.data.button !== 0) {
                 return
             }
@@ -298,6 +316,26 @@ class ToolBar extends PureComponent {
         })
     }
 
+    getRandomColorTypeText = (type) => {
+        const { randomColorType, nextRectColor } = this.state
+        switch (type || randomColorType) {
+            case 'light': return <div style={{ color: 'silver', textShadow: '1px 1px 5px #cbcbcb' }}>随机亮色</div>
+            case 'dark': return <div style={{ fontWeight: 'bold' }}>随机暗色</div>
+            case 'hue': {
+                return (
+
+                    <div>
+                        <span style={{color: '#a31131'}}>系</span>
+                        <span style={{color: '#d81316'}}>列</span>
+                        <span style={{color: '#ef758b'}}>颜</span>
+                        <span style={{color: '#f9bdcb'}}>色</span>
+                    </div>
+                )
+            }
+            default: return <div style={{ backgroundImage: `url('https://x0.ifengimg.com/ucms/2022_07/16E4BA1EA98E030BBCB4ACC21679A66C83E60C7C_size583_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>完全随机</div>
+        }
+    }
+
     render() {
         const { env, mode, dataMap } = this.props
         const { nextRectColor, channelList, randomColorType } = this.state
@@ -324,19 +362,22 @@ class ToolBar extends PureComponent {
                         overlay={
                             <Menu selectedKeys={[randomColorType]} style={{ maxHeight: '500px', overflow: 'auto' }}>
                                 <Menu.Item key="" onClick={this.handleRandomColorTypeChange}>
-                                    <div style={{ backgroundImage: `url('https://x0.ifengimg.com/ucms/2022_07/16E4BA1EA98E030BBCB4ACC21679A66C83E60C7C_size583_w800_h450.gif')`, WebkitBackgroundClip: 'text', color: 'transparent' }}>完全随机</div>
+                                    {this.getRandomColorTypeText('random')}
                                 </Menu.Item>
-                                <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>亮色</Menu.Item>
-                                <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>暗色</Menu.Item>
+                                <Menu.Item key="light" onClick={this.handleRandomColorTypeChange}>
+                                    {this.getRandomColorTypeText('light')}
+                                </Menu.Item>
+                                <Menu.Item key="dark" onClick={this.handleRandomColorTypeChange}>
+                                    {this.getRandomColorTypeText('dark')}
+                                </Menu.Item>
+                                <Menu.Item key="hue" onClick={this.handleRandomColorTypeChange}>
+                                    {this.getRandomColorTypeText('hue')}
+                                </Menu.Item>
                             </Menu>
                         }
                     >
                         <span className="colorType">
-                            {
-                                randomColorType
-                                    ? randomColorType === 'light' ? '亮色' : '暗色'
-                                    : '完全随机'
-                            }
+                            {this.getRandomColorTypeText()}
                         </span>
                     </Dropdown>
                 </div>

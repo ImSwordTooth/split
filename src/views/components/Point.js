@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { changeDataMap } from '@action'
 import { getDataById, hex2PixiColor, startChoose } from '../utils/common'
 
+
 /**
  * 本组件处理矩形的四个点，包括：
  * 1. 显示矩形顶点
@@ -144,7 +145,10 @@ class Point extends PureComponent {
                 point.x = points[i].x
                 point.y = points[i].y
                 point.clear()
-                point.lineStyle(1, 0x3e3c3d, 1)
+                const { activeId, dataMap } = this.props
+                const activeGraphics = getDataById(activeId, dataMap)
+                const color = activeGraphics.color ? hex2PixiColor(activeGraphics.color) : '0x000000'
+                point.lineStyle(2, color, 1)
                 point.beginFill( 0xf8f8f8, 1)
                 point.drawCircle(0, 0, 5)
                 point.endFill()

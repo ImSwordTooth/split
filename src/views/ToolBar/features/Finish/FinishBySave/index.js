@@ -22,7 +22,6 @@ class FinishBySave extends PureComponent {
         let components = getPreComponentArrayFromDataMap()
         let dependencies = []
         const { pc, mobile } = preComponentList
-        let allComponent = [...preComponentList.pc, ...preComponentList.mobile]
         Array.from(new Set(components)).forEach(c => {
             let comp = null
             if (c.type === 'pc') {
@@ -72,9 +71,13 @@ class FinishBySave extends PureComponent {
             <StyledFinishBySave>
                 <div>这是来自 <strong>custom</strong> 的一个<span className={ `highlight ${isUpdate ? 'update' : 'create'}`}>{isUpdate ? '更新' : '新建'}</span>操作，将会执行以下操作：</div>
                 <ol className="tipList">
-                    <li>节点的信息会更新到<span className="code">config_split.js</span>中；</li>
-                    <li>碎片内容还会写入<span className="code">config.js</span>的 allData 里；</li>
-                    <li>依旧会生成一份代码，但是为了不影响原文件，所以代码被放置在原文件根目录的<span className="code">__tmp_split__</span>文件夹里，按需查用。</li>
+                    <li>节点的信息{ isUpdate ? '更新' : '保存' }到<span className="code">config_split.js</span>中；</li>
+                    <li>碎片内容写入<span className="code">config.js</span>的 allData；</li>
+                    {
+                        isUpdate
+                            ? <li>依旧会生成一份代码，但是为了不影响原文件，所以代码被放置在源文件根目录的<span className="code">__tmp_split__</span>文件夹里，按需查用。</li>
+                            : <li>直接在源文件根目录生成代码。</li>
+                    }
                 </ol>
                 <div className="extraWp">
                     <div className="extraTitle">额外的可选操作：</div>
