@@ -3,6 +3,10 @@ import styled from 'styled-components'
 export const StyledTrack = styled.div`
   position: relative;
 
+  .ant-form-item {
+    margin-bottom: 6px!important;
+  }
+
   .params {
     padding-left: 20px;
   }

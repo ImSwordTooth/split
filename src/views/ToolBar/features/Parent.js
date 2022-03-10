@@ -31,7 +31,7 @@ class Parent extends PureComponent {
                     <span style={{ fontWeight: 'lighter' }}>新的组件将强制创建在该组件内，表现在树状图中为<span style={{ color: '#ffc864' }}>橙色边框</span></span>
                 </div>
             }>
-                <button className={`btn ${parentId && parentId === activeId ? 'active': ''}`} onClick={this.markParent}>
+                <button className={`btn parent ${parentId && parentId === activeId ? 'active': ''}`} onClick={this.markParent}>
                     <Icon icon="parent"/>
                     {
                         parentId &&

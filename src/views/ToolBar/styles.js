@@ -86,6 +86,66 @@ export const StyledToolbar = styled.div`
     cursor: pointer;
     transition: all .3s;
 
+    &.image {
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(40px 30px ellipse at 18px 18px, #40b4ca, transparent 30%);
+        opacity: 0;
+        transition: all ease .5s;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.parent {
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(40px 20px ellipse at 14px 9px, #ffc864, transparent 30%);
+        opacity: 0;
+        transition: all ease .5s;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.help {
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(yellow, transparent 40%);
+        opacity: 0;
+        transition: all ease .5s;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
     &:hover {
       background-color: rgba(181, 227, 253, .3);
     }
@@ -133,12 +193,13 @@ export const StyledToolbar = styled.div`
   }
 
   .colorType {
+    display: inline-flex;
+    align-items: center;
     font-size: 12px;
     cursor: pointer;
-    display: inline-block;
     padding: 0 2px;
     box-sizing: content-box;
-    width: 50px;
+    //width: 50px;
     height: 24px;
     line-height: 24px;
     text-align: center;

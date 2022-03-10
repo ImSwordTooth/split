@@ -73,11 +73,7 @@ class FinishBySave extends PureComponent {
                 <ol className="tipList">
                     <li>节点的信息{ isUpdate ? '更新' : '保存' }到<span className="code">config_split.js</span>中；</li>
                     <li>碎片内容写入<span className="code">config.js</span>的 allData；</li>
-                    {
-                        isUpdate
-                            ? <li>依旧会生成一份代码，但是为了不影响原文件，所以代码被放置在源文件根目录的<span className="code">__tmp_split__</span>文件夹里，按需查用。</li>
-                            : <li>直接在源文件根目录生成代码。</li>
-                    }
+                    <li>会生成一份代码，为了不影响原文件，所以代码被放置在源文件根目录的<span className="code">__tmp_split__</span>文件夹里，按需查用。</li>
                 </ol>
                 <div className="extraWp">
                     <div className="extraTitle">额外的可选操作：</div>
@@ -96,8 +92,9 @@ class FinishBySave extends PureComponent {
                             的 .txt 文件，方便安装
                         </div>
                     }
-                    <div className="extra">
-                        <Checkbox checked={setting.isCreateLayout}  onChange={(e) => this.handleChange('isCreateLayout', e)} />创建通栏碎片，并应用到项目中</div>
+                    <div className="extra" style={{ color: '#a7a7a7' }}>
+                        <Checkbox checked={setting.isCreateLayout} disabled onChange={(e) => this.handleChange('isCreateLayout', e)} />创建通栏碎片，并应用到项目中
+                    </div>
                 </div>
             </StyledFinishBySave>
         );

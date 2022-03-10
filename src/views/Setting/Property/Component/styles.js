@@ -48,7 +48,7 @@ export const StyledComponent = styled.div`
       }
 
       .propKey {
-        cursor: text;
+        cursor: pointer;
         color: black;
         
         &:hover {
@@ -62,7 +62,7 @@ export const StyledComponent = styled.div`
       
       .customType {
         font-size: 12px;
-        cursor: text;
+        cursor: pointer;
         
         &:hover {
           color: #3490FF;

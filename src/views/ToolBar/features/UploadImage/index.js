@@ -53,7 +53,7 @@ class UploadImage extends PureComponent {
         return (
             <StyledUploadImage>
                 <Tooltip title="上传新的背景图">
-                    <button className={`btn ${!image ? 'empty' : ''}`} onClick={this.upload}><Icon icon="addImage"/></button>
+                    <button className={`btn image ${!image ? 'empty' : ''}`} onClick={this.upload}><Icon icon="addImage"/></button>
                 </Tooltip>
                 <input type="file" accept="image/*" id="uploadImage" hidden onChange={this.finishUpload}/>
             </StyledUploadImage>

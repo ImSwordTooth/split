@@ -1,23 +1,21 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Dropdown, Menu, message, Slider, Tag, Tooltip } from 'antd'
-import axios from 'axios'
+import { Slider, Tooltip } from 'antd'
 import LabelInput from '../../../components/LabelInput'
 import Icon from '../../../components/Icon'
 import Copy from '../../../components/Copy'
+import ChannelChoose from '../../../components/ChannelChoose'
 import { changeDataMap } from '@action'
 import { StyledMainSetting } from './styles'
 
 class MainSetting extends PureComponent {
     
     state = {
-        channelList: [],
         bcScale: 100 // 不放到state里，点击Slider的marks的时候不会更新视图，不知道原因
     }
 
     componentDidMount() {
         const { dataMap } = this.props
-        this.fetchChannelList()
         this.setState({
             bcScale: Math.round(dataMap.bc.scale * 100)
         })
@@ -29,27 +27,6 @@ class MainSetting extends PureComponent {
                 bcScale: Math.round(this.props.dataMap.bc.scale * 100)
             })
         }
-    }
-
-    fetchChannelList = async () => {
-        const res = await axios.get(`https://ucms.ifeng.com/platform/area/areaApi/area/ucms/searchpath/root/list`)
-        const { code, data } = res.data
-        if (code === 0) {
-            this.setState({
-                channelList: data
-            })
-        } else {
-            message.error('获取频道列表失败')
-            this.setState({ channelList: [] }) // 失败不至于影响整个项目
-        }
-    }
-
-    handleChannelChange = (e) => {
-        const { dataMap } = this.props
-        const newDataMap = {...dataMap}
-        const [ id, name ] = e.key.split(':')
-        newDataMap.channel = { id, name }
-        changeDataMap(newDataMap)
     }
 
     handleBcScaleChange = (value) => {
@@ -76,8 +53,8 @@ class MainSetting extends PureComponent {
 
     render() {
         const { env, trackProjectId, dataMap } = this.props
-        const { channelList, bcScale } = this.state
-        const { name, cname, channel, bc } = dataMap
+        const { bcScale } = this.state
+        const { name, cname, bc } = dataMap
         return (
             <StyledMainSetting>
                 <h2 className="settingTitle"><Icon icon="setting"/>项目设置</h2>
@@ -108,24 +85,9 @@ class MainSetting extends PureComponent {
                                 }>
                                 <span className="prop">频道:</span>
                             </Tooltip>
-                            <Dropdown
-                                trigger="click"
-                                overlay={
-                                    <Menu selectedKeys={[`${channel.id}:${channel.name}`]} style={{ maxHeight: '500px', overflow: 'auto' }}>
-                                        {channelList.map((item) => (
-                                            <Menu.Item key={`${item.channel}:${item.title}`} value={item.channel} onClick={this.handleChannelChange}>
-                                                {item.title}
-                                            </Menu.Item>
-                                        ))}
-                                    </Menu>
-                                }
-                            >
-                                <span style={{ cursor: 'pointer' }}>
-                                    {
-                                        channel.name ? <Tag color="blue">{channel.name}</Tag> : <Tag>未指定频道</Tag>
-                                    }
-                                </span>
-                            </Dropdown>
+                            <span style={{ cursor: 'pointer' }}>
+                                <ChannelChoose />
+                            </span>
                         </div>
                         <div className="settingItem">
                             <Tooltip
