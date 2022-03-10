@@ -7,7 +7,7 @@ import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Conflict from './Other/Conflict'
 import Point from './components/Point'
-import { changeEnv, changeParentId, deleteData, changeDataMap } from '@action'
+import { changeEnv, changeParentId, deleteData, changeDataMap, changeActiveId } from '@action'
 import { getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
 import { StyledApp } from './styles'
@@ -91,9 +91,10 @@ class App extends PureComponent{
                 }
                 setTimeout(() => {
                     const newDataMap = {...this.props.dataMap}
-                    newDataMap.name = data.trunkName
+                    newDataMap.name = data.splitConfig.name
                     newDataMap.cname = data.path
                     changeDataMap(newDataMap)
+                    changeActiveId('0')
                 })
                 console.log('成功', e)
                 break;

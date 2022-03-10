@@ -104,26 +104,33 @@ class Setting extends PureComponent {
                 <div className="propertyWp">
                     <div className="property">
                         {
-                            (activeId && activeId !== '0')
-                                ?
-                                    <Tabs size="small" defaultActiveKey={activeKey} style={{ height: '100%' }} onChange={this.handleActiveKeyChange}>
-                                        <TabPane
-                                            tab={<div className="tabDiv">组件</div>}
-                                            key="1">
-                                            <Component key={activeId}/>
-                                        </TabPane>
-                                        <TabPane
-                                            tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
-                                            key="2">
-                                            <Track key={activeId}/>
-                                        </TabPane>
-                                        <TabPane
-                                            tab={<div className="tabDiv">碎片</div>}
-                                            key="3">
-                                            <Chip key={activeId}/>
-                                        </TabPane>
-                                    </Tabs>
-                                : <MainSetting/>
+                            activeId
+                                &&
+                                    <>
+                                        {
+                                            activeId === '0' &&
+                                            <div style={{ borderBottom: 'solid 1px #e5e5e5', paddingBottom: '10px', marginBottom: '10px' }}>
+                                                <MainSetting/>
+                                            </div>
+                                        }
+                                        <Tabs size="small" defaultActiveKey={activeKey} style={{ height: '100%' }} onChange={this.handleActiveKeyChange}>
+                                            <TabPane
+                                                tab={<div className="tabDiv">组件</div>}
+                                                key="1">
+                                                <Component key={activeId}/>
+                                            </TabPane>
+                                            <TabPane
+                                                tab={<div className={`tabDiv ${data && data.config && data.config.track && data.config.track.trackId ? 'active' : ''}`}>埋点</div>}
+                                                key="2">
+                                                <Track key={activeId}/>
+                                            </TabPane>
+                                            <TabPane
+                                                tab={<div className="tabDiv">碎片</div>}
+                                                key="3">
+                                                <Chip key={activeId}/>
+                                            </TabPane>
+                                        </Tabs>
+                                    </>
                         }
                     </div>
                     <div className="breadcrumb">{this.getPath()}</div>

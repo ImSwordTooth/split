@@ -227,9 +227,9 @@ class DataTree extends PureComponent {
 
     render() {
         const { dataMap, activeId, extraSetting } = this.props
-        const { expandedKeys, isShowTreeIcon, isAutoFocus } = this.state
+        const { expandedKeys, isShowTreeIcon, isAutoFocus, localEditId } = this.state
         const { isShowText } = extraSetting
-        const { cname } = dataMap
+        const { name, config } = dataMap
         return (
             <StyledDataTree>
                 <div className="toolbar">
@@ -249,23 +249,50 @@ class DataTree extends PureComponent {
                         </button>
                     </Tooltip>
                 </div>
-                <Tree showIcon
-                      draggable={{ icon: false }}
-                      allowDrop={() => true}
-                      selectedKeys={[activeId]}
-                      expandedKeys={expandedKeys}
-                      onExpand={this.handleExpand}
-                      onDoubleClick={this.treeNodeOnDoubleClick}
-                      onSelect={this.treeNodeOnClick}
-                      onDrop={this.drop}
-                      treeData={
-                          [
-                              {
-                                  key: '0',
-                                  icon: <Icon icon="all" />,
-                                  className: this.getClassName('0'),
-                                  title: cname,
-                                  children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
+                <Tree
+                    showIcon
+                    draggable={{ icon: false }}
+                    allowDrop={() => true}
+                    selectedKeys={[activeId]}
+                    expandedKeys={expandedKeys}
+                    onExpand={this.handleExpand}
+                    onDoubleClick={this.treeNodeOnDoubleClick}
+                    onSelect={this.treeNodeOnClick}
+                    onDrop={this.drop}
+                    treeData={
+                        [
+                            {
+                                key: '0',
+                                icon: <Icon icon="all" />,
+                                className: this.getClassName('0'),
+                                title: (
+                                    <div className="treeTitle">
+                                        <span>
+                                            {
+                                                localEditId === '0'
+                                                ?
+                                                    <span>
+                                                        <Input autoFocus id="treeNodeInput" value={name} style={{ width: '120px' }} size="small" onChange={this.changeName} onFocus={this.selectAll} onPressEnter={this.handleEnter}/>
+                                                    </span>
+                                                : name
+                                            }
+                                        </span>
+                                        <span className="iconPart">
+                                            {
+                                                isShowTreeIcon && config && config.track && config.track.trackId &&
+                                                <img style={{ width: '14px' }} src="https://x0.ifengimg.com/ucms/2021_51/04BF5ED7540F3BC2AE6D3AC19C0D10974FA606B5_size2_w50_h48.png" alt=""/>
+                                            }
+                                            {
+                                                isShowTreeIcon && config && config.chip && config.chip.length > 0 &&
+                                                <span className="chipIcon">
+                                                    <img src="https://x0.ifengimg.com/ucms/2021_51/CD0B86062ED829ECCAF0B9635F42E3A629DBF2AE_size2_w48_h48.png" alt=""/>
+                                                    <span>{config.chip.length}</span>
+                                                </span>
+                                            }
+                                        </span>
+                                    </div>
+                                ),
+                                children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
                               }
                           ]
                       }

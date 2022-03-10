@@ -172,7 +172,7 @@ class Chip extends PureComponent {
                                         </div>
                                     }>
                                     <div>
-                                        <ChipForm chip={{...chip}} onChange={(obj) => this.changeLocalChipList(obj, index)} onDelete={() => this.changeLocalChipList(undefined, index)}/>
+                                        <ChipForm index={index} chip={{...chip}} onChange={(obj) => this.changeLocalChipList(obj, index)} onDelete={() => this.changeLocalChipList(undefined, index)}/>
                                     </div>
                                 </Collapse.Panel>
                             )

@@ -317,13 +317,12 @@ class ToolBar extends PureComponent {
     }
 
     getRandomColorTypeText = (type) => {
-        const { randomColorType, nextRectColor } = this.state
+        const { randomColorType } = this.state
         switch (type || randomColorType) {
             case 'light': return <div style={{ color: 'silver', textShadow: '1px 1px 5px #cbcbcb' }}>随机亮色</div>
             case 'dark': return <div style={{ fontWeight: 'bold' }}>随机暗色</div>
             case 'hue': {
                 return (
-
                     <div>
                         <span style={{color: '#a31131'}}>系</span>
                         <span style={{color: '#d81316'}}>列</span>
@@ -402,7 +401,7 @@ class ToolBar extends PureComponent {
                         }>
                             <div className="env" style={{ color: ENV_CONFIG_MAP[env].color }}>{env}</div>
                         </Tooltip>
-                        <LabelInput readOnly={env.indexOf('custom') === 0} style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
+                        <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
                             {name}
                         </LabelInput>
                         <span>-</span>

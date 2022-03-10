@@ -16,20 +16,24 @@ class SelectNodeFromTree extends PureComponent {
     }
 
     getTreeData = (list) => {
+        const { disabledId } = this.props
+
         return list
             ?
             list.map(data => {
                 let iconName = 'div'
                 if (data.config && data.config.component) {
-                    const { pc, mobile } = data.config.component.preComponent
+                    const { preComponent } = data.config.component
+                    const pc = preComponent.filter(p => p.type === 'pc')
+                    const mobile = preComponent.filter(p => p.type === 'mobile')
                     if (pc.length + mobile.length > 1) {
                         iconName = 'div'
                     } else {
                         if (mobile.length > 0) {
-                            iconName = preComponentList.mobile.find(a => a.name === mobile[0]).icon
+                            iconName = preComponentList.mobile.find(a => a.name === mobile[0].name).icon
                         }
                         if (pc.length > 0) {
-                            iconName = preComponentList.pc.find(a => a.name === pc[0]).icon
+                            iconName = preComponentList.pc.find(a => a.name === pc[0].name).icon
                         }
                     }
                 }
@@ -37,6 +41,7 @@ class SelectNodeFromTree extends PureComponent {
                     value: data.id,
                     icon: <Icon icon={iconName || 'div'} color={data.color}/>,
                     className: 'treeTitle',
+                    disabled: disabledId === data.id,
                     title:
                         <div className="treeTitle">
                             <span>{data.name}</span>
