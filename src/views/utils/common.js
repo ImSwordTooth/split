@@ -145,10 +145,6 @@ export const md5 = str => {
     return md5.digest('hex');
 };
 
-export const getPublicPath = () => {
-    return process.env.NODE_ENV === 'production' ? '/utils/split' : ''
-}
-
 /**
  * 把数据转化为内容，一般是粘贴或者跳转
  *

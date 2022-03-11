@@ -16,7 +16,6 @@ export const StyledChipParams = styled.div`
         
         &:hover {
           text-decoration: underline dashed;
-          
         }
       }
     }

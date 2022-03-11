@@ -199,8 +199,12 @@ class Track extends PureComponent {
     }
 
     createTrack = async () => {
-        const { activeId, dataMap, name, cname, trackProjectId } = this.props
+        const { activeId, dataMap, dataMap: { name, cname }, trackProjectId } = this.props
         if (!trackProjectId) {
+            if (!name) {
+                message.error('请先填写项目名称')
+                return
+            }
             const createItemRes = await axios.post('http://test0.platform.ifengidc.com/platform/server/trackApi/createProject', {
                 projectName: name,
                 projectNote: cname + '- from Split'
@@ -328,7 +332,8 @@ class Track extends PureComponent {
 
     render() {
         const { editingId, paramsList, initConfig, isUpdating, updateRes } = this.state
-        const { name, trackProjectId } = this.props
+        const { trackProjectId, dataMap } = this.props
+        const { name } = dataMap
         return (
             <StyledTrack>
                 <Form ref={this.formRef} size="small" initialValues={{ ...initConfig }} onValuesChange={this.handleFormChange}>
@@ -347,7 +352,7 @@ class Track extends PureComponent {
                             <Option value="action">action</Option>
                         </Select>
                     </Form.Item>
-                    <div style={{ fontSize: '12px' }}>埋点参数：</div>
+                    <div style={{ fontSize: '12px', height: '24px', lineHeight: '24px' }}>埋点参数：</div>
 
                     <div className="params">
                         <table className={'customer_table'} border="1" id="trackTable">
@@ -423,8 +428,8 @@ class Track extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { trackProjectId, activeId, dataMap, name, cname } = state;
-    return { trackProjectId, activeId, dataMap, name, cname }
+    const { trackProjectId, activeId, dataMap } = state;
+    return { trackProjectId, activeId, dataMap }
 }
 
 export default connect(mapStateToProps)(Track)

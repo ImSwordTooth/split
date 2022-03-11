@@ -9,7 +9,7 @@ import { changeDataMap } from '@action'
 import { StyledChipForm } from './styles'
 
 const { Option } = Select
-const NEED_NOT_CREATE = ['struct']
+const NEED_NOT_CREATE = []
 
 class ChipForm extends PureComponent {
 
@@ -22,14 +22,38 @@ class ChipForm extends PureComponent {
         }),
         onChange: PropTypes.func,
         onDelete: PropTypes.func,
-        onAdd: PropTypes.func
+        onAdd: PropTypes.func,
+        isNew: PropTypes.bool
     }
 
-    changeChip = (key, value) => {
+    static defaultProps = {
+        isNew: false
+    }
+
+    changeChipValue = (obj) => {
+        const newObj = {...obj}
         const { onChange, chip } = this.props
+        if (newObj.id !== undefined) {
+            onChange({
+                ...chip,
+                chipId: newObj.id,
+                chipData: newObj
+            })
+            delete newObj.id
+        } else {
+            onChange({
+                ...chip,
+                chipData: newObj
+            })
+        }
+    }
+
+    changeChipType = (type) => {
+        const { onChange, chip } = this.props
+
         onChange({
             ...chip,
-            [key]: value
+            chipType: type
         })
     }
 
@@ -59,12 +83,12 @@ class ChipForm extends PureComponent {
     }
 
     render() {
-        const { chip:{ chipId, chipType, chipData }, onDelete, onAdd, activeId } = this.props
+        const { chip:{ chipId, chipType, chipData }, onDelete, onAdd, isNew, activeId } = this.props
         return (
             <StyledChipForm>
                 <div className="chipType">
                     <span className="formProp">碎片类型 : </span>
-                    <Select disabled={chipId} size="small" value={chipType} style={{ width: '120px' }} onChange={(value) => this.changeChip('chipType', value)}>
+                    <Select disabled={!isNew} size="small" value={chipType} style={{ width: '120px' }} onChange={this.changeChipType}>
                         <Option value="">无碎片</Option>
                         <Option value="static">静态碎片</Option>
                         <Option value="recommend">推荐位碎片</Option>
@@ -73,12 +97,12 @@ class ChipForm extends PureComponent {
                 </div>
                 <div>
                     {
-                        chipType && <ChipParams type={chipType} data={chipData} onChange={(obj) => this.changeChip('chipData', obj)}/>
+                        chipType && <ChipParams type={chipType} chipId={chipId} data={chipData} onChange={this.changeChipValue}/>
                     }
                 </div>
                 <div className="btnBox">
                     {
-                        chipId
+                        !isNew
                             ?
                             <>
                                 <Popover
@@ -102,7 +126,7 @@ class ChipForm extends PureComponent {
                                     </Popconfirm>
                                 </Popover>
                             </>
-                            : (chipType && !NEED_NOT_CREATE.includes(chipType) && <Button type="primary" size="small" onClick={onAdd}>创建碎片</Button>)
+                            : (chipType && !NEED_NOT_CREATE.includes(chipType) && <Button type="primary" ghost={!!chipData.id} size="small" onClick={onAdd}>{chipData.id ? '添加' : '创建'}碎片</Button>)
                     }
                 </div>
             </StyledChipForm>

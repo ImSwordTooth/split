@@ -72,7 +72,7 @@ class SelectNodeFromTree extends PureComponent {
     }
 
     render() {
-        const { value, height, dataMap } = this.props
+        const { value, height, dataMap, disabledId } = this.props
 
         return (
             <StyledSelectNodeFromTree>
@@ -94,6 +94,7 @@ class SelectNodeFromTree extends PureComponent {
                                 icon: <Icon icon="all" />,
                                 className: 'treeTitle',
                                 title: dataMap.name,
+                                disabled: disabledId === '0',
                                 children: (dataMap && dataMap.children) ? this.getTreeData(dataMap.children) : []
                             }
                         ]

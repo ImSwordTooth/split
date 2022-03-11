@@ -1,7 +1,7 @@
 export const defaultState = {
     env: 'default', // 环境，default 默认，custom：从个性化的启动页进来的
     mode: 'choose', // 模式，choose：选择模式，rect：创建矩形模式
-    trackProjectId: '57bda573-fd1e-4d34-87df-65f7f243bc8c', // 埋点系统中项目的id，首次创建埋点的时候会先创建一个埋点项目，示例项目：57bda573-fd1e-4d34-87df-65f7f243bc8c
+    trackProjectId: '', // 埋点系统中项目的id，首次创建埋点的时候会先创建一个埋点项目，示例项目：57bda573-fd1e-4d34-87df-65f7f243bc8c
     scale: 1, // 画布缩放
     dataMap: {  // 数据
         id: '0',

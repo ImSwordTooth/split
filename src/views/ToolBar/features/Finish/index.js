@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Button, message, Modal, Result, Tabs } from 'antd'
+import { Button, message, Modal, Tabs } from 'antd'
 import Icon from '../../../components/Icon'
 import FinishBySave from './FinishBySave'
 import { getChipArrayFromDataMap } from '../../../utils/common'
@@ -22,10 +22,10 @@ class Finish extends PureComponent {
         isLeave: false, // 是否离开 button 时 border 的动画
         tabIndex: '0', // Tabs 的 index
         finishLoading: false, // 完成的loading
-        isShowResult: false, // 是否展示生成结果的 modal
         extraSetting: {
             isCreateDependenciesText: true, // 是否生成依赖的txt文件
-            isCreateLayout: false // 是否创建通栏
+            isCreateLayout: false, // 是否创建通栏
+            reactType: 'function', // React组件写法，class || function
         }
     }
 
@@ -33,7 +33,6 @@ class Finish extends PureComponent {
 
     toggleIsShowModal = () => this.setState({ isShowModal: !this.state.isShowModal })
     toggleIsShowBC = () => this.setState({ isShowBC: !this.state.isShowBC })
-    toggleIsShowResult = () => this.setState({ isShowResult: !this.state.isShowResult })
 
     trueLeave = () => this.setState({ isLeave: true })
     falseLeave = () => this.setState({ isLeave: false })
@@ -83,7 +82,7 @@ class Finish extends PureComponent {
 
     render() {
         const { env } = this.props
-        const { isShowModal, isShowBC, isLeave, tabIndex, isShowResult, extraSetting, finishLoading } = this.state
+        const { isShowModal, isShowBC, isLeave, tabIndex, extraSetting, finishLoading } = this.state
 
         return (
             <StyledFinish>
@@ -147,21 +146,6 @@ class Finish extends PureComponent {
                             </TabPane>
                         </Tabs>
                     </StyledFinishModal>
-                </Modal>
-                <Modal
-                    visible={isShowResult}
-                    width={500}
-                    closable={false}
-                    footer={null}>
-                    <Result
-                        status="success"
-                        title="成功"
-                        subTitle="123"
-                        onCancel={this.toggleIsShowResult}
-                        extra={[
-                            <Button>好的</Button>
-                        ]}
-                    />
                 </Modal>
             </StyledFinish>
         )

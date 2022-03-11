@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, Checkbox, Popover } from 'antd'
+import { Button, Checkbox, Popover, Radio } from 'antd'
 import { getPreComponentArrayFromDataMap } from '../../../../utils/common'
 import { preComponentList } from '../../../../Setting/Property/Component/PRE'
 import { StyledFinishBySave } from './styles'
@@ -45,9 +45,9 @@ class FinishBySave extends PureComponent {
         })
     }
 
-    handleChange = (prop, e) => {
+    handleChange = (prop, value) => {
         const { onChangeSetting } = this.props
-        onChangeSetting(prop, e.target.checked)
+        onChangeSetting(prop, value)
     }
 
     handleDependenciesCheckbox = (e) => {
@@ -93,7 +93,15 @@ class FinishBySave extends PureComponent {
                         </div>
                     }
                     <div className="extra" style={{ color: '#a7a7a7' }}>
-                        <Checkbox checked={setting.isCreateLayout} disabled onChange={(e) => this.handleChange('isCreateLayout', e)} />创建通栏碎片，并应用到项目中
+                        <Checkbox checked={setting.isCreateLayout} disabled onChange={(e) => this.handleChange('isCreateLayout', e.target.checked)} />创建通栏碎片，并应用到项目中
+                    </div>
+
+                    <div className="extra" style={{ marginTop: '8px', color: '#a7a7a7' }}>React组件写法：</div>
+                    <div className="extra" style={{ paddingLeft: '32px', marginTop: '4px', color: '#a7a7a7' }}>
+                        <Radio.Group disabled value={setting.reactType} onChange={(e) => this.handleChange('reactType', e.target.value)}>
+                            <Radio value="function"><span style={{ fontSize: '12px' }}>函数式写法</span></Radio>
+                            <Radio value="class"><span style={{ fontSize: '12px' }}>class 写法</span></Radio>
+                        </Radio.Group>
                     </div>
                 </div>
             </StyledFinishBySave>

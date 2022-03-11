@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
-import * as PIXI from 'pixi.js'
-import { message, Tooltip } from 'antd'
-import axios from 'axios'
 import { connect } from 'react-redux'
+import * as PIXI from 'pixi.js'
+import axios from 'axios'
+import { message, Tooltip } from 'antd'
 import Icon from '../../../components/Icon'
 import { changeDataMap } from '@action'
 import { StyledUploadImage } from './styles'
@@ -18,15 +18,7 @@ class UploadImage extends PureComponent {
         const [ file ] = e.currentTarget.files
         const reader = new FileReader();
         reader.readAsDataURL(file);
-
         reader.onload= (ev) => {
-            const texture = PIXI.Texture.from(ev.target.result)
-            const image = new PIXI.Sprite(texture);
-            image.name = 'bc'
-            image.zIndex = -1
-            // 只能出现一个背景图，所以要删掉上一个
-            app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
-            app.stage.addChild(image)
             axios.post(`https://test0.ucms.ifeng.com/api/resource/upload`, {
                 body: {
                     data: ev.target.result,
@@ -36,13 +28,20 @@ class UploadImage extends PureComponent {
                 }
             }).then(res => {
                 if (res.data.code === 0) {
+                    const texture = PIXI.Texture.from(ev.target.result)
+                    const image = new PIXI.Sprite(texture);
+                    image.name = 'bc'
+                    image.zIndex = -1
+                    // 只能出现一个背景图，所以要删掉上一个
+                    app.stage.removeChild(...app.stage.children.filter(c => c.name === 'bc'))
+                    app.stage.addChild(image)
                     const { dataMap } = this.props
                     const newDataMap = {...dataMap}
                     newDataMap.bc.image = res.data.data.url
                     changeDataMap(newDataMap)
                     message.success('上传成功')
                 } else {
-                    message.error('上传失败')
+                    message.error(`上传失败：${res.data.message}`)
                 }
             })
         }

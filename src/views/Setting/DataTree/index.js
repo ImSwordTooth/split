@@ -12,9 +12,8 @@ class DataTree extends PureComponent {
     state = {
         expandedKeys: ['0'],
         localEditId: '',
-        isVisible: false,
-        isShowTreeIcon: true,
-        isAutoFocus: true
+        isShowTreeIcon: true, // 是否显示树节点后面的小图片
+        isAutoFocus: true // 创建树节点时是否自动开启文本框修改名称
     }
     
     componentDidUpdate(prevProps, prevState, snapshot) {

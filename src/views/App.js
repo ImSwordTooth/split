@@ -6,7 +6,7 @@ import { message, notification } from 'antd'
 import ToolBar from './ToolBar'
 import Setting from './Setting'
 import Conflict from './Other/Conflict'
-import Point from './components/Point'
+import Point from './Other/Point'
 import { changeEnv, changeParentId, deleteData, changeDataMap, changeActiveId } from '@action'
 import { getChipArrayFromDataMap, getDataById, resize, startChoose, transferPaste } from './utils/common'
 import { getAllChildren } from './utils/pixiUtils'
@@ -85,13 +85,13 @@ class App extends PureComponent{
                 if (!isSplitEmpty) {
                     transferPaste(data.splitConfig)
                     changeEnv('custom')
-                    this.compareChip(data.splitConfig, data.allData)
                 } else {
                     changeEnv('custom_new')
                 }
+                this.compareChip(data.splitConfig, data.allData)
                 setTimeout(() => {
                     const newDataMap = {...this.props.dataMap}
-                    newDataMap.name = data.splitConfig.name
+                    newDataMap.name = data.splitConfig.name || 'newProject'
                     newDataMap.cname = data.path
                     changeDataMap(newDataMap)
                     changeActiveId('0')
@@ -177,9 +177,9 @@ class App extends PureComponent{
 
         // 空格 并且没有在移动模式
         if(e.keyCode === 32 && !isMoveMode) {
-            app.stage.children.filter(c => c.name !== 'bc').forEach(c => c.interactive = false)
             e.stopPropagation()
             startChoose()
+            app.stage.children.filter(c => c.name !== 'bc').forEach(c => c.interactive = false)
             app.stage.cursor = 'grab'
             this.setState({ // 改为选择模式
                 isMoveMode: true,

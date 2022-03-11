@@ -81,32 +81,13 @@ class Chip extends PureComponent {
     createChip = async () => {
         const { dataMap } = this.props
         const { cname, channel } = dataMap
-        const { newChip: { chipType, chipData } } = this.state
+        const { newChip: { chipId, chipType, chipData }, newChip } = this.state
 
-        if (!channel.id) {
-            message.warn('还没指定频道，创建失败')
-            return
-        }
-
-        const { title } = chipData
-
-        const params = {
-            name: `${channel.name}-${cname}-from Split-${title}`,
-            channel: channel.id,
-            channelName: channel.name,
-            content: undefined,
-        };
-        params.signature = this.getSignature(params);
-
-        const res = await axios.post(CREATE_CHIP_URL[chipType], params)
-        if (res.data.code === 0) {
+        if (chipId) {
+            // 有碎片id，添加
             const { localChipList } = this.state
             const newList = [...localChipList]
-            newList.push({
-                chipId: res.data.data,
-                chipType,
-                chipData
-            })
+            newList.push(newChip)
             this.setState({
                 localChipList: newList,
                 newChip: {
@@ -116,10 +97,50 @@ class Chip extends PureComponent {
                 }
             }, this.updateChip)
 
-            message.success('创建成功')
+            message.success('添加成功')
         } else {
-            message.error('创建碎片失败')
+            // 没有碎片id，创建
+
+            if (!channel.id) {
+                message.warn('还没指定频道，创建失败')
+                return
+            }
+
+            const { title } = chipData
+
+            const params = {
+                name: `${channel.name}-${cname}-from Split-${title}`,
+                channel: channel.id,
+                channelName: channel.name,
+                content: undefined,
+            };
+            params.signature = this.getSignature(params);
+
+            const res = await axios.post(CREATE_CHIP_URL[chipType], params)
+            if (res.data.code === 0) {
+                const { localChipList } = this.state
+                const newList = [...localChipList]
+                newList.push({
+                    chipId: res.data.data,
+                    chipType,
+                    chipData
+                })
+                this.setState({
+                    localChipList: newList,
+                    newChip: {
+                        chipId: '',
+                        chipType: '',
+                        chipData: {}
+                    }
+                }, this.updateChip)
+
+                message.success('创建成功')
+            } else {
+                message.error('创建碎片失败')
+            }
         }
+
+
     }
 
     updateChip = () => {
@@ -180,7 +201,7 @@ class Chip extends PureComponent {
                     }
                 </Collapse>
                 <div className="title">新增碎片</div>
-                <ChipForm chip={newChip} onChange={this.changeNewChip} onAdd={this.createChip} />
+                <ChipForm isNew={true} chip={newChip} onChange={this.changeNewChip} onAdd={this.createChip} />
             </StyledChipParams>
         )
     }

@@ -40,7 +40,7 @@ class Setting extends PureComponent {
     }
 
     getPath = () => {
-        const { activeId, cname, dataMap } = this.props
+        const { activeId, dataMap } = this.props
         let path = [];
         if (activeId !== '' && activeId !== '0') {
             let selectedKeyArr = activeId.split('_');
@@ -73,10 +73,9 @@ class Setting extends PureComponent {
             }
         }
         return (
-            <Breadcrumb separator={'>'}>
+            <Breadcrumb separator=">">
                 <Breadcrumb.Item onClick={() => changeActiveId('0')}>
                     <Icon icon="all" />
-                    {cname}
                 </Breadcrumb.Item>
                 {
                     path.map((item,index)=>{
@@ -141,8 +140,8 @@ class Setting extends PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { activeId, settingWidth, cname, dataMap } = state;
-    return { activeId, settingWidth, cname, dataMap }
+    const { activeId, settingWidth, dataMap } = state;
+    return { activeId, settingWidth, dataMap }
 }
 
 export default connect(mapStateToProps)(Setting)

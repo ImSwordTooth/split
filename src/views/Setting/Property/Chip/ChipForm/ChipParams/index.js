@@ -9,8 +9,10 @@ import { StyledChipParams } from './styles'
 class ChipParams extends PureComponent {
 
     static propTypes = {
+        chipId: Proptypes.string,
         type: Proptypes.string,
-        data: Proptypes.object
+        data: Proptypes.object,
+        onChange: Proptypes.func
     }
 
     state = {
@@ -29,10 +31,14 @@ class ChipParams extends PureComponent {
     }
 
     initChipData = () => {
-        const { type, data: chipDataFromProps, activeId, dataMap, onChange } = this.props
+        const { type, data: chipDataFromProps, activeId, dataMap, onChange, chipId } = this.props
         let initData = {}
         if (chipDataFromProps && Object.keys(chipDataFromProps).length > 0) {
-            initData = chipDataFromProps
+            if (chipId) {
+                initData = { ...chipDataFromProps, id: chipId }
+            } else {
+                initData = { ...chipDataFromProps, id: '' }
+            }
         } else {
             const parentId = activeId.split('_').length > 1 ? activeId.split('_').slice(0, -1).join('_'): activeId // 如果没有父组件，data-group 就是本身的名字
             const data = getDataById(activeId, dataMap)
@@ -40,6 +46,7 @@ class ChipParams extends PureComponent {
             switch (type) {
                 case 'static':{
                     initData = {
+                        id: '',
                         name: 'chip' + data.id,
                         title: data.name,
                         group: parent.name
@@ -48,6 +55,7 @@ class ChipParams extends PureComponent {
                 }
                 case 'recommend': {
                     initData = {
+                        id: '',
                         name: 'chip' + data.id,
                         title: data.name,
                         group: parent.name,

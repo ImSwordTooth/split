@@ -96,7 +96,7 @@ export const StyledToolbar = styled.div`
         height: 100%;
         background-image: radial-gradient(40px 30px ellipse at 18px 18px, #40b4ca, transparent 30%);
         opacity: 0;
-        transition: all ease .5s;
+        transition: all ease-out 2s;
       }
 
       &:hover {
@@ -116,7 +116,7 @@ export const StyledToolbar = styled.div`
         height: 100%;
         background-image: radial-gradient(40px 20px ellipse at 14px 9px, #ffc864, transparent 30%);
         opacity: 0;
-        transition: all ease .5s;
+        transition: all ease-out 2s;
       }
 
       &:hover {
@@ -136,7 +136,7 @@ export const StyledToolbar = styled.div`
         height: 100%;
         background-image: radial-gradient(yellow, transparent 40%);
         opacity: 0;
-        transition: all ease .5s;
+        transition: all ease-out 2s;
       }
 
       &:hover {

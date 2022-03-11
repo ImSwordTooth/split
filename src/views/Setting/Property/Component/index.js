@@ -206,7 +206,6 @@ class Component extends PureComponent {
     }
 
     handlePreComponentChange = (type, name, isDelete) => {
-        console.log(type, name, isDelete)
         const { preComponent } = this.state
         const newPre = [ ...preComponent]
         if (isDelete) {

@@ -27,7 +27,7 @@ export const StyledFinishBySave = styled.div`
   
   .extraWp {
     padding-left: 24px;
-    margin-top: 10px;
+    margin-top: 30px;
     
     .extraTitle {
       border-left: solid 4px #3490ff;

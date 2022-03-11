@@ -9,16 +9,22 @@ export const StyledUploadImage = styled.span`
     from {
       transform: rotate(0deg);
     }
-    25% {
-      transform: rotate(-15deg);
+    5% {
+      transform: rotate(-10deg);
     }
-    50% {
+    10% {
       transform: rotate(0deg);
     }
-    75% {
-      transform: rotate(15deg); 
+    15% {
+      transform: rotate(10deg);
     }
-    to {
+    20% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(10deg);
+    }
+    30% {
       transform: rotate(0deg);
     }
   }

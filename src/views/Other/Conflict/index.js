@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, message, Popover } from 'antd'
+import {Button, Checkbox, message, Popover} from 'antd'
 import SelectNodeFromTree from '../../components/SelectNodeFromTree'
 import { getDataById } from '../../utils/common'
 import { changeIsFreeze, changeDataMap } from '@action'
@@ -21,7 +21,8 @@ class Conflict extends PureComponent {
             reduce: [], // 以 splitChip 为基准，减少列表
             infoChange: [] // 同样的碎片，但是 name、title 之类的附加信息变了，记录数量即可
         },
-        finishLoading: false
+        finishLoading: false,
+        isAddSaveAll: true, // 新增里，保留全部到根节点
     }
 
     componentDidMount() {
@@ -141,8 +142,17 @@ class Conflict extends PureComponent {
         return total.filter(t => !!t.status).length / total.length
     }
 
+    toggleIsAddSaveAll = (e) => {
+        const { checked } = e.target
+        if (checked) {
+
+        } else {
+
+        }
+    }
+
     render() {
-        const { isConflict, changeList: { add, reduce, infoChange }, finishLoading } = this.state
+        const { isConflict, changeList: { add, reduce, infoChange }, finishLoading, isAddSaveAll } = this.state
 
         if (!isConflict) {
             return null
@@ -153,20 +163,24 @@ class Conflict extends PureComponent {
         return (
             <StyledConflict>
                 <div className="title">检测到<span className="code">config_split.js</span>和 config.js 中的<span className="code">allData</span>存在碎片冲突：</div>
-                {/*<SelectNodeFromTree height={500} />*/}
-                <div className="addWp">
+                <div className="content">
                     {
                         add.length > 0 &&
-                        <>
+                        <div className="addWp">
                             <div className="tipTitle">
-                                <span className="sign add">新增</span>
-                                这些是 allData 里新增的，建议保留
+                                <div>
+                                    <span className="sign add">新增</span>
+                                    这些是 allData 里新增的，建议保留
+                                </div>
+                                <div className="saveAll">
+                                    <Checkbox checked={isAddSaveAll} onChange={this.toggleIsAddSaveAll}>全部保留到根节点</Checkbox>
+                                </div>
                             </div>
                             {
                                 add.map((a, index) => {
                                     return (
                                         <div className="conflict" key={index}>
-                                            {a.chipId} - {a.chipType}
+                                            {a.chipId} - {a.chipType} ({a.chipData.title})
                                             {
                                                 a.status && a.status !== 'delete' &&
                                                 <div className="saveTip">
@@ -191,12 +205,10 @@ class Conflict extends PureComponent {
                                     )
                                 })
                             }
-                        </>
+                        </div>
                     }
-                </div>
-                {
-                    reduce.length > 0 &&
-                    <>
+                    {
+                        reduce.length > 0 &&
                         <div className="reduceWp">
                             <div className="tipTitle">
                                 <span className="sign reduce">减少</span>
@@ -216,12 +228,13 @@ class Conflict extends PureComponent {
                                 })
                             }
                         </div>
-                    </>
-                }
-                {
-                    infoChange.length > 0 &&
-                    <div className="extra"><span className="sign other">其他</span>还有 <strong>{infoChange.length}</strong> 个碎片的信息有改动，将以 allData 为准自动更新</div>
-                }
+                    }
+                    {
+                        infoChange.length > 0 &&
+                        <div className="extra"><span className="sign other">其他</span>还有 <strong>{infoChange.length}</strong> 个碎片的信息有改动，将以 allData 为准自动更新</div>
+                    }
+                </div>
+
                 <div className="footer">
                     <Button type="primary" ghost={percent !== 1} shape="round" loading={finishLoading} onClick={this.finish} disabled={percent !== 1}>
                         确定
