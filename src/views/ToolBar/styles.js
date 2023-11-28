@@ -62,11 +62,6 @@ export const StyledToolbar = styled.div`
       }
 
     }
-
-    .channel {
-      cursor: pointer;
-      margin: 0 0 2px 8px;
-    }
   }
 
   .btn {

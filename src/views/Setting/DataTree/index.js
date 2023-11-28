@@ -15,7 +15,7 @@ class DataTree extends PureComponent {
         isShowTreeIcon: true, // 是否显示树节点后面的小图片
         isAutoFocus: true // 创建树节点时是否自动开启文本框修改名称
     }
-    
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.activeId !== this.props.activeId) {
             this.updateExpandedkeys()
@@ -249,7 +249,7 @@ class DataTree extends PureComponent {
                     </Tooltip>
                 </div>
                 <Tree
-                    showIcon
+                    showIcon={isShowTreeIcon}
                     draggable={{ icon: false }}
                     allowDrop={() => true}
                     selectedKeys={[activeId]}

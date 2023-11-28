@@ -10,7 +10,7 @@ import { StyledUploadImage } from './styles'
 class UploadImage extends PureComponent {
 
     upload = () => {
-        document.getElementById("uploadImage").click()
+        // document.getElementById("uploadImage").click()
     }
 
     finishUpload = (e) => {
@@ -51,7 +51,7 @@ class UploadImage extends PureComponent {
         const { dataMap: { bc: { image } } } = this.props
         return (
             <StyledUploadImage>
-                <Tooltip title="上传新的背景图">
+                <Tooltip title="上传新的背景图(暂停)">
                     <button className={`btn image ${!image ? 'empty' : ''}`} onClick={this.upload}><Icon icon="addImage"/></button>
                 </Tooltip>
                 <input type="file" accept="image/*" id="uploadImage" hidden onChange={this.finishUpload}/>

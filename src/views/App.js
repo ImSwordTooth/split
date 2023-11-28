@@ -53,6 +53,17 @@ class App extends PureComponent{
             image.zIndex = -1
             app.stage.addChild(image)
         }
+
+        /**
+         * 临时写死的默认图
+         * */
+        const texture = PIXI.Texture.from('https://i1.letvimg.com/lc14_lemf/202311/28/10/15/Snipaste_2023-11-28_10-14-36.png')
+        const image = new PIXI.Sprite(texture);
+        image.name = 'bc'
+        image.zIndex = -1
+        app.stage.addChild(image)
+
+
         app.stage.sortableChildren = true
         appElement.appendChild(app.view);
         window.app = app

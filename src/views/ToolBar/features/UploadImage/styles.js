@@ -2,7 +2,13 @@ import styled from 'styled-components'
 
 export const StyledUploadImage = styled.span`
   .empty {
-    animation: empty 1.5s infinite linear;
+    //animation: empty 1.5s infinite linear;
+  }
+  
+  button {
+    background-color: #eeeeee!important;
+    //pointer-events: none;
+    cursor: not-allowed!important;
   }
   
   @keyframes empty {

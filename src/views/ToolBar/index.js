@@ -8,28 +8,12 @@ import Resize from './features/Resize'
 import Help from './features/Help'
 import Create from './features/Create'
 import ColorChoose from './features/ColorChoose'
-import ChannelChoose from '../components/ChannelChoose'
 import Finish from "./features/Finish/index"
 import Icon from '../components/Icon'
 import LabelInput from '../components/LabelInput'
 import { changeDataMap } from '@action'
 import { copyText, startChoose } from '../utils/common'
 import { StyledToolbar } from './styles'
-
-const ENV_CONFIG_MAP = {
-    default: {
-        color: '#b8b8b8',
-        desc: '纯净独立的默认开发环境'
-    },
-    custom: {
-        color: '#ffc65c',
-        desc: '来自个性化页面，项目修改'
-    },
-    custom_new: {
-        color: '#3fd136',
-        desc: '来自个性化页面，项目初始化'
-    }
-}
 
 class ToolBar extends PureComponent {
 
@@ -85,24 +69,6 @@ class ToolBar extends PureComponent {
                 {/*中间，为保持视觉居中，需要absolute*/}
                 <div className="centerPart">
                     <div className="fileNameWp">
-                        <Tooltip title={
-                            <div>
-                                <span style={{ fontWeight: 'bold' }} >环境</span>
-                                <br/>
-                                {
-                                    Object.entries(ENV_CONFIG_MAP).map(([key, value], index) => {
-                                        return (
-                                            <div key={index}>
-                                                <span style={{ color: value.color, marginRight: '4px', fontStyle: 'italic', textShadow: '1px 1px 3px rgba(189, 189, 189, 0.48)' }}>{key}:</span>
-                                                <span>{value.desc}</span>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        }>
-                            <div className="env" style={{ color: ENV_CONFIG_MAP[env].color }}>{env}</div>
-                        </Tooltip>
                         <LabelInput style={{fontSize: '16px', fontWeight: 'bold' }} inputStyle={{ width: '160px', fontWeight: 'bold' }} onChange={(value) => this.finishReName('en', value)}>
                             {name}
                         </LabelInput>
@@ -110,9 +76,6 @@ class ToolBar extends PureComponent {
                         <LabelInput readOnly={env.indexOf('custom') === 0} style={{fontSize: '12px' }} inputStyle={{ width: '160px', fontSize: '12px' }} onChange={(value) => this.finishReName('cn', value)}>
                             {cname}
                         </LabelInput>
-                    </div>
-                    <div className="channel">
-                        <ChannelChoose />
                     </div>
                 </div>
                 {/*右侧*/}

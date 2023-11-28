@@ -4,12 +4,11 @@ import { Slider, Tooltip } from 'antd'
 import LabelInput from '../../../components/LabelInput'
 import Icon from '../../../components/Icon'
 import Copy from '../../../components/Copy'
-import ChannelChoose from '../../../components/ChannelChoose'
 import { changeDataMap } from '@action'
 import { StyledMainSetting } from './styles'
 
 class MainSetting extends PureComponent {
-    
+
     state = {
         bcScale: 100 // 不放到state里，点击Slider的marks的时候不会更新视图，不知道原因
     }
@@ -72,22 +71,6 @@ class MainSetting extends PureComponent {
                                 <span className="prop">{env === 'default' ? '项目中文名称' : '项目路径'}:</span>
                             </Tooltip>
                             <LabelInput readOnly={env.indexOf('custom') === 0} inputStyle={{ width: '160px', fontSize: '12px' }} size="small" onChange={(value) => this.updateName('cn', value)}>{cname}</LabelInput>
-                        </div>
-                        <div className="settingItem">
-                            <Tooltip
-                                placement="left"
-                                title={
-                                    <div>
-                                        <span>项目所属频道</span>
-                                        <br/>
-                                        <span style={{ fontWeight: 'lighter' }}>用于碎片的创建</span>
-                                    </div>
-                                }>
-                                <span className="prop">频道:</span>
-                            </Tooltip>
-                            <span style={{ cursor: 'pointer' }}>
-                                <ChannelChoose />
-                            </span>
                         </div>
                         <div className="settingItem">
                             <Tooltip
